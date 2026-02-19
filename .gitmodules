@@ -7,3 +7,6 @@
 [submodule "examples/slow-church"]
 	path = examples/slow-church
 	url = https://github.com/rupy1014/slow-church.git
+[submodule "core"]
+	path = core
+	url = https://gitea.max5.ai/ehowlsla/mdshare.git
