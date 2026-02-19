@@ -1,34 +1,121 @@
 ---
 slug: index
-title: AI 캐릭터 채팅 서비스 만들기 — 8시간 완성 코스
+title: AI 캐릭터 채팅 서비스 만들기 — 3회차 바이브코딩 코스
 status: published
-tags: [바이브코딩, 8시간, 자기주도, AI채팅, OpenRouter, Next.js, Vercel]
+tags: [바이브코딩, 강의3회, 숙제3회, AI채팅, OpenRouter, Next.js, Vercel, Supabase]
 ---
 
 # AI 캐릭터 채팅 서비스 만들기
 
-> 코드 한 줄 몰라도, 8시간 후엔 내가 만든 AI와 대화하는 서비스가 인터넷에 올라가 있어요.
+> 코드 한 줄 몰라도, 6번의 수업 후엔 내가 만든 AI 서비스가 인터넷에 살고 있어요.
 
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 3px; margin: 2em 0;">
 <div style="background: #1a1a2e; border-radius: 14px; padding: 28px 32px; color: #e0e0e0; line-height: 1.7;">
-  <h3 style="margin: 0 0 24px 0; color: #fff; font-size: 1.25em; text-align: center; border-bottom: 1px solid #444; padding-bottom: 18px;">🎯 8시간 후 여러분은</h3>
+  <h3 style="margin: 0 0 24px 0; color: #fff; font-size: 1.25em; text-align: center; border-bottom: 1px solid #444; padding-bottom: 18px;">🎯 과정 수료 후 여러분은</h3>
   <ul style="margin: 0; padding-left: 8px; list-style: none;">
-    <li style="margin: 12px 0; padding-left: 28px; position: relative;"><span style="position: absolute; left: 0; color: #4ade80;">✅</span>나만의 AI 캐릭터를 설계하고, 그 캐릭터와 대화하는 서비스를 만들어요</li>
-    <li style="margin: 12px 0; padding-left: 28px; position: relative;"><span style="position: absolute; left: 0; color: #4ade80;">✅</span>인터넷에 공개 URL이 생겨요 — 지금 바로 친구에게 보낼 수 있는 링크</li>
-    <li style="margin: 12px 0; padding-left: 28px; position: relative;"><span style="position: absolute; left: 0; color: #4ade80;">✅</span>에러가 나도 당황하지 않고 AI에게 시켜서 고칠 수 있어요</li>
+    <li style="margin: 12px 0; padding-left: 28px; position: relative;"><span style="position: absolute; left: 0; color: #4ade80;">✅</span>나만의 AI 캐릭터가 있는 채팅 서비스를 직접 만들어요</li>
+    <li style="margin: 12px 0; padding-left: 28px; position: relative;"><span style="position: absolute; left: 0; color: #4ade80;">✅</span>인터넷 공개 URL이 생겨요 — 친구에게 바로 공유 가능</li>
+    <li style="margin: 12px 0; padding-left: 28px; position: relative;"><span style="position: absolute; left: 0; color: #4ade80;">✅</span>대화 기록이 DB에 저장돼요 (새로고침해도 남아있어요)</li>
+    <li style="margin: 12px 0; padding-left: 28px; position: relative;"><span style="position: absolute; left: 0; color: #4ade80;">✅</span>에러가 나도 AI에게 시켜서 고칠 수 있어요</li>
     <li style="margin: 12px 0; padding-left: 28px; position: relative;"><span style="position: absolute; left: 0; color: #4ade80;">✅</span>"나도 서비스 만들 수 있다"는 확신이 생겨요</li>
   </ul>
 </div>
 </div>
 
 **대상**: 코드를 본 적 없는 완전 비개발자
-**시간**: 총 8시간 (순수 학습 + 실습)
-**도구**: Claude Code, VS Code, Node.js, OpenRouter, GitHub, Vercel
-**비용**: 전부 무료 (OpenRouter 무료 크레딧 + Vercel 무료 플랜)
+**구성**: 강의 2시간 × 3회 + 숙제 2시간 × 3회 = 총 12시간
+**도구**: Claude Code, VS Code, Node.js, OpenRouter, GitHub, Vercel, Supabase
+**비용**: 전부 무료
 
 ---
 
-## 오늘 만드는 것
+## 커리큘럼 구조: 3×2 나선형 학습
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 3px; margin: 1.5em 0;">
+<div style="background: #1a1a2e; border-radius: 14px; padding: 20px 24px; color: #e0e0e0; line-height: 1.7;">
+  <p style="margin: 0 0 12px 0; color: #94a3b8; font-size: 0.95em;">같은 서비스를 3번 만들어요. 매번 더 고도화된 버전으로.</p>
+  <table style="width:100%; border-collapse:collapse; color:#e0e0e0;">
+    <tr>
+      <th style="padding:8px 12px; text-align:left; border-bottom:1px solid #444; color:#a78bfa; width:100px;">단계</th>
+      <th style="padding:8px 12px; text-align:left; border-bottom:1px solid #444; color:#a78bfa;">결과물</th>
+    </tr>
+    <tr>
+      <td style="padding:8px 12px; color:#4ade80; font-weight:bold;">강의 1</td>
+      <td style="padding:8px 12px;">AI 캐릭터 채팅 V1 — localhost에서 동작</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 12px; color:#fbbf24; font-weight:bold;">숙제 1</td>
+      <td style="padding:8px 12px;">내 캐릭터로 교체 + UI 커스터마이즈</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 12px; color:#4ade80; font-weight:bold;">강의 2</td>
+      <td style="padding:8px 12px;">V2 배포 — Vercel URL + UX 개선</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 12px; color:#fbbf24; font-weight:bold;">숙제 2</td>
+      <td style="padding:8px 12px;">나만의 기능 1개 직접 추가</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 12px; color:#4ade80; font-weight:bold;">강의 3</td>
+      <td style="padding:8px 12px;">V3 완성 — DB 저장 + 서비스 완성도</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 12px; color:#fbbf24; font-weight:bold;">숙제 3</td>
+      <td style="padding:8px 12px;">마무리 + 공유 + 다음 프로젝트 기획</td>
+    </tr>
+  </table>
+</div>
+</div>
+
+---
+
+## 전체 시간표
+
+<table style="width:100%; border-collapse:collapse; margin:1.5em 0;">
+  <thead>
+    <tr>
+      <th style="border:1px solid #ddd; padding:12px; background:#e8e8e8; font-weight:bold; text-align:center; width:14%;">단계</th>
+      <th style="border:1px solid #ddd; padding:12px; background:#e8e8e8; font-weight:bold;">주제</th>
+      <th style="border:1px solid #ddd; padding:12px; background:#e8e8e8; font-weight:bold; text-align:center; width:14%;">시간</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f0fdf4;"><strong><a href="./강의-1회차.md">강의 1</a></strong></td>
+      <td style="border:1px solid #ddd; padding:12px; background:#f0fdf4;">환경세팅 + 첫 AI 채팅 서비스 만들기 (localhost)</td>
+      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f0fdf4;">2시간</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#fefce8;"><strong><a href="./숙제-1회차.md">숙제 1</a></strong></td>
+      <td style="border:1px solid #ddd; padding:12px; background:#fefce8;">내 캐릭터로 교체 + UI 커스터마이즈</td>
+      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#fefce8;">2시간</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f0fdf4;"><strong><a href="./강의-2회차.md">강의 2</a></strong></td>
+      <td style="border:1px solid #ddd; padding:12px; background:#f0fdf4;">GitHub + Vercel 배포 + UX 고도화</td>
+      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f0fdf4;">2시간</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#fefce8;"><strong><a href="./숙제-2회차.md">숙제 2</a></strong></td>
+      <td style="border:1px solid #ddd; padding:12px; background:#fefce8;">나만의 기능 1개 직접 기획 + 구현 + 재배포</td>
+      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#fefce8;">2시간</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f0fdf4;"><strong><a href="./강의-3회차.md">강의 3</a></strong></td>
+      <td style="border:1px solid #ddd; padding:12px; background:#f0fdf4;">Supabase 대화 기록 저장 + 완성도 높이기</td>
+      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f0fdf4;">2시간</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#fefce8;"><strong><a href="./숙제-3회차.md">숙제 3</a></strong></td>
+      <td style="border:1px solid #ddd; padding:12px; background:#fefce8;">마무리 + 세상에 공유하기 + 다음 프로젝트 기획</td>
+      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#fefce8;">2시간</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 만들 서비스 미리보기
 
 <table style="width:100%; border-collapse:collapse; margin:1.5em 0;">
   <thead>
@@ -54,76 +141,9 @@ tags: [바이브코딩, 8시간, 자기주도, AI채팅, OpenRouter, Next.js, Ve
       <td style="border:1px solid #ddd; padding:14px;"><strong>🌐 공개 URL 배포</strong></td>
       <td style="border:1px solid #ddd; padding:14px;">https://내이름.vercel.app — 핸드폰으로도 접속 가능</td>
     </tr>
-  </tbody>
-</table>
-
----
-
-## 전체 시간표
-
-<table style="width:100%; border-collapse:collapse; margin:1.5em 0;">
-  <thead>
     <tr>
-      <th style="border:1px solid #ddd; padding:12px; background:#e8e8e8; font-weight:bold; text-align:center; width:14%;">파트</th>
-      <th style="border:1px solid #ddd; padding:12px; background:#e8e8e8; font-weight:bold;">주제</th>
-      <th style="border:1px solid #ddd; padding:12px; background:#e8e8e8; font-weight:bold; text-align:center; width:14%;">시간</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f8f4ff;"><strong><a href="./00-오리엔테이션.md">PART 0</a></strong></td>
-      <td style="border:1px solid #ddd; padding:12px; background:#f8f4ff;">오리엔테이션: 오늘 뭘 만드나, 바이브코딩이란</td>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f8f4ff;">30분</td>
-    </tr>
-    <tr>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center;"><strong><a href="./01-환경세팅.md">PART 1</a></strong></td>
-      <td style="border:1px solid #ddd; padding:12px;">환경 세팅: Claude Code, VS Code, Node.js, OpenRouter</td>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center;">1시간</td>
-    </tr>
-    <tr>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f0fff4;"><strong>🎯 체크 1</strong></td>
-      <td style="border:1px solid #ddd; padding:12px; background:#f0fff4; font-style:italic;">환경 세팅 완료 확인</td>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f0fff4;"></td>
-    </tr>
-    <tr>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f8f4ff;"><strong><a href="./02-기획.md">PART 2</a></strong></td>
-      <td style="border:1px solid #ddd; padding:12px; background:#f8f4ff;">기획: AI 캐릭터 설계 + 화면 스케치</td>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f8f4ff;">30분</td>
-    </tr>
-    <tr>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center;"><strong><a href="./03-프론트엔드.md">PART 3</a></strong></td>
-      <td style="border:1px solid #ddd; padding:12px;">프론트엔드: 채팅 화면 만들기</td>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center;">2시간</td>
-    </tr>
-    <tr>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f0fff4;"><strong>🎯 체크 2</strong></td>
-      <td style="border:1px solid #ddd; padding:12px; background:#f0fff4; font-style:italic;">채팅 UI 완성 확인</td>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f0fff4;"></td>
-    </tr>
-    <tr>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f8f4ff;"><strong><a href="./04-백엔드-AI연결.md">PART 4</a></strong></td>
-      <td style="border:1px solid #ddd; padding:12px; background:#f8f4ff;">백엔드: OpenRouter AI 연결하기</td>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f8f4ff;">1시간 30분</td>
-    </tr>
-    <tr>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f0fff4;"><strong>🎯 체크 3</strong></td>
-      <td style="border:1px solid #ddd; padding:12px; background:#f0fff4; font-style:italic;">AI 대화 작동 확인</td>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f0fff4;"></td>
-    </tr>
-    <tr>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center;"><strong><a href="./05-배포.md">PART 5</a></strong></td>
-      <td style="border:1px solid #ddd; padding:12px;">배포: 세상에 공개하기</td>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center;">1시간</td>
-    </tr>
-    <tr>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#fff3e0;"><strong>🏆 완성!</strong></td>
-      <td style="border:1px solid #ddd; padding:12px; background:#fff3e0; font-style:italic;">공개 URL 획득</td>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#fff3e0;"></td>
-    </tr>
-    <tr>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f8f4ff;"><strong><a href="./06-마무리.md">PART 6</a></strong></td>
-      <td style="border:1px solid #ddd; padding:12px; background:#f8f4ff;">마무리: 커스터마이즈 + 다음 스텝</td>
-      <td style="border:1px solid #ddd; padding:12px; text-align:center; background:#f8f4ff;">30분</td>
+      <td style="border:1px solid #ddd; padding:14px;"><strong>🗄️ 대화 기록 저장</strong></td>
+      <td style="border:1px solid #ddd; padding:14px;">새로고침해도, 다음에 접속해도 이전 대화가 남아있음 (Supabase)</td>
     </tr>
   </tbody>
 </table>
@@ -134,7 +154,7 @@ tags: [바이브코딩, 8시간, 자기주도, AI채팅, OpenRouter, Next.js, Ve
 
 <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 16px; padding: 3px; margin: 2em 0;">
 <div style="background: #1a1a2e; border-radius: 14px; padding: 24px 28px; color: #e0e0e0; line-height: 1.7;">
-  <h3 style="margin: 0 0 20px 0; color: #fff; font-size: 1.1em;">오늘의 3가지 규칙</h3>
+  <h3 style="margin: 0 0 20px 0; color: #fff; font-size: 1.1em;">바이브코딩 3가지 규칙</h3>
   <p style="margin: 0 0 14px 0;"><strong style="color: #fbbf24;">1. 코드를 이해하려 하지 마세요</strong><br>
   → 지금은 몰라도 됩니다. AI가 다 써줘요. "이게 뭔지 몰라도" 일단 따라오면 됩니다.</p>
   <p style="margin: 0 0 14px 0;"><strong style="color: #fbbf24;">2. AI에게 구체적으로 시키세요</strong><br>
@@ -144,4 +164,20 @@ tags: [바이브코딩, 8시간, 자기주도, AI채팅, OpenRouter, Next.js, Ve
 </div>
 </div>
 
-**→ [PART 0 오리엔테이션으로 시작하기](./00-오리엔테이션.md)**
+**→ [강의 1회차 시작하기](./강의-1회차.md)**
+
+---
+
+## 참고 자료 (파트별 상세 가이드)
+
+이전 버전의 파트별 가이드입니다. 필요할 때 참고하세요.
+
+| 파일 | 내용 |
+|------|------|
+| [PART 0 — 오리엔테이션](./00-오리엔테이션.md) | 바이브코딩 개념, 3가지 규칙 |
+| [PART 1 — 환경세팅](./01-환경세팅.md) | Node.js, Claude Code, VS Code 설치 |
+| [PART 2 — 기획](./02-기획.md) | AI 캐릭터 설계 시트 |
+| [PART 3 — 프론트엔드](./03-프론트엔드.md) | 채팅 UI 만들기 (Next.js) |
+| [PART 4 — 백엔드·AI연결](./04-백엔드-AI연결.md) | OpenRouter API 연결 |
+| [PART 5 — 배포](./05-배포.md) | GitHub + Vercel 배포 |
+| [PART 6 — 마무리](./06-마무리.md) | 커스터마이즈 옵션 + 다음 스텝 |
