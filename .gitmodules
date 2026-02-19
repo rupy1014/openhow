@@ -1,12 +1,6 @@
-[submodule "examples/ai-docs"]
-	path = examples/ai-docs
-	url = https://git.bootpay.co.kr/bootpay/docs.git
 [submodule "examples/ai-jobdori"]
 	path = examples/ai-jobdori
 	url = https://github.com/rupy1014/ai-jobdori.git
 [submodule "examples/slow-church"]
 	path = examples/slow-church
 	url = https://github.com/rupy1014/slow-church.git
-[submodule "core"]
-	path = core
-	url = https://gitea.max5.ai/ehowlsla/mdshare.git
