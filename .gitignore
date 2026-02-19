@@ -13,6 +13,8 @@ temp/
 
 # Private AI assistant config (not for public repo)
 CLAUDE.md
+# But allow content guides in examples
+!examples/*/CLAUDE.md
 
 # Private repos (local only, not for GitHub)
 core/
