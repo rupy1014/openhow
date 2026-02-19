@@ -22,9 +22,9 @@ mdshare publish  # deploy to mdshare cloud
 | **Blog** | Dev logs, updates, knowledge base articles |
 
 Real-world examples built with mdshare:
-- 🔖 **[Bootpay Developer Docs](https://mdshare.rupy1014.workers.dev/d/bootpay/guide)** — API reference for a payment gateway
-- 📚 **[AI Vibe Coding Book](https://github.com/rupy1014/ai-jobdori)** — Programming course with paid chapters
-- ⛪ **[Slow Church](https://github.com/rupy1014/slow-church)** — Church sermons shared with members
+- 📚 **[AI Vibe Coding Book](https://github.com/rupy1014/ai-jobdori)** — Programming course with free preview + paid chapters
+- ⛪ **[Slow Church](https://github.com/rupy1014/slow-church)** — Weekly sermons shared with church members
+- 📖 **[mdshare Docs](https://github.com/rupy1014/mdshare/tree/main/docs)** — This documentation, published with mdshare
 
 ---
 
