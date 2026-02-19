@@ -1,0 +1,30 @@
+# Development
+node_modules/
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+.wrangler/
+
+# mdshare temp files
+temp/
+
+# Private AI assistant config (not for public repo)
+CLAUDE.md
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
