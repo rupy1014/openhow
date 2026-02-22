@@ -1,4 +1,5 @@
 ---
+draft: true
 slug: 특강-콘텐츠자동화-3-antigravity
 title: "Part 3: 공짜로 돌리기 — Antigravity"
 nav: "Part 3: Antigravity"
