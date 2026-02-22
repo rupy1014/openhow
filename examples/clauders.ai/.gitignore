@@ -1,0 +1,4 @@
+# mdshare video files (large binaries — tracked by mdshare-videos.json)
+docs/videos/*.mp4
+docs/videos/*.webm
+docs/videos/*.mov
