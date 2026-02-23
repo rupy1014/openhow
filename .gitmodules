@@ -1,6 +1,0 @@
-[submodule "examples/ai-jobdori"]
-	path = examples/ai-jobdori
-	url = https://github.com/rupy1014/ai-jobdori.git
-[submodule "examples/slow-church"]
-	path = examples/slow-church
-	url = https://github.com/rupy1014/slow-church.git
