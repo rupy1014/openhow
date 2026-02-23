@@ -266,8 +266,7 @@ Claude Code에게 프로젝트를 설명하는 파일.
 ### Claude Code
 ```
 터미널에서 Claude와 대화하는 CLI 도구.
-코드 작성, 파일 수정, 명령어 실행까지 가능.
-npm install -g @anthropic-ai/claude-code로 설치.
+코드 작성, 파일 수정, 명령어 실행까지 가능. 
 ```
 
 ### CSS
