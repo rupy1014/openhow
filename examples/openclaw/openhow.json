@@ -1,4 +1,6 @@
 {
   "content": "docs",
-  "workspace": "openclaw"
+  "workspace": "openclaw",
+  "title": "OpenClaw 마스터 가이드",
+  "description": "메신저로 AI한테 일 시키는 오픈소스 프레임워크. 텔레그램에서 '이메일 정리해줘'라고 치면 진짜 정리해주는 도구, OpenClaw 완전정복 가이드."
 }
