@@ -5,9 +5,12 @@ nav: CLI 명령어
 order: 3
 ---
 
+*검증 기준일: 2026-02-26 (공식 문서·릴리즈 기준)*
+
 **자주 쓰는 명령어만 모았어.**
 
 전부 외울 필요 없어. 이 페이지 북마크해두고 필요할 때 찾아봐.
+`openclaw 2026.2.24` 기준으로 확인했어.
 
 ---
 
@@ -37,7 +40,7 @@ openclaw gateway --verbose  # 디버그 모드
 ```bash
 openclaw config get agent.model          # 현재 모델 확인
 openclaw config set agent.model "..."    # 모델 변경
-openclaw config validate                 # 설정 유효성 검사
+openclaw config unset agent.model         # 설정 키 제거
 openclaw configure                       # 대화형 설정
 ```
 
@@ -46,10 +49,9 @@ openclaw configure                       # 대화형 설정
 ## 대화
 
 ```bash
-openclaw chat "안녕"       # 터미널에서 바로 대화
-openclaw tui               # 터미널 UI (풀스크린)
-openclaw web               # 웹 UI (브라우저)
-openclaw dashboard         # 대시보드 (관리용)
+openclaw agent --message "안녕"  # 단일 요청
+openclaw tui                     # 터미널 UI (풀스크린)
+openclaw dashboard               # 대시보드 열기
 ```
 
 ---
@@ -64,12 +66,13 @@ openclaw pairing approve telegram ABC    # 페어링 승인
 
 ---
 
-## 스킬 (플러그인)
+## 스킬 (확장 기능)
 
 ```bash
-openclaw plugins list                           # 설치된 스킬
-openclaw plugins install 스킬이름               # 설치
-openclaw skills search git                      # 스킬 검색
+openclaw skills list                            # 스킬 목록
+openclaw skills info coding-agent               # 스킬 상세
+openclaw skills check                           # 실행 가능 여부 점검
+clawhub search "git"                            # ClawHub 검색
 clawhub install 스킬이름                        # ClawHub에서 설치
 clawhub update --all                            # 전체 업데이트
 ```
@@ -81,7 +84,7 @@ clawhub update --all                            # 전체 업데이트
 ```bash
 openclaw cron add --name "이름" --cron "0 7 * * *" --message "할 일"
 openclaw cron list                              # 등록된 작업
-openclaw cron remove 작업ID                      # 삭제
+openclaw cron rm 작업ID                          # 삭제 (remove도 가능)
 ```
 
 ---
