@@ -22,8 +22,9 @@
 
 ## 시작 절차 (새 기수)
 1. 새 워크스페이스 생성: `clauders-{cohort}`
-2. 템플릿 6개 폴더 복사
-3. `cohort`, `owner`, `updatedAt` 값 기수 기준으로 일괄 수정
+2. 스타터 자동 생성 실행
+   - `./scripts/create-cohort-starter.sh 4th @owner`
+3. 생성된 `docs/clauders/starter/cohort-4th`를 해당 기수 워크스페이스로 복사
 4. 자기소개 게시판 오픈 공지
 
 ## 주간 운영 루프
