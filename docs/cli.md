@@ -1,36 +1,36 @@
 # CLI Reference
 
-All commands provided by `@max5/cli`.
+All commands provided by `@openhow/cli`.
 
 ## Installation
 
 ```bash
-npm install -g @max5/cli
+npm install -g @openhow/cli
 ```
 
 ---
 
 ## Commands
 
-### `mdshare init`
+### `openhow init`
 
 Initialize a new project in the current directory.
 
 ```bash
-mdshare init
+openhow init
 ```
 
-Creates `mdshare.json` and a starter content folder based on the selected template (API Docs, Tutorial Book, or Blog).
+Creates `openhow.json` and a starter content folder based on the selected template (API Docs, Tutorial Book, or Blog).
 
 ---
 
-### `mdshare serve [path]`
+### `openhow serve [path]`
 
 Start a local preview server.
 
 ```bash
-mdshare serve              # serves current directory
-mdshare serve ./my-docs    # serves a specific path
+openhow serve              # serves current directory
+openhow serve ./my-docs    # serves a specific path
 ```
 
 | Option | Default | Description |
@@ -38,21 +38,21 @@ mdshare serve ./my-docs    # serves a specific path
 | `--port` | `3600` | Port to listen on |
 | `--open` | `true` | Auto-open browser |
 
-The server reads your `mdshare.json` config, scans the content directory, and injects navigation data into the viewer. No API calls are made — all data is served locally.
+The server reads your `openhow.json` config, scans the content directory, and injects navigation data into the viewer. No API calls are made — all data is served locally.
 
 ---
 
-### `mdshare publish [path]`
+### `openhow publish [path]`
 
-Publish content to the mdshare cloud.
+Publish content to the openhow cloud.
 
 ```bash
-mdshare publish            # publishes current directory
-mdshare publish ./my-docs  # publishes a specific path
+openhow publish            # publishes current directory
+openhow publish ./my-docs  # publishes a specific path
 ```
 
 **What it does:**
-1. Reads your local token (`~/.mdshare/tokens.json`)
+1. Reads your local token (`~/.openhow/tokens.json`)
 2. Scans the content directory
 3. Computes content hashes — only changed files are uploaded
 4. Rewrites relative image paths to R2 asset URLs
@@ -65,46 +65,46 @@ mdshare publish ./my-docs  # publishes a specific path
 
 ---
 
-### `mdshare login`
+### `openhow login`
 
 Authenticate with GitHub or Google OAuth.
 
 ```bash
-mdshare login --provider github
-mdshare login --provider google
+openhow login --provider github
+openhow login --provider google
 ```
 
-Token is saved to `~/.mdshare/tokens.json`. The browser opens automatically for the OAuth flow.
+Token is saved to `~/.openhow/tokens.json`. The browser opens automatically for the OAuth flow.
 
 ---
 
-### `mdshare logout`
+### `openhow logout`
 
 Remove stored credentials.
 
 ```bash
-mdshare logout
+openhow logout
 ```
 
 ---
 
-### `mdshare whoami`
+### `openhow whoami`
 
 Display the currently logged-in user.
 
 ```bash
-mdshare whoami
+openhow whoami
 # → taesup@example.com (GitHub)
 ```
 
 ---
 
-### `mdshare status`
+### `openhow status`
 
 Show account and workspace summary.
 
 ```bash
-mdshare status
+openhow status
 ```
 
 Displays:
@@ -115,17 +115,17 @@ Displays:
 
 ---
 
-### `mdshare config`
+### `openhow config`
 
 Read and write local configuration.
 
 ```bash
-mdshare config get              # print current config
-mdshare config set key value    # set a config value
-mdshare config reset            # reset to defaults
+openhow config get              # print current config
+openhow config set key value    # set a config value
+openhow config reset            # reset to defaults
 ```
 
-Config is stored in `~/.mdshare/config.json`.
+Config is stored in `~/.openhow/config.json`.
 
 ---
 
@@ -133,5 +133,5 @@ Config is stored in `~/.mdshare/config.json`.
 
 | Variable | Description |
 |----------|-------------|
-| `MDSHARE_TOKEN` | Auth token (for CI/non-interactive environments) |
-| `MDSHARE_API_URL` | Override the API endpoint (for self-hosted instances) |
+| `OPENHOW_TOKEN` | Auth token (for CI/non-interactive environments) |
+| `OPENHOW_API_URL` | Override the API endpoint (for self-hosted instances) |

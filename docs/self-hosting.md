@@ -1,14 +1,14 @@
 # Self-hosting
 
-mdshare runs entirely on Cloudflare infrastructure. If you prefer to own your data and infrastructure, you can deploy your own mdshare instance to your Cloudflare account.
+openhow runs entirely on Cloudflare infrastructure. If you prefer to own your data and infrastructure, you can deploy your own openhow instance to your Cloudflare account.
 
-> **Note:** Self-hosting is currently in early access. The deployment package is available on request. [Contact us](mailto:hello@mdshare.dev) to get access.
+> **Note:** Self-hosting is currently in early access. The deployment package is available on request. [Contact us](mailto:hello@openhow.dev) to get access.
 
 ---
 
 ## Architecture
 
-A self-hosted mdshare instance consists of:
+A self-hosted openhow instance consists of:
 
 | Component | Cloudflare product | Description |
 |-----------|-------------------|-------------|
@@ -35,7 +35,7 @@ All Cloudflare products have a generous free tier sufficient for small to medium
 ### 1. Create D1 database
 
 ```bash
-wrangler d1 create mdshare-db
+wrangler d1 create openhow-db
 ```
 
 Note the `database_id` from the output.
@@ -43,13 +43,13 @@ Note the `database_id` from the output.
 ### 2. Create R2 bucket
 
 ```bash
-wrangler r2 bucket create mdshare-docs
+wrangler r2 bucket create openhow-docs
 ```
 
 ### 3. Create KV namespace
 
 ```bash
-wrangler kv namespace create mdshare-sessions
+wrangler kv namespace create openhow-sessions
 ```
 
 Note the `id` from the output.
@@ -80,18 +80,18 @@ You need at least one OAuth provider configured.
 Update `wrangler.toml` with your resource IDs:
 
 ```toml
-name = "mdshare"
+name = "openhow"
 main = "src/index.ts"
 compatibility_date = "2024-01-01"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "mdshare-db"
+database_name = "openhow-db"
 database_id = "YOUR_D1_DATABASE_ID"
 
 [[r2_buckets]]
 binding = "R2"
-bucket_name = "mdshare-docs"
+bucket_name = "openhow-docs"
 
 [[kv_namespaces]]
 binding = "KV"
@@ -114,26 +114,26 @@ wrangler secret put GOOGLE_CLIENT_SECRET    # optional
 
 ```bash
 # Run database migrations
-wrangler d1 execute mdshare-db --file=./migrations/0001_init.sql
+wrangler d1 execute openhow-db --file=./migrations/0001_init.sql
 
 # Build and deploy
 pnpm run deploy
 ```
 
-Your instance will be live at `https://mdshare.your-subdomain.workers.dev`.
+Your instance will be live at `https://openhow.your-subdomain.workers.dev`.
 
 ---
 
 ## Point the CLI to your instance
 
 ```bash
-mdshare config set apiUrl https://mdshare.your-subdomain.workers.dev
+openhow config set apiUrl https://openhow.your-subdomain.workers.dev
 ```
 
 Or set the environment variable:
 
 ```bash
-export MDSHARE_API_URL=https://mdshare.your-subdomain.workers.dev
+export OPENHOW_API_URL=https://openhow.your-subdomain.workers.dev
 ```
 
 ---

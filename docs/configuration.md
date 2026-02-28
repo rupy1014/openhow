@@ -1,12 +1,12 @@
 # Configuration
 
-mdshare projects are configured through three layers: the project config file, frontmatter in individual markdown files, and `_meta.json` for navigation structure.
+openhow projects are configured through three layers: the project config file, frontmatter in individual markdown files, and `_meta.json` for navigation structure.
 
 ---
 
-## `mdshare.json`
+## `openhow.json`
 
-The project-level config file, created by `mdshare init`.
+The project-level config file, created by `openhow init`.
 
 ```json
 {
@@ -45,7 +45,7 @@ Each markdown file can include a YAML frontmatter block at the top.
 ```markdown
 ---
 title: Getting Started
-description: Learn how to install and use the mdshare CLI.
+description: Learn how to install and use the openhow CLI.
 access: public
 order: 1
 draft: false
@@ -78,7 +78,7 @@ draft: false
 
 ## `_meta.json`
 
-Controls the sidebar navigation structure within a directory. If omitted, mdshare generates navigation automatically from the file and folder names.
+Controls the sidebar navigation structure within a directory. If omitted, openhow generates navigation automatically from the file and folder names.
 
 ```json
 {
@@ -110,7 +110,7 @@ Controls the sidebar navigation structure within a directory. If omitted, mdshar
 
 ## Auto-generated navigation
 
-If no `_meta.json` is present, mdshare generates navigation automatically:
+If no `_meta.json` is present, openhow generates navigation automatically:
 
 - **Folders** become sidebar sections
 - **Files** become sidebar links, sorted by:

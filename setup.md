@@ -1,4 +1,4 @@
-# mdshare — Architecture & Roadmap (Internal)
+# openhow — Architecture & Roadmap (Internal)
 
 > 내부 개발 문서. 코어 아키텍처, 로드맵, 구현 현황 기록.
 > 사용자 문서는 `docs/` 폴더 참조.
@@ -7,26 +7,26 @@
 
 ## 1. 코어 아키텍처 — 4가지 성격의 복합 프로젝트
 
-mdshare는 단일 SDK가 아니라, 하나의 모노레포에 4가지 성격이 공존한다.
+openhow는 단일 SDK가 아니라, 하나의 모노레포에 4가지 성격이 공존한다.
 
 | 성격 | 패키지 | 핵심 파일 | 역할 |
 |------|--------|----------|------|
-| **CLI 도구** | `@max5/cli` | `cli.ts`, `scanner/`, `commands/` | 로컬 뷰어 + 클라우드 퍼블리시 |
-| **웹 뷰어** | `@max5/viewer` | `views/`, `components/`, `stores/` | 문서 열람 SPA |
-| **API 서버** | `@max5/worker` | `routes/`, `db/`, `middleware/` | 인증, CRUD, 검색, 에셋 |
+| **CLI 도구** | `@openhow/cli` | `cli.ts`, `scanner/`, `commands/` | 로컬 뷰어 + 클라우드 퍼블리시 |
+| **웹 뷰어** | `@openhow/viewer` | `views/`, `components/`, `stores/` | 문서 열람 SPA |
+| **API 서버** | `@openhow/worker` | `routes/`, `db/`, `middleware/` | 인증, CRUD, 검색, 에셋 |
 | **AI 통합** | worker 내장 | `/manual.md`, `/llms.txt` | LLM 온보딩 + 모네타이제이션 가이드 |
 
 ### CLI 내부 동작
 
 ```
-mdshare serve [path]
-  1. loadConfig()         mdshare.json > .mdsharerc.json > ~/.mdshare/config.json
+openhow serve [path]
+  1. loadConfig()         openhow.json > .openhowrc.json > ~/.openhow/config.json
   2. scanProject()        globby → gray-matter → _meta.json → MainNav + Sidebar 자동 생성
   3. createServer()       Vite dev server + window.__PROJECT_DATA__ 주입
   4. open(:3600)
 
-mdshare publish [path]
-  1. getValidToken()      ~/.mdshare/tokens.json → 만료 체크
+openhow publish [path]
+  1. getValidToken()      ~/.openhow/tokens.json → 만료 체크
   2. scanProject()        위와 동일
   3. resolveWorkspace()   slug 매칭 or 자동 생성
   4. for page:
@@ -37,7 +37,7 @@ mdshare publish [path]
 
 ### Viewer 두 가지 모드
 
-- **로컬 모드** (`mdshare serve`): `window.__PROJECT_DATA__`에서 직접 로드. API 호출 없음.
+- **로컬 모드** (`openhow serve`): `window.__PROJECT_DATA__`에서 직접 로드. API 호출 없음.
 - **클라우드 모드** (배포 후): Worker API 페치. Better Auth 세션 인증.
 
 ### Worker 특수 엔드포인트
@@ -114,7 +114,7 @@ mdshare publish [path]
 **목표 config 스펙:**
 
 ```ts
-// mdshare.config.ts (향후)
+// openhow.config.ts (향후)
 export default {
   title: "My Docs",
   content: "./docs",
@@ -148,7 +148,7 @@ export default {
 
 현재 scanner는 계층형만 잘 지원한다. 순서형/블로그형을 수용하려면:
 
-1. `mdshare.config.ts` 로딩 지원 (현재 `.json`만)
+1. `openhow.config.ts` 로딩 지원 (현재 `.json`만)
 2. config에 `type` 필드 추가
 3. `init`에 인터랙티브 타입 선택
 4. scanner에 순서형 패턴 지원 (숫자 접두사는 이미 파싱하지만, ChapterNav 데이터 생성이 없음)
@@ -166,7 +166,7 @@ export default {
 ### Phase 3: 퍼블리싱 자동화 (중기)
 
 - `publish --watch` (파일 변경 → 자동 업데이트)
-- `publish --ci` (non-interactive, `MDSHARE_TOKEN` 환경변수)
+- `publish --ci` (non-interactive, `OPENHOW_TOKEN` 환경변수)
 - GitHub Actions 템플릿
 
 ### Phase 4: 플랫폼 확장 (장기)
@@ -198,7 +198,7 @@ export default {
 
 ### 미구현
 
-- [ ] `mdshare.config.ts` 로딩 (현재 `.json`만)
+- [ ] `openhow.config.ts` 로딩 (현재 `.json`만)
 - [ ] config `type` 필드 + 순서형/블로그형 지원
 - [ ] `init` 인터랙티브 타입 선택
 - [ ] `publish --watch`, `publish --ci`

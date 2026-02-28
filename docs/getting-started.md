@@ -1,39 +1,39 @@
 # Getting Started
 
-This guide walks you through publishing your first document with mdshare in under 5 minutes.
+This guide walks you through publishing your first document with openhow in under 5 minutes.
 
 ## Prerequisites
 
 - Node.js 18 or later
-- An mdshare account → [Sign up](https://mdshare.rupy1014.workers.dev/login)
+- An openhow account → [Sign up](https://openhow.rupy1014.workers.dev/login)
 
 ## 1. Install the CLI
 
 ```bash
-npm install -g @max5/cli
+npm install -g @openhow/cli
 ```
 
 Verify the installation:
 
 ```bash
-mdshare --version
+openhow --version
 ```
 
 ## 2. Log in
 
 ```bash
-mdshare login --provider github
+openhow login --provider github
 # or
-mdshare login --provider google
+openhow login --provider google
 ```
 
-This opens a browser window for OAuth. On success, your token is saved to `~/.mdshare/tokens.json`.
+This opens a browser window for OAuth. On success, your token is saved to `~/.openhow/tokens.json`.
 
 ## 3. Initialize a project
 
 ```bash
 mkdir my-docs && cd my-docs
-mdshare init
+openhow init
 ```
 
 The interactive wizard asks:
@@ -53,7 +53,7 @@ This generates:
 
 ```
 my-docs/
-├── mdshare.json          ← project config
+├── openhow.json          ← project config
 └── docs/
     ├── guide/
     │   └── getting-started.md
@@ -63,7 +63,7 @@ my-docs/
 ## 4. Preview locally
 
 ```bash
-mdshare serve
+openhow serve
 ```
 
 Opens a live preview at **http://localhost:3600**. Changes to your markdown files reload automatically.
@@ -71,17 +71,17 @@ Opens a live preview at **http://localhost:3600**. Changes to your markdown file
 ## 5. Publish
 
 ```bash
-mdshare publish
+openhow publish
 ```
 
-mdshare compares content hashes and only uploads changed files. On the first publish, a workspace is created automatically.
+openhow compares content hashes and only uploads changed files. On the first publish, a workspace is created automatically.
 
 ```
 ✔  Workspace created: my-docs
 ✔  Uploaded: guide/getting-started.md
 ✔  Uploaded: _meta.json
 
-→  https://mdshare.rupy1014.workers.dev/d/my-docs/guide/getting-started
+→  https://openhow.rupy1014.workers.dev/d/my-docs/guide/getting-started
 ```
 
 ## Next steps

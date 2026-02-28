@@ -1,6 +1,6 @@
 # Content Types & Examples
 
-mdshare supports three content types. Each generates a different folder structure, navigation style, and reading experience.
+openhow supports three content types. Each generates a different folder structure, navigation style, and reading experience.
 
 ---
 
@@ -24,7 +24,7 @@ docs/
 
 **Navigation:** Multi-level sidebar with collapsible sections. The top-level `_meta.json` defines the main navigation categories.
 
-**Real example:** [Bootpay Developer Docs](https://mdshare.rupy1014.workers.dev/d/bootpay/guide) — payment gateway API reference covering 5 product areas (결제, 구독, 정산, 빌링, 부가서비스).
+**Real example:** [Bootpay Developer Docs](https://openhow.rupy1014.workers.dev/d/bootpay/guide) — payment gateway API reference covering 5 product areas (결제, 구독, 정산, 빌링, 부가서비스).
 
 ---
 
@@ -39,7 +39,7 @@ book/
 ├── 01-setup.md
 ├── 02-basics.md
 ├── 03-advanced.md
-└── mdshare.json
+└── openhow.json
 ```
 
 **Navigation:** Linear previous/next navigation. Files are sorted by numeric prefix. Progress is preserved per user.
@@ -68,7 +68,7 @@ Best for: dev logs, changelogs, newsletters, community updates, sermon archives.
 posts/
 ├── 2025-01-15-hello-world.md
 ├── 2025-02-01-new-feature.md
-└── mdshare.json
+└── openhow.json
 ```
 
 **Navigation:** Newest-first list. No explicit ordering needed — files sort by date prefix automatically.

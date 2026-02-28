@@ -323,7 +323,7 @@ Cloudflare 인프라에서 직접 운영할 수 있습니다.
 ## Repository Structure
 
 ```
-mdshare/
+openhow/
 ├── README.md
 ├── docs/                  ← 공개 문서
 │   ├── getting-started.md
