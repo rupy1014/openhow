@@ -18,7 +18,11 @@ CLAUDE.md
 
 # Private repos (local only, not for GitHub)
 core/
+csflow.ai/
 examples/ai-docs/
+
+# Secrets
+client_secret*.json
 
 # macOS
 .DS_Store
