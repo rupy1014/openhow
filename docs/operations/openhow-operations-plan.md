@@ -118,3 +118,5 @@ updatedAt: YYYY-MM-DD
 - [ ] 주간 검수 시간 고정
 - [ ] 승격 기준 공지
 - [ ] 아카이브 공개 정책 확정
+- [ ] CLI RBAC 명세 반영 (`docs/operations/cli-rbac-spec.md`)
+- [ ] RBAC 구현 스프린트 시작 (`docs/operations/implementation-plan-rbac.md`)
