@@ -17,13 +17,21 @@ Claude Pro나 ChatGPT Plus 구독이 있어?
 
 llm-mux는 네 브라우저 로그인 정보를 이용해.
 
-**Step 1.** `llm-mux login claude`를 실행하면 브라우저가 열려.
+:::steps
 
-**Step 2.** Claude에 로그인해. 평소 쓰던 계정 그대로.
+### llm-mux login 실행
 
-**Step 3.** 끝. 이제 `localhost:8317`로 API 요청을 보내면 돼.
+`llm-mux login claude`를 실행하면 브라우저가 열려.
 
-```bash
+### Claude에 로그인
+
+평소 쓰던 계정 그대로 로그인해.
+
+### API 요청 보내기
+
+끝. 이제 `localhost:8317`로 API 요청을 보내면 돼.
+
+```bash:터미널
 curl http://localhost:8317/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -31,6 +39,8 @@ curl http://localhost:8317/v1/chat/completions \
     "messages": [{"role": "user", "content": "안녕"}]
   }'
 ```
+
+:::
 
 OpenAI 형식 그대로야.
 그래서 OpenAI API를 쓰는 어떤 도구든 엔드포인트만 바꾸면 연결돼.
@@ -43,7 +53,7 @@ OpenAI 형식 그대로야.
 
 **방법 1. Go로 설치**
 
-```bash
+```bash:터미널
 go install github.com/nicholasgasior/llm-mux@latest
 ```
 
@@ -53,7 +63,7 @@ GitHub Releases에서 네 OS에 맞는 파일을 받아.
 
 설치 후 실행은 이렇게:
 
-```bash
+```bash:터미널
 llm-mux serve
 ```
 

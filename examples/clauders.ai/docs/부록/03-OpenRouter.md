@@ -14,13 +14,21 @@ order: 3
 
 ## 어떻게 시작해?
 
-**Step 1.** openrouter.ai에 가서 회원가입해.
+:::steps
 
-**Step 2.** 대시보드에서 API 키를 만들어.
+### 회원가입
 
-**Step 3.** 이 키 하나로 모든 모델을 써.
+openrouter.ai에 가서 회원가입해.
 
-```bash
+### API 키 만들기
+
+대시보드에서 API 키를 만들어.
+
+### 요청 보내기
+
+이 키 하나로 모든 모델을 써.
+
+```bash:터미널
 curl https://openrouter.ai/api/v1/chat/completions \
   -H "Authorization: Bearer sk-or-..." \
   -H "Content-Type: application/json" \
@@ -29,6 +37,8 @@ curl https://openrouter.ai/api/v1/chat/completions \
     "messages": [{"role": "user", "content": "안녕"}]
   }'
 ```
+
+:::
 
 OpenAI 형식이야. 엔드포인트만 OpenRouter로 바꾸면 돼.
 

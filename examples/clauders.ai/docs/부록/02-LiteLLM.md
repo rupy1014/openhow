@@ -14,13 +14,15 @@ LiteLLM이면 모델 이름만 바꾸면 돼. 나머지 코드는 그대로.
 
 ## 어떻게 써?
 
-**Step 1.** 설치해.
+:::steps
 
-```bash
+### 설치
+
+```bash:터미널
 pip install litellm
 ```
 
-**Step 2.** 코드에서 모델 이름만 바꿔.
+### 코드에서 모델 이름만 바꿔
 
 ```python
 from litellm import completion
@@ -40,6 +42,8 @@ response = completion(
 
 같은 코드야. `model`만 달라.
 
+:::
+
 ---
 
 ## API 키는 필요해?
@@ -48,7 +52,7 @@ response = completion(
 
 llm-mux랑 다른 점이 이거야. 각 서비스의 API 키를 환경변수에 넣어야 해.
 
-```bash
+```bash:터미널
 export ANTHROPIC_API_KEY="sk-ant-..."
 export OPENAI_API_KEY="sk-..."
 ```
@@ -61,7 +65,7 @@ export OPENAI_API_KEY="sk-..."
 
 **프록시 모드**를 켜면 돼.
 
-```bash
+```bash:터미널
 litellm --model claude-sonnet-4-20250514 --port 4000
 ```
 
