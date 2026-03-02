@@ -1,0 +1,45 @@
+1Depth,2Depth,3Depth,URL
+헤더,로고,홈,/
+헤더,GNB,모든 강의,/all-courses (추정)
+헤더,GNB,국비,/nation (추정)
+헤더,GNB,단기 완성,/short (추정)
+헤더,GNB,커뮤니티,/community
+헤더,GNB,수강 후기,/reviews
+헤더,GNB,멤버십 안내,/membership
+헤더,GNB,로그인,/login
+헤더,GNB,회원가입,/register
+헤더,유틸리티,검색,/search
+헤더,유틸리티,부트캠프,/bootcamp
+헤더,유틸리티,기업교육,/b2b
+헤더,유틸리티,평생교육이용권,/lifelong-voucher
+,,,
+카테고리,전체,전체,/all-courses
+카테고리,코딩 기초,-,/category/basic-coding
+카테고리,데이터 분석,-,/category/data-analysis
+카테고리,생성형 AI 활용,-,/category/generative-ai
+카테고리,웹 개발,-,/category/web-development
+카테고리,디자인,-,/category/design
+카테고리,프로그래밍 언어,-,/category/programming-languages
+카테고리,머신러닝/딥러닝,-,/category/ml-dl
+카테고리,IT 실무/비즈니스,-,/category/it-business
+카테고리,개발 도구/컴퓨터 과학,-,/category/devtools-cs
+,,,
+홈섹션,홈,코딩 기초,/all-courses?category=basic
+홈섹션,홈,데이터 분석,/all-courses?category=data
+홈섹션,홈,생성형 AI 활용,/all-courses?category=ai
+홈섹션,홈,웹 개발,/all-courses?category=web
+홈섹션,홈,디자인,/all-courses?category=design
+홈섹션,홈,프로그래밍 언어,/all-courses?category=programming
+홈섹션,홈,머신러닝/딥러닝,/all-courses?category=ml
+홈섹션,홈,IT 실무/비즈니스,/all-courses?category=business
+홈섹션,홈,개발 도구/컴퓨터 과학,/all-courses?category=devtools
+,,,
+푸터,콘텐츠,전체 강의,/all-courses
+푸터,콘텐츠,로드맵,/roadmap
+푸터,서비스,커뮤니티,/community
+푸터,서비스,기업교육,/b2b
+푸터,서비스,부트캠프,/bootcamp
+푸터,고객지원,FAQ,/help
+푸터,고객지원,문의하기,/help/contact
+푸터,정책,이용약관,/terms
+푸터,정책,개인정보처리방침,/privacy

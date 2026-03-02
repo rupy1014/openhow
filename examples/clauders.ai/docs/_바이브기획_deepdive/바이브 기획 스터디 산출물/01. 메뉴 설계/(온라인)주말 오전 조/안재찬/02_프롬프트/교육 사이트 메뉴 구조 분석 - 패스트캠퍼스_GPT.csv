@@ -1,0 +1,49 @@
+1Depth,2Depth,3Depth,URL
+헤더,로고,홈,/
+헤더,유틸리티,로그인,/account/sign-in
+헤더,유틸리티,커뮤니티,/community
+헤더,유틸리티,기업교육,https://b2b.fastcampus.co.kr/
+,,,
+GNB,카테고리,카테고리 메가메뉴 열기,-
+,,,
+GNB_포커스,BLK프라이데이,BLACK FRIDAY SALE,/event_online_pack_2511
+GNB_포커스,BLK프라이데이,[~90%] 블프 쿠폰팩,/event_online_couponpack_2511
+GNB_포커스,BLK프라이데이,[~78%] 쉐엑블프,https://sharex.fastcampus.co.kr/event_2025BlackFriday
+,,,
+GNB_운영,메인운영,신규강의,/new
+GNB_운영,메인운영,AI 월드,https://fastcampus.co.kr/ai-world
+GNB_운영,메인운영,오픈세미나,/openseminar_new
+GNB_운영,메인운영,이벤트,/event
+GNB_운영,메인운영,국비지원,/b2g_nbacademy
+GNB_운영,메인운영,평생교육이용권,/category_online_voucher
+,,,
+모바일GNB,공통,홈,/
+모바일GNB,공통,BLACK FRIDAY SALE,/event_online_pack_2511
+모바일GNB,공통,[~90%] 블프 쿠폰팩,/event_online_couponpack_2511
+모바일GNB,공통,[~78%] 쉐엑블프,https://sharex.fastcampus.co.kr/event_2025BlackFriday
+모바일GNB,공통,신규강의,/new
+모바일GNB,공통,AI 월드,https://fastcampus.co.kr/ai-world
+모바일GNB,공통,오픈세미나,/openseminar_new
+모바일GNB,공통,이벤트,/event
+모바일GNB,공통,국비지원,/b2g_nbacademy
+모바일GNB,공통,평생교육이용권,/category_online_voucher
+,,,
+카테고리,AI TECH,LLM,-
+카테고리,AI TECH,RAG & AI Agent,-
+카테고리,AI TECH,딥러닝/머신러닝,-
+카테고리,AI TECH,자율주행/로봇,-
+카테고리,AI TECH,컴퓨터 비전,-
+카테고리,AI TECH,추천 강의,-
+카테고리,AI TECH,[한정] 슬램랩PICK,-
+카테고리,AI TECH,[한정] 박정기PICK,-
+카테고리,AI TECH,로봇 실무 로드맵,-
+,,,
+카테고리,AI CREATIVE,2D/3D 이미지 생성,-
+카테고리,AI CREATIVE,영상 생성,-
+카테고리,AI CREATIVE,추천 강의,-
+카테고리,AI CREATIVE,생성 AI 마스터,-
+,,,
+카테고리,AI/업무생산성,AI 생산성,-
+카테고리,AI/업무생산성,마케팅,-
+카테고리,AI/업무생산성,엑셀/피피티/보고서,-
+카,,,

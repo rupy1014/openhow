@@ -1,0 +1,64 @@
+1Depth,2Depth,3Depth,URL
+헤더,로고,홈,/
+헤더,GNB,강의,/course
+헤더,GNB,로드맵,/roadmaps
+헤더,GNB,커뮤니티,/community
+헤더,GNB,멘토링,/mentoring
+헤더,GNB,채용,/jobs
+헤더,GNB,지식공유자,/creator
+헤더,유틸리티,로그인,/login
+헤더,유틸리티,이메일/알림,/notifications
+헤더,유틸리티,검색,/search
+,,,
+강의_메뉴,전체 강의,전체,/course
+강의_메뉴,개발·프로그래밍,개발자 로드맵,/roadmaps
+강의_메뉴,개발·프로그래밍,웹 개발,/courses?category=web
+강의_메뉴,개발·프로그래밍,프론트엔드,/courses?category=frontend
+강의_메뉴,개발·프로그래밍,백엔드,/courses?category=backend
+강의_메뉴,개발·프로그래밍,풀스택,/courses?category=fullstack
+강의_메뉴,데이터 사이언스,데이터 분석,/courses?category=data-analysis
+강의_메뉴,데이터 사이언스,머신러닝·AI,/courses?category=machine-learning
+강의_메뉴,데이터 사이언스,딥러닝,/courses?category=deep-learning
+강의_메뉴,데이터 사이언스,SQL,/courses?category=sql
+강의_메뉴,보안·네트워크,보안,/courses?category=security
+강의_메뉴,보안·네트워크,네트워크,/courses?category=networking
+강의_메뉴,클라우드·DevOps,AWS,/courses?category=aws
+강의_메뉴,클라우드·DevOps,도커·쿠버네티스,/courses?category=docker
+강의_메뉴,클라우드·DevOps,DevOps,/courses?category=devops
+강의_메뉴,비즈니스·마케팅,마케팅,/courses?category=marketing
+강의_메뉴,비즈니스·마케팅,브랜딩,/courses?category=branding
+강의_메뉴,비즈니스·마케팅,비즈니스 전략,/courses?category=business
+강의_메뉴,디자인,UX/UI,/courses?category=ux-ui
+강의_메뉴,디자인,그래픽 디자인,/courses?category=design
+강의_메뉴,역량 개발,생산성,/courses?category=productivity
+강의_메뉴,역량 개발,자기계발,/courses?category=self-dev
+,,,
+로드맵,로드맵 홈,전체,/roadmaps
+로드맵,개발자 로드맵,프론트엔드 로드맵,/roadmaps/frontend
+로드맵,개발자 로드맵,백엔드 로드맵,/roadmaps/backend
+로드맵,AI 로드맵,AI 입문,/roadmaps/ai
+로드맵,디자인 로드맵,UIUX 로드맵,/roadmaps/uiux
+,,,
+커뮤니티,커뮤니티 홈,전체,/community
+커뮤니티,Q&A,전체 Q&A,/community/qna
+커뮤니티,스터디,스터디 모집,/community/studies
+커뮤니티,자유글,전체 자유글,/community/free
+,,,
+멘토링,멘토링 홈,전체,/mentoring
+멘토링,멘토찾기,리스트,/mentoring/mentors
+멘토링,멘토지원,지원하기,/mentoring/apply
+,,,
+채용,채용 홈,전체,/jobs
+채용,포지션,개발자,/jobs?category=dev
+채용,포지션,디자이너,/jobs?category=design
+채용,포지션,기획자,/jobs?category=pm
+,,,
+지식공유자,지식공유자 홈,전체,/creator
+지식공유자,강의만들기,강의제작 신청,/creator/course/create
+지식공유자,공지,지식공유자 뉴스,/creator/notice
+지식공유자,가이드,공유자 가이드,/creator/guide
+,,,
+마이페이지,학습,내 학습,/my-courses
+마이페이지,찜하기,내 찜한 강의,/my-wishlist
+마이페이지,수료증,수료증 보기,/my-certificates
+마이페이지,계정설정,프로필,/settings/profile
