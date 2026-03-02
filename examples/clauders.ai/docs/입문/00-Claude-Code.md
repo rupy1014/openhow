@@ -9,6 +9,9 @@ order: 0
 
 이게 Claude Code야.
 
+:::youtube 7gV9aDwtao8
+:::
+
 ---
 
 ## "해줘" — 마법의 말
