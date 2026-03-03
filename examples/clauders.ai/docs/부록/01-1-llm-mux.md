@@ -2,7 +2,7 @@
 slug: 부록-llm-mux
 title: "llm-mux"
 nav: llm-mux
-order: 1
+order: 2
 ---
 
 **구독만 있으면 API 키 없이도 돼.**

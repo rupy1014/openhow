@@ -2,7 +2,7 @@
 slug: 부록-OpenRouter
 title: "OpenRouter"
 nav: OpenRouter
-order: 3
+order: 4
 ---
 
 **설치 없이 바로 쓰고 싶으면 이거야.**
