@@ -1,8 +1,8 @@
 ---
-slug: 메신저연결-vLLM연결
+slug: AI모델-vLLM연결
 title: "vLLM 연결"
 nav: vLLM 연결
-order: 4
+order: 3
 ---
 
 *검증 기준일: 2026-03-03 (공식 문서·릴리즈 기준)*
@@ -151,4 +151,4 @@ nvidia-smi --query-gpu=memory.used,memory.total --format=csv
 
 ## 한 줄 정리
 
-`openclaw.json`에 vLLM 프로바이더를 `mode: "merge"`로 등록하면 끝. [하이브리드 모델 전략](../실전활용/08-하이브리드모델)에서 로컬+클라우드를 나눠 쓰는 방법을 봐.
+`openclaw.json`에 vLLM 프로바이더를 `mode: "merge"`로 등록하면 끝. [하이브리드 모델 전략](../AI모델/02-하이브리드모델)에서 로컬+클라우드를 나눠 쓰는 방법을 봐.
