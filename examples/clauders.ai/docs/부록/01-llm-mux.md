@@ -9,65 +9,84 @@ order: 1
 
 Claude Pro나 ChatGPT Plus 구독이 있어?
 그러면 API 키 발급 없이 바로 API처럼 쓸 수 있어.
-그게 llm-mux야.
+그게 [llm-mux](https://github.com/nghyane/llm-mux)야.
 
 ---
 
 ## 어떻게 되는 거야?
 
-llm-mux는 네 브라우저 로그인 정보를 이용해.
+llm-mux는 네 브라우저 로그인(OAuth)을 이용해서 구독 계정을 API로 바꿔줘.
 
 :::steps
 
-### llm-mux login 실행
-
-`llm-mux login claude`를 실행하면 브라우저가 열려.
-
-### Claude에 로그인
-
-평소 쓰던 계정 그대로 로그인해.
-
-### API 요청 보내기
-
-끝. 이제 `localhost:8317`로 API 요청을 보내면 돼.
+### llm-mux 설치
 
 ```bash:터미널
-curl http://localhost:8317/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "claude",
-    "messages": [{"role": "user", "content": "안녕"}]
-  }'
+curl -fsSL https://raw.githubusercontent.com/nghyane/llm-mux/main/install.sh | bash
 ```
 
-:::
-
-OpenAI 형식 그대로야.
-그래서 OpenAI API를 쓰는 어떤 도구든 엔드포인트만 바꾸면 연결돼.
-
----
-
-## 어떻게 설치해?
-
-두 가지 방법이 있어.
-
-**방법 1. Go로 설치**
+### OAuth 로그인
 
 ```bash:터미널
-go install github.com/nicholasgasior/llm-mux@latest
+llm-mux login claude
 ```
 
-**방법 2. 바이너리 다운로드**
+브라우저가 열려. 평소 쓰던 Claude 계정으로 로그인하면 돼.
 
-GitHub Releases에서 네 OS에 맞는 파일을 받아.
-
-설치 후 실행은 이렇게:
+### 서버 실행
 
 ```bash:터미널
 llm-mux serve
 ```
 
-이러면 `localhost:8317`에서 대기해.
+`localhost:8317`에서 OpenAI 호환 API가 열려.
+어떤 도구든 엔드포인트만 바꾸면 연결돼.
+
+:::
+
+---
+
+## 설치가 귀찮아? Claude Code한테 시켜
+
+직접 설치해도 되지만, Claude Code한테 맡기는 게 더 빨라.
+
+:::steps
+
+### Claude Code를 열어
+
+터미널에서 `claude`를 실행해.
+
+### GitHub 주소를 넘겨
+
+이렇게 말하면 돼:
+
+```text:프롬프트
+https://github.com/nghyane/llm-mux 이 프로젝트 보고 llm-mux 설치해줘.
+설치 끝나면 claude 로그인까지 해줘.
+```
+
+### Claude Code가 알아서 해
+
+README를 읽고, 설치 스크립트를 실행하고, OAuth 로그인까지 안내해줘.
+너는 브라우저에서 로그인만 하면 돼.
+
+:::
+
+이게 바이브코딩이야. 문서 읽고 따라하는 대신, AI한테 문서를 읽게 시키는 거야.
+
+---
+
+## Claude 말고 다른 것도 돼?
+
+돼. GitHub Copilot이나 Gemini 구독도 쓸 수 있어.
+
+```bash:터미널
+llm-mux login copilot    # GitHub Copilot
+llm-mux login antigravity # Google Gemini
+```
+
+계정 여러 개를 동시에 연결하면 부하 분산도 해줘.
+할당량 초과되면 자동으로 다른 계정으로 넘어가.
 
 ---
 
@@ -82,4 +101,4 @@ API 키가 없는데 Claude Code 같은 도구를 연결하고 싶을 때.
 
 ## 한 줄 정리
 
-llm-mux는 구독 계정을 API로 바꿔주는 도구야. API 키 없이 시작하고 싶으면 이걸 써.
+llm-mux는 구독 계정을 API로 바꿔주는 도구야. GitHub 주소 하나 던져주면 Claude Code가 설치부터 로그인까지 해줘.
