@@ -309,3 +309,7 @@ npm run build
 | YouTube | Data API 자동 업로드 | 무료 |
 
 [Remotion](https://github.com/remotion-dev/remotion)이 React로 영상을 찍는 거야. Claude Code가 기획부터 씬 스펙까지 쓰고, 나머지는 명령어 한 줄씩이야.
+
+각 단계 상세 레퍼런스 →
+- [/write · /scene 커맨드](./03-1-write-scene) — 대본 집필, 퇴고, 씬 타입 13종, YAML 구조
+- [TTS · 렌더 커맨드](./03-2-tts-render) — TTS 생성, audio:polish, 타임라인 빌드, /render 파이프라인
