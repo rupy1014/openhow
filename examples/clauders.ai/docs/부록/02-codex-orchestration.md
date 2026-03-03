@@ -286,11 +286,14 @@ Codex가 딴짓해.
 결과를 **파일로 저장**하고 python3으로 파싱해. `echo | python3` 파이프는 멀티라인 JSON에서 깨져:
 
 ```bash
-# 1단계: 백엔드 → 파일로 저장
-bash scripts/run-codex.sh packages/backend "API 구현" > /tmp/step1.json
+# 세션 고유 디렉토리 — 여러 터미널에서 동시에 돌려도 안 겹쳐
+WORK=$(mktemp -d /tmp/codex-XXXXXX)
 
-STATUS=$(python3 -c "import json; print(json.load(open('/tmp/step1.json'))['status'])")
-SUMMARY=$(python3 -c "import json; print(json.load(open('/tmp/step1.json'))['summary'])")
+# 1단계: 백엔드 → 파일로 저장
+bash scripts/run-codex.sh packages/backend "API 구현" > "$WORK/step1.json"
+
+STATUS=$(python3 -c "import json; print(json.load(open('$WORK/step1.json'))['status'])")
+SUMMARY=$(python3 -c "import json; print(json.load(open('$WORK/step1.json'))['summary'])")
 
 # 2단계: 완료 확인 후 프론트에 컨텍스트 전달
 if [ "$STATUS" = "done" ]; then
@@ -298,12 +301,17 @@ if [ "$STATUS" = "done" ]; then
     "백엔드 완료: $SUMMARY. 이에 맞게 프론트 구현."
 else
   echo "백엔드 실패: $STATUS — $SUMMARY"
-  exit 1
 fi
+
+rm -rf "$WORK"
 ```
 
 :::warning
 **`echo "$RESULT" | python3` 패턴은 쓰지 마.** Codex 결과 JSON이 멀티라인이거나 특수문자를 포함하면 파이프가 깨져. 항상 파일로 저장 후 `json.load(open(...))` 방식을 써.
+:::
+
+:::warning
+**`/tmp/step1.json` 같은 고정 경로 쓰지 마.** 두 터미널에서 동시에 돌리면 덮어써. 항상 `mktemp -d`로 세션 고유 디렉토리를 만들어.
 :::
 
 ### 병렬: 독립적인 작업
@@ -311,12 +319,16 @@ fi
 서로 다른 파일/모듈을 건드리는 작업은 동시에 돌릴 수 있어:
 
 ```bash
-bash scripts/run-codex.sh packages/module-a "..." > /tmp/a.json &
-bash scripts/run-codex.sh packages/module-b "..." > /tmp/b.json &
+WORK=$(mktemp -d /tmp/codex-XXXXXX)
+
+bash scripts/run-codex.sh packages/module-a "..." > "$WORK/a.json" &
+bash scripts/run-codex.sh packages/module-b "..." > "$WORK/b.json" &
 wait
 
-python3 -c "import json; print(json.load(open('/tmp/a.json'))['status'])"
-python3 -c "import json; print(json.load(open('/tmp/b.json'))['status'])"
+python3 -c "import json; print(json.load(open('$WORK/a.json'))['status'])"
+python3 -c "import json; print(json.load(open('$WORK/b.json'))['status'])"
+
+rm -rf "$WORK"
 ```
 
 :::warning
@@ -329,17 +341,21 @@ python3 -c "import json; print(json.load(open('/tmp/b.json'))['status'])"
 Codex가 `error`나 `blocked`를 돌려줄 때가 있어.
 
 ```bash
-bash scripts/run-codex.sh packages/backend "..." > /tmp/result.json
+WORK=$(mktemp -d /tmp/codex-XXXXXX)
 
-STATUS=$(python3 -c "import json; print(json.load(open('/tmp/result.json'))['status'])")
+bash scripts/run-codex.sh packages/backend "..." > "$WORK/result.json"
+
+STATUS=$(python3 -c "import json; print(json.load(open('$WORK/result.json'))['status'])")
 
 if [ "$STATUS" = "done" ]; then
   echo "성공"
 else
-  SUMMARY=$(python3 -c "import json; print(json.load(open('/tmp/result.json'))['summary'])")
+  SUMMARY=$(python3 -c "import json; print(json.load(open('$WORK/result.json'))['summary'])")
   echo "실패: $SUMMARY"
   # → Claude가 summary를 보고 프롬프트를 더 구체적으로 바꿔서 재시도
 fi
+
+rm -rf "$WORK"
 ```
 
 **3번 연속 실패하면 Codex에 위임하지 말고 Claude가 직접 해.**
