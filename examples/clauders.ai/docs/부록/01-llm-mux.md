@@ -48,31 +48,14 @@ llm-mux serve
 
 ## 설치가 귀찮아? Claude Code한테 시켜
 
-직접 설치해도 되지만, Claude Code한테 맡기는 게 더 빨라.
-
-:::steps
-
-### Claude Code를 열어
-
-터미널에서 `claude`를 실행해.
-
-### GitHub 주소를 넘겨
-
-이렇게 말하면 돼:
+위에 단계 따라할 필요 없어. Claude Code한테 git 주소만 넘기면 돼.
 
 ```text:프롬프트
-https://github.com/nghyane/llm-mux 이 프로젝트 보고 llm-mux 설치해줘.
-설치 끝나면 claude 로그인까지 해줘.
+https://github.com/nghyane/llm-mux 이거 참고해서 우리 프로젝트에 적용해줘
 ```
 
-### Claude Code가 알아서 해
-
-README를 읽고, 설치 스크립트를 실행하고, OAuth 로그인까지 안내해줘.
-너는 브라우저에서 로그인만 하면 돼.
-
-:::
-
-이게 바이브코딩이야. 문서 읽고 따라하는 대신, AI한테 문서를 읽게 시키는 거야.
+Claude Code가 README 읽고, 설치하고, 설정까지 알아서 해.
+너는 OAuth 로그인할 때 브라우저에서 클릭만 하면 돼.
 
 ---
 
