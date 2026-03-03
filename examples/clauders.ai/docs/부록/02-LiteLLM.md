@@ -24,7 +24,7 @@ pip install litellm
 
 ### 코드에서 모델 이름만 바꿔
 
-```python
+```python:Python
 from litellm import completion
 
 # Claude 쓸 때
