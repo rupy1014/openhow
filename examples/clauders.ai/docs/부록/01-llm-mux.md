@@ -61,16 +61,22 @@ Claude Code가 README 읽고, 설치하고, 설정까지 알아서 해.
 
 ## 다른 provider도 돼?
 
-돼. Claude, GitHub Copilot, Gemini 구독도 쓸 수 있어.
+돼. Codex 외에도 여러 provider를 지원해.
 
 ```bash:터미널
-llm-mux login claude      # Claude Pro/Max
+llm-mux login codex       # ChatGPT Plus/Pro (추천)
 llm-mux login copilot     # GitHub Copilot
+llm-mux login claude      # Claude Pro/Max
 llm-mux login antigravity # Google Gemini
 ```
 
 계정 여러 개를 동시에 연결하면 부하 분산도 해줘.
 할당량 초과되면 자동으로 다른 계정으로 넘어가.
+
+> **codex를 써.** Claude(`login claude`)나 Gemini(`login antigravity`)는 구독 약관상 API 용도를 허용하지 않아서, 계정이 정지될 수 있어. ChatGPT의 Codex(`login codex`)가 가장 안전해.
+
+출력 포맷은 OpenAI, Anthropic, Ollama 호환이라 어떤 클라이언트든 엔드포인트만 바꾸면 붙어.
+Ollama를 쓰고 있었다면 코드 수정 없이 llm-mux로 교체할 수 있어.
 
 ---
 
@@ -161,9 +167,7 @@ llm-mux가 15분마다 토큰 상태를 확인하고, 만료되면 자동으로 
 ## 언제 쓰면 좋아?
 
 API 키가 없는데 Claude Code 같은 도구를 연결하고 싶을 때.
-
 이미 구독하고 있으면 추가 비용이 없어.
-근데 구독 약관을 확인하는 게 좋아. API 용도를 허용하지 않을 수도 있거든.
 
 ---
 
