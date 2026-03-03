@@ -5,82 +5,66 @@ nav: Remotion 영상 파이프라인
 order: 8
 ---
 
-**Claude Code에게 "이 주제로 영상 대본 써줘" 하면 진짜 써줘.**
+**Claude Code에게 주제 주면 대본부터 YAML 씬 스펙까지 다 써줘.**
 
-대본 쓰고, YAML 씬 스펙으로 바꾸고, TTS 생성하고, Remotion으로 렌더링하고, 유튜브에 올리는 것까지 — 이 파이프라인은 Claude Code 커맨드 몇 번으로 돌아가.
+그다음은 TTS 생성하고, 캐릭터 있으면 립싱크 붙이고, 타임라인 스튜디오에서 확인하고, 렌더링하면 끝이야.
 
 실제 이 시리즈에서 쓰는 캐릭터들이야.
 
 | 강의자 (instructor) | 질문자 (student) |
 |---|---|
 | ![강의자](./images/instructor-01.png) | ![질문자](./images/student-01.png) |
-| ElevenLabs TTS | Fish Audio TTS |
 
 ---
 
-## 전체 흐름이 어떻게 되냐
+## 뭘 하는 거냐
 
 :::canvas-flow
 {
   "nodes": [
-    {"id": "write",    "label": "/write\n대본 작성",         "col": 0, "row": 0, "type": "default"},
-    {"id": "scene",    "label": "/scene\nYAML 씬 스펙",      "col": 1, "row": 0, "type": "default"},
-    {"id": "tts",      "label": "TTS 생성\nElevenLabs+Fish", "col": 2, "row": 0, "type": "process"},
-    {"id": "polish",   "label": "오디오 후처리\n배속+정규화",  "col": 3, "row": 0, "type": "process"},
-    {"id": "timeline", "label": "타임라인 빌드\nYAML→JSON",  "col": 4, "row": 0, "type": "process"},
-    {"id": "render",   "label": "Remotion\n렌더링",          "col": 5, "row": 0, "type": "success"},
-    {"id": "youtube",  "label": "YouTube\n업로드",           "col": 6, "row": 0, "type": "success"}
+    {"id": "write",    "label": "대본 작성\n/write",           "col": 0, "row": 0, "type": "default"},
+    {"id": "scene",    "label": "씬 스펙\n/scene",             "col": 1, "row": 0, "type": "default"},
+    {"id": "tts",      "label": "TTS 생성\nnpm run tts",       "col": 2, "row": 0, "type": "process"},
+    {"id": "lipsync",  "label": "립싱크\n(캐릭터 있으면)",       "col": 3, "row": 0, "type": "process"},
+    {"id": "check",    "label": "타임라인 확인\nRemotionStudio","col": 4, "row": 0, "type": "warning"},
+    {"id": "render",   "label": "렌더링\nnpm run build",       "col": 5, "row": 0, "type": "success"}
   ],
   "edges": [
-    {"from": "write",    "to": "scene"},
-    {"from": "scene",    "to": "tts"},
-    {"from": "tts",      "to": "polish"},
-    {"from": "polish",   "to": "timeline"},
-    {"from": "timeline", "to": "render"},
-    {"from": "render",   "to": "youtube", "label": "선택"}
+    {"from": "write",   "to": "scene"},
+    {"from": "scene",   "to": "tts"},
+    {"from": "tts",     "to": "lipsync"},
+    {"from": "lipsync", "to": "check"},
+    {"from": "check",   "to": "render"}
   ],
   "direction": "LR",
-  "cols": 7,
+  "cols": 6,
   "rows": 1
 }
 :::
 
-Claude Code가 앞 두 단계(대본 → 씬 스펙)를 처리하고, 나머지는 npm 스크립트가 자동으로 돌아가.
+앞 두 단계(대본 → 씬 스펙)는 Claude Code가 처리해.
+나머지는 명령어 한 줄씩이야.
 
 ---
 
-## Claude Code가 대본을 어떻게 써주냐
-
-`/write` 커맨드로 에피소드 대본을 요청해.
+## 대본을 어떻게 쓰냐
 
 ```bash:Claude Code
 /write ep01-ai-coding-map
 /write "Cursor vs Claude Code"
 ```
 
-에피소드 번호나 주제를 주면 Claude가 알아서 처리해.
+주제나 에피소드 번호 주면 Claude가 알아서 써줘.
+로컬 문서 + 웹 리서치 + 이전 에피소드 톤 참조해서 초안 작성하고, 퇴고까지 한 번에 돌아가.
 
-:::steps
+퇴고에서 하는 일:
 
-### 콘텐츠 수집
-
-로컬 문서(`contents/`) + 웹 리서치로 주제 소스를 모아.
-`learner-state.json`을 읽어서 질문자의 현재 지식 수준도 파악해.
-
-### 대본 집필
-
-강의자/질문자 2인 대화 형식으로 대본을 작성해.
-TTS가 읽는 `tts` 필드는 한글 발음으로, 화면 자막 `display_text`는 원문으로 따로 써.
-
-### 퇴고
-
-TTS 발음 검수(숫자/영어 → 한글 변환), 톤 검수, 이미지 소싱까지 자동으로 돌아가.
-
-:::
+- TTS 발음 검수 (AI → 에이아이, 39% → 삼십구퍼센트 등 영문/숫자를 한글 발음으로)
+- 학습 연속성 체크 (질문자가 모르는 용어를 설명 없이 쓰진 않았는지)
+- 이미지 소싱 (공식 스크린샷, 다이어그램 찾아서 대본에 삽입)
 
 ```
 📝 대본 완성!
-
 파일: scripts/part1/ep01-ai-coding-map.md
 분량: 2,847자 (약 12분)
 이미지: 4개 소싱됨
@@ -97,90 +81,51 @@ TTS 위반: 0건
 
 ## 씬 스펙은 어떻게 만드냐
 
-`/scene` 커맨드로 대본을 YAML 씬 스펙으로 변환해.
-
 ```bash:Claude Code
 /scene ep01-ai-coding-map
 ```
 
-각 대사와 화면이 씬 단위로 정의돼.
+대본을 YAML 씬 스펙으로 변환해.
+각 대사가 어떤 화면 타입으로 보일지, BGM은 어디에 깔릴지, YouTube 메타데이터까지 한 번에 정의돼.
 
 ```yaml:video/scenes/ep01-ai-coding-map.yaml
-meta:
-  id: "EP01"
-  slug: "ep01-ai-coding-map"
-  title: "2026 AI 코딩 지도"
-
 youtube:
   tags: ["AI코딩", "Claude Code", "바이브코딩"]
-  description: |
-    AI 코딩 도구의 큰 그림을 잡아드립니다.
   thumbnail_text: "AI 입문"
-  thumbnail_sub: '"해줘"라고 하면 진짜 해줘요'
 
 bgm:
   - section: "인트로"
     src: "audio/bgm/upbeat-tech.mp3"
     volume: 0.25
-    fade_in_sec: 0.5
-    duration_sec: 20    # 인사 구간만 깔리고 빠짐
+    duration_sec: 20
 
 scenes:
-  - id: "video-call-1"
-    type: "video-call"
-    speaker: "instructor"
-    tts: "오, 접속했네요! 안녕하세요~"
-    display_text: "오, 접속했네요! 안녕하세요~"
-
   - id: "stats-1"
     type: "stats"
     speaker: "instructor"
     tts: "작년 에이아이 코딩 시장이 팔조 원을 넘었어요."
     display_text: "작년 AI 코딩 시장이 8조 원을 넘었어요."
     stat: "8조 원"
-    detail: "AI 코딩 시장 규모 (2025)"
 ```
 
-씬 타입은 13종이야.
+씬 타입은 `narration`, `stats`, `comparison`, `flow`, `quote`, `screenshot`, `diagram`, `chart`, `code`, `greeting`, `video-call`, `kling`, `stage-clear` 13종이야.
 
-| 타입 | 용도 |
-|------|------|
-| `narration` | 자막 슬라이드 (가장 많이 씀) |
-| `stats` | 수치/통계 강조 |
-| `comparison` | 도구 비교표 |
-| `flow` | 단계별 흐름도 |
-| `quote` | 인용구, 핵심 문장 |
-| `screenshot` | 실제 화면 캡처 |
-| `diagram` | 개념 다이어그램 |
-| `chart` | IR 스타일 차트 |
-| `code` | 코드 블록 |
-| `greeting` | 캐릭터 인사 (Kie.ai InfiniTalk 립싱크) |
-| `video-call` | 화상통화 UI |
-| `kling` | Kling AI 시네마틱 영상 (인트로/아웃트로, via Kie.ai) |
-| `stage-clear` | 스테이지 클리어 이펙트 |
-
-썸네일도 `/thumbnail` 커맨드로 씬 스펙에서 뽑아.
+썸네일도 씬 스펙에서 바로 뽑아.
 
 ```bash:Claude Code
 /thumbnail ep01-ai-coding-map
-```
-
-```bash:터미널
-npx remotion still thumb-ep01-ai-coding-map out/thumb-ep01.png
 ```
 
 ---
 
 ## TTS는 어떻게 생성하냐
 
-강의자와 질문자가 다른 TTS 서비스를 써.
+YAML `speaker` 필드에 `instructor` / `student`만 지정하면 자동으로 분기돼.
 
 ```
 instructor (강의자) → ElevenLabs   : 고품질, 주력 음성
 student   (질문자) → Fish Audio    : 저렴, 짧은 대사에 충분
 ```
-
-YAML `speaker` 필드만 지정하면 자동으로 분기돼.
 
 :::steps
 
@@ -190,13 +135,9 @@ YAML `speaker` 필드만 지정하면 자동으로 분기돼.
 npm run tts:dry ep01-ai-coding-map
 ```
 
-API 한 번도 안 부르고 비용만 계산해줘.
+API 한 번도 안 부르고 예상 비용만 계산해줘.
 
 ```
-📄 Loaded: video/scenes/ep01-ai-coding-map.yaml
-   Instructor (ElevenLabs): 52씬, 3,200자
-   Student (Fish Audio): 16씬, 260자
-
 💰 예상 비용:
    ElevenLabs (강의자): ~$0.534
    Fish Audio (질문자): ~$0.012
@@ -207,301 +148,102 @@ API 한 번도 안 부르고 비용만 계산해줘.
 
 ```bash:터미널
 npm run tts ep01-ai-coding-map
+npm run audio:polish ep01-ai-coding-map
 ```
 
-강의자/질문자 MP3가 씬별로 생성되고 `_manifest.json`에 메타가 기록돼.
-
-```
-public/audio/ep01-ai-coding-map/
-├── opening-01.mp3    ← 강의자 (ElevenLabs)
-├── opening-05.mp3    ← 질문자 (Fish Audio)
-├── ...
-└── _manifest.json    ← 씬별 오디오 길이
-```
+`audio:polish`는 1.1배속 + 무음 트리밍 + CPS 정규화를 자동으로 해줘.
+이걸 안 돌리면 TTS 속도가 강의용으로 느리고 앞뒤 침묵 구간이 남아.
 
 :::
 
 :::warning
-**비용 확인 없이 바로 실행하면 안 돼.**
-`tts:dry`로 금액 먼저 확인하고, 괜찮으면 `tts` 실행해.
-10분짜리 에피소드 기준 합계 ~$0.55 수준이야.
+**`tts:dry`로 금액 확인 후에 `tts` 실행해.**
+10분짜리 에피소드 기준 ~$0.55 수준이야.
 :::
 
----
+### TTS 서비스 선택지
 
-## tts랑 display_text가 왜 다르냐
+| 서비스 | 특징 | 한국어 품질 |
+|--------|------|-------------|
+| **ElevenLabs** | 고품질, 자연스러운 감정 표현 | 상 |
+| **Fish Audio** | 저렴, 짧은 대사용 | 중 |
+| **수퍼톤 (Supertone)** | 국내 서비스, 한국어 특화 | 상 |
+| **CLOVA Voice** | Naver, 저렴하고 안정적 | 중상 |
+| **Azure TTS** | 다양한 한국어 음성 제공 | 중상 |
 
-화면에 보이는 자막과 TTS 엔진에 넘기는 텍스트를 구분해야 해.
-TTS 엔진이 영어, 숫자, 기호를 이상하게 읽거든.
-
-```yaml:씬 텍스트 설정 예시
-# ❌ TTS가 "에이아이", "삼 가지"를 어색하게 읽어
-tts: "AI로 자동화할 수 있는 3가지 방법이 있어요."
-
-# ✅ TTS는 한글 발음으로, 자막은 원문 그대로
-tts: "에이아이로 자동화할 수 있는 세가지 방법이 있어요."
-display_text: "AI로 자동화할 수 있는 3가지 방법"
-highlight: "AI 자동화"
-```
-
-숫자와 단위는 붙여서 한글로.
-
-```yaml:숫자/기호 변환 규칙
-tts: "삼개월"    # ✅
-tts: "삼 개월"   # ❌ (띄어쓰면 어색하게 읽힘)
-
-tts: "삼십구퍼센트"   # 39%
-tts: "십오달러"       # $15
-```
-
-> [!TIP]
-> `src/data/term-map.json`에 AI 도구 발음 매핑이 정리돼 있어.
-> ChatGPT→챗지피티, Claude→클로드, GitHub→깃허브 등. 새 용어 쓸 때 여기 먼저 등록해.
+서비스 교체는 `generate-tts.ts`의 provider 분기만 바꾸면 돼.
 
 ---
 
-## 오디오 후처리 왜 해야 하냐
+## 립싱크는 언제 쓰냐
 
-TTS 생성 후 반드시 `audio:polish`를 돌려야 해.
+`greeting` 타입 씬 — 캐릭터가 인사하는 장면 — 에만 선택적으로 써.
+입 모양이 오디오에 맞게 움직이는 영상을 별도로 생성해서 붙이는 거야.
 
-```bash:터미널
-npm run audio:polish ep01-ai-coding-map
-```
+YAML에서 `lipsync: true`로 지정한 씬만 대상이야.
 
-:::steps
-
-### Phase 1 — 1.1배속 + 무음 트리밍
-
-TTS 엔진은 앞뒤에 침묵 구간을 붙이는 경우가 많아.
-그리고 기본 속도가 유튜브 강의 기준으로 살짝 느려.
-
-- 1.1배속 (atempo 필터, 음정 유지)
-- 앞뒤 -35dB 이하 구간 자동 제거
-- 끝에 0.03초 여백만 남김
-
-### Phase 2 — CPS 정규화
-
-CPS(Characters Per Second, 초당 발화 글자 수)가 씬마다 다르면 리듬이 끊겨.
-어떤 씬은 천천히, 어떤 씬은 빠르게 말하면 시청자가 불편해.
-
-- 목표 CPS: **9.8** (글자/초)
-- 9.0 미만인 씬은 추가 배속 (최대 1.3x)
-- 강의자 씬만 적용
-
-### Phase 3 — 매니페스트 업데이트
-
-각 씬의 실제 오디오 길이(`actual_sec`)를 측정해서 `_manifest.json`에 저장해.
-이 정보가 있어야 다음 단계에서 프레임 타이밍을 정확하게 계산할 수 있어.
-
-:::
-
----
-
-## 립싱크는 어떻게 만드냐
-
-`greeting` 타입 씬은 캐릭터 입 모양이 오디오에 맞게 움직이는 립싱크 영상을 써.
-**Fish Audio는 TTS만 담당하고, 립싱크는 별도로 Kie.ai InfiniTalk를 써.**
-
-```yaml:YAML에서 립싱크 씬 지정
+```yaml
 - id: "opening-greeting"
   type: "greeting"
   speaker: "instructor"
   tts: "안녕하세요, 이번 에피소드에서는..."
-  lipsync: true   # ← 이 플래그가 있으면 립싱크 영상 사용
+  lipsync: true
 ```
 
-립싱크 영상 생성은 자동화되어 있지 않고 수동으로 처리해.
+생성된 MP4를 `/public/video/{slug}/{scene-id}.mp4`에 놓으면 타임라인 빌드 시 자동 연결돼.
 
-:::steps
+> [!TIP]
+> Remotion에서 재생할 때 **H.264 코덱 필수**. H.265(HEVC)로 나오면 ffmpeg로 변환해야 해.
+> 내부 오디오도 제거해야 해 (`-an`). Remotion이 TTS 오디오를 따로 붙이기 때문이야.
 
-### Kie.ai InfiniTalk에 요청
+### 립싱크 서비스 선택지
 
-캐릭터 이미지 URL + TTS 오디오 URL을 Kie.ai API에 넘기면 입 모양이 맞춰진 영상이 나와.
+| 서비스 | 방식 | 단가 | 특징 |
+|--------|------|------|------|
+| **Kie.ai InfiniTalk** | 이미지 + 오디오 → 영상 | $0.015/초 (480p) | 현재 사용 중 |
+| **HeyGen** | 아바타 기반 | 구독제 | UI 편리, 다양한 아바타 |
+| **D-ID** | 이미지 + 오디오 → 영상 | API 과금 | 빠른 처리 |
+| **Sync.so (SyncLabs)** | 영상 + 오디오 → 립싱크 | API 과금 | 기존 영상에 립싱크 |
+| **Hedra** | 텍스트/오디오 → 아바타 | 크레딧제 | 고품질 |
 
-```
-모델: infinitalk/from-audio
-해상도: 480p ($0.015/초) | 720p ($0.06/초)
-소요: 5~15분 (폴링)
-```
+Kie.ai는 Kling AI 시네마틱 영상(인트로/아웃트로용)도 같은 백엔드로 제공해.
 
-### 파일 배치
+---
 
-생성된 MP4를 `/public/video/{slug}/{scene-id}.mp4`에 저장해.
-`timeline` 빌드 스크립트가 이 위치를 자동으로 찾아서 연결해줘.
+## 타임라인 확인은 어떻게 하냐
 
-### 코덱 확인
-
-Kie.ai 결과물이 H.265(HEVC)로 나오면 Remotion이 못 읽어.
-**H.264로 변환 필수.**
+렌더링 전에 반드시 Remotion Studio에서 직접 확인해.
 
 ```bash:터미널
-ffmpeg -i input.mp4 \
-  -c:v libx264 -preset slow -crf 16 -r 30 -g 15 \
-  -an -movflags +faststart \
-  public/video/ep01-ai-coding-map/opening-greeting.mp4
+npm run timeline ep01-ai-coding-map   # YAML → JSON 빌드
+npm run start                          # localhost:3700 에서 스튜디오 열기
 ```
-
-`-an`은 내부 오디오 제거야. Remotion에서 TTS 오디오를 따로 재생하기 때문에 영상 내부 오디오는 반드시 빼야 해.
-
-:::
-
-Kling AI 인트로/아웃트로(`kling` 타입)도 같은 Kie.ai 백엔드에서 처리해.
-이미지 + 텍스트 프롬프트 → 5초 시네마틱 영상. 편당 $0.40~$1.00.
-
-:::warning
-**Topaz 업스케일(4x, $0.07/초)은 선택사항이야.**
-480p 립싱크 결과물을 1080p로 올리고 싶을 때만 써. 비용이 크게 뛰어.
-:::
-
----
-
-## 타임라인은 어떻게 만들어지냐
-
-Remotion이 읽는 건 JSON이야.
-빌드 스크립트가 YAML + 오디오 매니페스트를 합쳐서 JSON으로 변환해줘.
-
-```bash:터미널
-npm run timeline ep01-ai-coding-map
-```
-
-이 단계에서 씬마다 `startFrame`과 `durationFrames`가 계산돼.
-
-```
-FPS: 30
-TTS 씬:      actual_sec + 0.15초 패딩
-비-TTS 씬:   YAML duration_sec 사용
-```
-
-씬 사이에 자연스러운 호흡 여유도 자동으로 들어가.
-
-```
-강의자 → 강의자: 0.35초  // 자연스러운 호흡
-강의자 → 질문자: 0.45초  // 질문 전 살짝 더 여유
-질문자 → 강의자: 0.30초  // 답변은 약간 빠르게 시작
-```
-
-캡컷에서 이걸 하려면 클립 사이 간격을 하나씩 드래그해서 맞춰야 해.
-여기선 오디오 실제 길이를 재고 자동으로 계산돼.
-
----
-
-## 강의자랑 질문자는 어떻게 나뉘냐
-
-강의자 슬라이드 위에 질문자 말풍선을 오버레이로 올리는 구조야.
-
-:::canvas-flow
-{
-  "nodes": [
-    {"id": "inst",   "label": "강의자 씬\n(슬라이드 배경)",   "col": 0, "row": 0, "type": "default"},
-    {"id": "stu",    "label": "질문자 씬\n(말풍선 오버레이)", "col": 0, "row": 1, "type": "process"},
-    {"id": "merge",  "label": "합성",                        "col": 1, "row": 0, "type": "default"},
-    {"id": "bgm",    "label": "BGM + TTS\n오디오 믹스",      "col": 1, "row": 1, "type": "process"},
-    {"id": "frame",  "label": "최종 프레임",                  "col": 2, "row": 0, "type": "success"}
-  ],
-  "edges": [
-    {"from": "inst",  "to": "merge"},
-    {"from": "stu",   "to": "merge"},
-    {"from": "merge", "to": "frame"},
-    {"from": "bgm",   "to": "frame"}
-  ],
-  "direction": "LR",
-  "cols": 3,
-  "rows": 2
-}
-:::
-
-강의자 씬은 **다음 강의자 씬이 시작할 때까지 화면을 고정**해.
-질문자가 말하는 동안 강의 자료가 그대로 보이는 이유야.
-
-```
-시간 흐름 →
-
-강의자 씬 A ─────────────────────────── 강의자 씬 B
-                 질문자 말풍선
-                  ┌──────┐
-                  └──────┘
-결과: A 배경 위에 말풍선 표시 → B 배경으로 자연 전환
-```
-
-화면이 덜 바뀌니까 시청자가 집중할 수 있어.
-
----
-
-## Remotion이 어떻게 영상을 만드냐
-
-[Remotion](https://github.com/remotion-dev/remotion)은 React 컴포넌트를 영상 프레임으로 렌더링하는 라이브러리야.
-`useCurrentFrame()`으로 현재 프레임 번호를 읽어서 애니메이션을 만들어.
-
-실제 이 시리즈에서 Claude Code를 소개하는 씬은 이런 스크린샷을 쓰고 있어.
 
 ![Claude Code 터미널 화면](./images/claude-code-terminal.png)
 
-이걸 씬에 넣으면 YAML에서는 이렇게 쓰고:
+프레임 단위 슬라이더로 확인할 것들:
 
-```yaml:씬 스펙 예시
-- id: "demo-claude-code"
-  type: "screenshot"
-  speaker: "instructor"
-  tts: "이렇게 터미널에 명령을 주면 직접 파일을 만들어줘요."
-  display_text: "Claude Code 실행 화면"
-  image: "assets/screenshots/claude-code-terminal.png"
+```
+□ 오디오가 끊기는 구간 없는지 (tts가 빈 씬)
+□ 이미지 에셋이 404 안 나는지
+□ 립싱크 영상이 오디오랑 싱크 맞는지
+□ BGM 페이드인/아웃 자연스러운지
+□ 씬 전환 타이밍이 어색하지 않은지
 ```
 
-React 컴포넌트에서는 이렇게 렌더링돼.
+특정 구간만 뽑아서 빠르게 확인할 수 있어.
 
-```tsx:src/scenes/NarrationScene.tsx
-import { useCurrentFrame, interpolate, AbsoluteFill } from "remotion";
-
-export const NarrationScene: React.FC<{ scene: TimelineScene }> = ({ scene }) => {
-  const frame = useCurrentFrame();
-
-  // 첫 15프레임(0.5초)에 opacity 0→1 페이드인
-  const opacity = interpolate(frame, [0, 15], [0, 1], {
-    extrapolateRight: "clamp",
-  });
-
-  return (
-    <AbsoluteFill style={{ opacity }}>
-      <p>{scene.displayText}</p>
-    </AbsoluteFill>
-  );
-};
+```bash:터미널
+npx remotion render EpisodeVideo out/preview.mp4 --frames=0-2100
 ```
 
-메인 컴포지션에서 `Sequence`로 각 씬을 타임라인에 배치해.
-
-```tsx:src/compositions/EpisodeVideo.tsx
-{instructorScenes.map((scene, idx) => (
-  <Sequence
-    key={scene.id}
-    from={scene.startFrame}
-    durationInFrames={getExtendedDuration(scene, idx)}
-  >
-    {renderScene(scene)}
-
-    {scene.audioSrc && (
-      <Audio src={staticFile(scene.audioSrc)} volume={1.0} />
-    )}
-  </Sequence>
-))}
-```
-
-영상 편집 툴의 타임라인 레이어를 코드로 표현한 거야.
-드래그 없이 숫자로 관리하니까 씬 순서 바꾸거나 추가해도 자동으로 다 맞아.
+앞 70초만 먼저 확인하는 거야.
 
 ---
 
-## 어떻게 렌더링하냐
+## 렌더링하고 올리는 방법
 
 :::steps
-
-### Remotion Studio로 미리보기
-
-```bash:터미널
-npm run start
-```
-
-`localhost:3700`에서 프레임 단위 슬라이더로 오디오/자막이 정확히 맞는지 바로 확인할 수 있어.
 
 ### 최종 MP4 렌더링
 
@@ -509,7 +251,7 @@ npm run start
 npm run build
 ```
 
-`out/ep01-ai-coding-map.mp4` 생성돼. 10분짜리 기준 5~10분 수준이야.
+`out/ep01-ai-coding-map.mp4` 생성돼. 10분짜리 기준 5~10분.
 
 ### SRT 자막 생성
 
@@ -517,101 +259,53 @@ npm run build
 npm run srt ep01-ai-coding-map
 ```
 
-TTS 대사 기반으로 자막 파일이 만들어져.
-한글 발음으로 썼던 `tts` 필드를 원문으로 자동 복원해줘 (에이아이→AI, 챗지피티→ChatGPT 등).
-`out/ep01-ai-coding-map.srt` + `.vtt` 두 형식으로 뽑혀.
+한글 발음으로 썼던 tts 텍스트를 원문으로 자동 복원해서 자막으로 뽑아줘.
+`에이아이 → AI`, `챗지피티 → ChatGPT` 등.
+
+### YouTube 업로드
+
+`.env`에 OAuth 설정해두면 YAML `youtube` 섹션 메타데이터로 자동 업로드 가능해.
+썸네일도 함께 올릴 수 있어.
 
 :::
-
-> [!TIP]
-> 특정 구간만 먼저 확인하고 싶으면 프레임 범위를 지정할 수 있어.
-> ```bash
-> npx remotion render EpisodeVideo out/preview.mp4 --frames=0-2100
-> ```
-> 앞 70초만 뽑아보는 거야. 전체 렌더링 전에 틀린 거 빠르게 체크할 때 유용해.
-
----
-
-## YouTube에 어떻게 올리냐
-
-`/scene`이 YAML `youtube` 섹션에 메타데이터를 미리 써줘.
-YouTube Data API OAuth 설정만 해두면 자동 업로드가 가능해.
-
-```bash:.env 설정
-YOUTUBE_API_KEY=...
-YOUTUBE_CHANNEL_ID=...
-YOUTUBE_CLIENT_ID=...
-YOUTUBE_CLIENT_SECRET=...
-YOUTUBE_ACCESS_TOKEN=...
-YOUTUBE_REFRESH_TOKEN=...
-```
-
-YAML에 써둔 메타데이터가 자동으로 업로드에 쓰여.
-
-```yaml:video/scenes/{slug}.yaml의 youtube 섹션
-youtube:
-  tags: ["AI코딩", "Claude Code", "바이브코딩", "vibe coding"]
-  description: |
-    AI 코딩 도구의 큰 그림을 잡아드립니다.
-    바이브코딩 입문 시리즈 1편.
-  thumbnail_text: "AI 입문"
-  thumbnail_sub: '"해줘"라고 하면 진짜 해줘요'
-```
-
-썸네일 이미지도 Remotion Still로 뽑은 다음 YouTube API로 함께 올릴 수 있어.
 
 ---
 
 ## 수정하면 얼마나 달라지냐
 
-캡컷이나 프리미어였으면:
-
-```
-대사 한 줄 수정
-  → 그 씬 다시 녹음
-  → 오디오 파일 교체
-  → 타임라인에서 클립 찾아서 교체
-  → 앞뒤 클립 타이밍 재조정
-  → 자막 텍스트도 따로 수정
-  → 렌더링 (시간 오래 걸림)
-
-총 소요: 30분~1시간
-```
+캡컷이나 프리미어였으면 대사 한 줄 수정에 30분~1시간이야.
+클립 찾아서 교체하고, 앞뒤 타이밍 재조정하고, 자막도 따로 수정해야 하니까.
 
 여기서는:
 
 ```bash:터미널
-# YAML에서 tts 텍스트 한 줄 수정 후
-npm run tts ep01-ai-coding-map --only=scene-id   # 그 씬 음성만 재생성
+# YAML tts 한 줄 수정 후
+npm run tts ep01-ai-coding-map --only=scene-id
 npm run audio:polish ep01-ai-coding-map
 npm run timeline ep01-ai-coding-map
 npm run build
-
-# 총 소요: 5~10분 (대부분 자동)
+# 총 5~10분
 ```
 
-대본 수준 수정이면 Claude Code에게 맡겨.
+대본 수준 수정은 Claude Code에게 맡겨.
 
 ```bash:Claude Code
-/write ep01-ai-coding-map --edit 인트로   # 특정 섹션만 다시 써
-/scene ep01-ai-coding-map --edit 인트로   # 해당 씬 스펙만 재생성
+/write ep01-ai-coding-map --edit 인트로
+/scene ep01-ai-coding-map --edit 인트로
 ```
 
 ---
 
 ## 한 줄 정리
 
-| 단계 | 커맨드/서비스 | 비용 |
-|------|--------|------|
-| 대본 작성 | `/write` (Claude Code) | 무료 |
-| 씬 스펙 변환 | `/scene` (Claude Code) | 무료 |
-| TTS 생성 | `npm run tts` (ElevenLabs + Fish Audio) | ~$0.55/편 |
-| 오디오 후처리 | `npm run audio:polish` | 무료 |
-| 립싱크 (선택) | Kie.ai InfiniTalk, 수동 | $0.015/초 (480p) |
-| 시네마틱 영상 (선택) | Kie.ai Kling AI, 수동 | $0.40~$1.00/영상 |
-| 타임라인 빌드 | `npm run timeline` | 무료 |
-| Remotion 렌더링 | `npm run build` | 무료 |
-| SRT 자막 | `npm run srt` | 무료 |
-| YouTube 업로드 | YouTube Data API | 무료 |
+| 단계 | 내가 하는 일 | 비용 |
+|------|-------------|------|
+| 대본 작성 | `/write` 주제 입력 | 무료 |
+| 씬 스펙 | `/scene` 에피소드명 | 무료 |
+| TTS | `npm run tts` (dry 먼저) | ~$0.55/편 |
+| 립싱크 (선택) | Kie.ai InfiniTalk, 수동 | $0.015/초 |
+| 타임라인 확인 | `npm run start`, 스튜디오 체크 | 무료 |
+| 렌더링 | `npm run build` | 무료 |
+| YouTube | Data API 자동 업로드 | 무료 |
 
-영상을 코드로 찍는 거야. Claude Code가 기획부터 씬 스펙까지 써주고, 나머지는 스크립트가 전부 처리해.
+[Remotion](https://github.com/remotion-dev/remotion)이 React로 영상을 찍는 거야. Claude Code가 기획부터 씬 스펙까지 쓰고, 나머지는 명령어 한 줄씩이야.
