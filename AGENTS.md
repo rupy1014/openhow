@@ -81,6 +81,10 @@ If touched area has no tests:
 Common local setup:
 - Terminal A: `cd core/packages/worker && pnpm dev`
 - Terminal B: `cd core/packages/viewer && pnpm dev`
+Docs workspace note:
+- `examples/clauders.ai` publish target is `clauders`.
+- Do not publish `examples/clauders.ai` to `clauders-ai` unless the user explicitly asks.
+- `clauders-ai` is a deprecated/private workspace kept separate from the real public workspace.
 Production deploy order:
 1. `cd core/packages/viewer && pnpm build`
 2. `cd core/packages/worker && pnpm deploy`
