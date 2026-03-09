@@ -11,7 +11,7 @@ order: 1
 
 ## 딸깍 1. 프로젝트 받기
 
-[max5-clone.zip 다운로드 (Google Drive)](https://drive.google.com/file/d/TODO/view?usp=sharing)
+[max5-clone.zip 다운로드 (Google Drive)](https://drive.google.com/file/d/1mflcsIcWFekJpL7kDPznto8htE5kemtU/view?usp=sharing)
 
 ```bash
 unzip max5-clone.zip
