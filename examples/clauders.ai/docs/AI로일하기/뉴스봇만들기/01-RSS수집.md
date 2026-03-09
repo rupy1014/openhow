@@ -5,13 +5,11 @@ nav: 시작하기
 order: 1
 ---
 
-**프로젝트 받고, Claude Code 열고, `/workflow` 치면 끝이야.**
-
-5분이면 돌아가.
+**3번 딸깍이면 뉴스봇이 돌아가.**
 
 ---
 
-## Step 1. 프로젝트 받기
+## 딸깍 1. 프로젝트 받기
 
 ```bash
 git clone https://github.com/rupy1014/max5.ai.git
@@ -20,28 +18,30 @@ npm install
 ```
 
 :::info git clone이 뭐야?
-다른 사람이 만든 프로젝트를 내 컴퓨터에 복사하는 거야. GitHub에 올라가 있는 코드를 그대로 가져와.
+다른 사람이 만든 프로젝트를 내 컴퓨터에 복사하는 거야. 한 번만 하면 돼.
 :::
 
 ---
 
-## Step 2. Claude Code 열기
+## 딸깍 2. Claude Code 열기
 
 ```bash
 claude
 ```
 
-프로젝트 폴더에서 Claude Code를 열면, 이 프로젝트의 구조를 자동으로 이해해. `CLAUDE.md`라는 파일에 프로젝트 설명이 다 적혀 있거든.
+이 프로젝트 폴더에서 Claude Code를 열면, AI가 프로젝트 구조를 자동으로 이해해. `CLAUDE.md`라는 파일에 "이 프로젝트는 뭐고, 뭘 해야 하는지"가 다 적혀 있거든.
+
+그래서 네가 설명할 필요 없이, 명령만 치면 돼.
 
 ---
 
-## Step 3. /workflow 실행
+## 딸깍 3. /workflow 실행
 
 ```
 /workflow
 ```
 
-이러면 이런 일이 벌어져:
+이러면:
 
 ```
 📡 1단계: RSS 수집
@@ -52,8 +52,8 @@ claude
 ✅ 수집 완료 (9개 신규)
 
 🤖 2단계: AI 리뷰 생성
-  hacker-news-agent-safehouse.md → dev_reviewer → ✅ 생성 완료
-  hackernoon-ai-startups.md → story_reviewer → ✅ 생성 완료
+  hacker-news-agent-safehouse.md → dev_reviewer → ✅ 생성
+  hackernoon-ai-startups.md → story_reviewer → ✅ 생성
   ...
 
 ✍️ 3단계: 퇴고
@@ -61,47 +61,46 @@ claude
   ✅ 퇴고 완료
 ```
 
-`content-workflow/` 폴더에 한국어 리뷰가 생성돼 있어.
+끝. `content-workflow/` 폴더에 한국어 리뷰가 만들어져 있어.
 
 ---
 
-## Step 4. 결과 확인
-
-로컬에서 바로 볼 수 있어:
+## 결과 확인도 딸깍
 
 ```bash
 npm run dev
 ```
 
-브라우저에서 `http://localhost:3000`을 열면 리뷰가 바로 보여. Supabase(DB) 없이도 로컬 파일로 먼저 보여주거든.
+브라우저에서 열리는 주소(`http://localhost:3000` 또는 자동 선택된 포트)를 열면 리뷰가 바로 보여.
+
+DB 설정? 서버 설정? 필요 없어. 로컬 파일을 바로 읽어서 보여주거든.
 
 ---
 
-## 내부에서 무슨 일이 벌어지냐
+## 안에서 무슨 일이 벌어졌냐
 
-알 필요는 없지만, 궁금하면:
+궁금하면. 안 궁금하면 넘어가.
 
-```
-max5.ai/
-├── scripts/fetch-all.js        ← RSS 10개 소스에서 수집
-├── .agent/skills/              ← AI 리뷰어 프롬프트 3종
-│   ├── dev_reviewer/           ← 개발 도구 리뷰 (설치법, 활용 프롬프트)
-│   ├── product_reviewer/       ← 서비스 리뷰 (사용 팁, 비즈 기회)
-│   └── story_reviewer/         ← 성공 사례 리뷰 (핵심 교훈, 적용법)
-├── content/날짜/               ← 수집된 원문
-└── content-workflow/           ← AI가 만든 한국어 리뷰
-```
+`/workflow`가 실행한 3단계:
 
-`/workflow` 명령이 이걸 순서대로 실행하는 거야:
+| 단계 | 뭘 했냐 | 결과 |
+|------|---------|------|
+| 수집 | Hacker News, HackerNoon 등 10개 소스에서 RSS 긁기 | `content/오늘날짜/` 폴더에 원문 저장 |
+| 리뷰 | 원문 유형 판별 → 맞는 리뷰어가 한국어 리뷰 작성 | `content-workflow/` 폴더에 리뷰 저장 |
+| 퇴고 | 번역투 제거, 마케팅 문구 삭제, 톤 맞춤 | 같은 파일 수정 |
 
-1. `fetch-all.js`로 RSS 수집
-2. 원문을 읽고 유형별 리뷰어로 한국어 리뷰 생성
-3. 퇴고 규칙 적용 (번역투 제거, 마케팅 문구 삭제)
+리뷰어는 3종류야:
 
-코드를 이해할 필요 없어. `/workflow` 치면 알아서 돌아가니까.
+| 원문 유형 | 리뷰어 | 뭘 쓰냐 |
+|----------|--------|---------|
+| GitHub/오픈소스 | `dev_reviewer` | 설치법, 활용 프롬프트, 바이브 코딩 레시피 |
+| 서비스/SaaS 출시 | `product_reviewer` | 사용 팁, 가격, 비즈니스 기회 |
+| 뉴스/성공 사례 | `story_reviewer` | 핵심 교훈, 타임라인, 적용법 |
+
+유형 판별도 AI가 자동으로 해. 키워드를 보고 "이건 개발 도구니까 dev_reviewer로 보내자" 이런 식.
 
 ---
 
 ## 한 줄 정리
 
-클론 → Claude Code → `/workflow`. 3단계면 뉴스봇이 돌아가.
+clone → claude → `/workflow`. 3번 딸깍이면 뉴스봇 완성.
