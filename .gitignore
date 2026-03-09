@@ -38,3 +38,4 @@ client_secret*.json
 # Logs
 *.log
 npm-debug.log*
+examples/clauders.ai/docs/AI로일하기/뉴스봇만들기/max5-clone.zip

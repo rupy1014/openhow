@@ -11,15 +11,15 @@ order: 1
 
 ## 딸깍 1. 프로젝트 받기
 
+[max5-clone.zip 다운로드 (Google Drive)](https://drive.google.com/file/d/TODO/view?usp=sharing)
+
 ```bash
-git clone https://github.com/rupy1014/max5.ai.git
-cd max5.ai
+unzip max5-clone.zip
+cd max5-clone
 npm install
 ```
 
-:::info git clone이 뭐야?
-다른 사람이 만든 프로젝트를 내 컴퓨터에 복사하는 거야. 한 번만 하면 돼.
-:::
+다운로드 → 압축 풀기 → npm install. 이 세 줄이면 끝이야.
 
 ---
 
