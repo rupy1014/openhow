@@ -14,6 +14,88 @@ openhow publish   # 클라우드 배포 → openhow.io
 
 > **Live**: [openhow.io](https://openhow.io)
 
+[![MCP](https://img.shields.io/badge/MCP-Streamable_HTTP-blue)](https://openhow.io/mcp)
+[![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?logo=cloudflare)](https://workers.cloudflare.com/)
+
+---
+
+## MCP Server
+
+AI 코딩 도구(**Claude**, **Cursor**, **Windsurf**, **Cline** 등)에서 openhow 문서를 검색하고, 워크스페이스 생성부터 퍼블리시까지 AI가 가이드합니다.
+
+### Claude Code (CLI)
+
+```bash
+claude mcp add openhow --transport http https://openhow.io/mcp
+```
+
+### Claude Desktop
+
+`~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) 또는
+`%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+
+```json
+{
+  "mcpServers": {
+    "openhow": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://openhow.io/mcp"]
+    }
+  }
+}
+```
+
+### Cursor
+
+Settings > MCP Servers > Add:
+
+```json
+{
+  "openhow": {
+    "url": "https://openhow.io/mcp"
+  }
+}
+```
+
+### Windsurf / Cline / Other MCP Clients
+
+Streamable HTTP endpoint:
+```
+https://openhow.io/mcp
+```
+
+### MCP로 할 수 있는 것
+
+MCP를 연결하면 AI에게 이렇게 말할 수 있습니다:
+
+```
+openhow로 API 문서 사이트 만들어줘
+React 튜토리얼 강의를 openhow로 만들어줘 — 챕터 1-2는 무료, 나머지는 유료로
+이 폴더의 마크다운 파일들을 openhow로 퍼블리시해줘
+```
+
+AI 내부 동작:
+```
+1. get_started              → CLI 설치 + 로그인 가이드
+2. get_workspace_template   → 프로젝트 유형별 폴더 구조/설정
+3. search_docs / get_doc    → 설정, 스타일, 접근 레벨 문서 조회
+4. setup-workspace 프롬프트 → 전체 실행 계획 생성
+```
+
+### 5 Tools + 1 Prompt
+
+| Tool | Description |
+|------|-------------|
+| `get_started` | CLI 설치부터 퍼블리시까지 단계별 가이드 |
+| `search_docs` | openhow 문서 키워드 검색 |
+| `get_doc` | 특정 문서 전체 마크다운 조회 |
+| `list_docs` | 사용 가능한 문서 목록 |
+| `get_workspace_template` | 유형별(docs/course/blog) 폴더 구조 + 설정 템플릿 |
+
+| Prompt | Description |
+|--------|-------------|
+| `setup-workspace` | 워크스페이스 생성~퍼블리시 전체 실행 계획 |
+
 ---
 
 ## Quick Start
