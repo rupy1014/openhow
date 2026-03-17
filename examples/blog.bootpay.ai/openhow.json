@@ -2,5 +2,8 @@
   "content": "docs",
   "workspace": "bootpay",
   "title": "Bootpay 블로그",
-  "type": "blog"
+  "type": "blog",
+  "scan": {
+    "exclude": ["research/**"]
+  }
 }
