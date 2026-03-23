@@ -4,6 +4,6 @@
   "title": "Bootpay 블로그",
   "type": "blog",
   "scan": {
-    "exclude": ["research/**"]
+    "exclude": ["research/**", "youtube/**"]
   }
 }

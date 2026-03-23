@@ -17,6 +17,7 @@ model: opus
 
 | 파일 | 참조 내용 |
 |------|-----------|
+| `docs/rules/*.md` | 용어 규칙, 표기 규칙 (취소/환불 구분 등) |
 | `docs/blog-strategy.md` | 전체 블로그 전략, 4개 가이드 목차, 차별화 포인트 |
 | `docs/competitor-analysis.md` | 포트원/토스페이먼츠 기존 분석 결과 |
 

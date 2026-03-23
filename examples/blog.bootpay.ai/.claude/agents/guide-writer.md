@@ -17,6 +17,7 @@ model: opus
 
 | 파일 | 참조 내용 |
 |------|-----------|
+| `docs/rules/*.md` | 용어 규칙, 표기 규칙 (취소/환불 구분 등) |
 | `docs/blog-strategy.md` | 글 작성 원칙, 가이드 구조, CTA 설계 |
 | `docs/competitor-analysis.md` | 경쟁사 빈틈 (우리가 채울 것) |
 | `docs/research/{slug}-research.md` | 리서치 노트 (이 글의 재료) |

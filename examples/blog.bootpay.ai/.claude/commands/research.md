@@ -23,6 +23,7 @@
 │ 에이전트: .claude/agents/researcher.md          │
 │ 입력:                                          │
 │   - 사용자 요청 ($ARGUMENTS)                    │
+│   - docs/rules/*.md (용어 규칙)                 │
 │   - docs/blog-strategy.md                      │
 │   - docs/competitor-analysis.md                │
 │ 출력:                                          │

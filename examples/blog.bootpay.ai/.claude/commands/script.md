@@ -1,16 +1,16 @@
-# 블로그 가이드 작성 파이프라인
+# 가이드 → 영상 대본 변환
 
 사용자 요청: $ARGUMENTS
 
 ## 개요
 
-`/write`는 리서치 → 초안 → 검수까지 한 번에 실행합니다.
+`/script`는 기존 블로그 가이드를 YouTube 영상 대본으로 변환합니다.
 
 ```
-/write 결제 도입           # 가이드 1
-/write 구독 기획           # 가이드 2
-/write 마켓플레이스 정산    # 가이드 3
-/write 결제 운영           # 가이드 4
+/script 결제 도입           # 가이드 1 → 영상 대본
+/script 구독 기획           # 가이드 2 → 영상 대본
+/script 마켓플레이스 정산    # 가이드 3 → 영상 대본
+/script 결제 운영           # 가이드 4 → 영상 대본
 ```
 
 ---
@@ -21,58 +21,57 @@
 ┌──────────────────────────────────────────────┐
 │ 0. 준비                                       │
 │   - docs/rules/*.md 읽기 (용어 규칙)           │
+│   - docs/youtube/channel-concept.md 읽기      │
+│   - docs/youtube/term-map.json 읽기           │
 │   - docs/blog-strategy.md 읽기                │
-│   - docs/competitor-analysis.md 읽기          │
-│   - 해당 가이드의 목차/차별점 확인               │
 └──────────────────────────────────────────────┘
                       ↓
 ┌──────────────────────────────────────────────┐
-│ 1. researcher 에이전트 호출                     │
+│ 1. 원본 가이드 분석                             │
 │                                               │
-│   에이전트: .claude/agents/researcher.md        │
 │   입력:                                        │
-│     - 사용자 요청 ($ARGUMENTS)                  │
-│     - docs/blog-strategy.md                    │
-│     - docs/competitor-analysis.md              │
-│   출력:                                        │
-│     → docs/research/{slug}-research.md         │
+│     - docs/guides/{slug}.md                   │
+│     - docs/research/{slug}-research.md        │
+│   작업:                                        │
+│     - 핵심 섹션 추출                            │
+│     - 비교표/숫자/삽질포인트 식별                │
+│     - 영상 분량 결정 (5~8분 or 파트 분할)        │
 │                                               │
-│   ⚠️ 리서치 노트 완성 후 사용자에게 요약 보고     │
-│   ⚠️ 방향 조정 필요하면 여기서 피드백 받기         │
+│   ⚠️ 가이드 분석 결과 사용자에게 보고            │
+│   ⚠️ 영상 구성 방향 피드백 받기                  │
 └──────────────────────────────────────────────┘
                       ↓
 ┌──────────────────────────────────────────────┐
-│ 2. guide-writer 에이전트 호출                   │
+│ 2. script-writer 에이전트 호출                  │
 │                                               │
-│   에이전트: .claude/agents/guide-writer.md      │
+│   에이전트: .claude/agents/script-writer.md     │
 │   입력:                                        │
-│     - docs/research/{slug}-research.md         │
-│     - docs/blog-strategy.md                    │
+│     - docs/guides/{slug}.md                   │
+│     - docs/research/{slug}-research.md        │
+│     - docs/youtube/channel-concept.md         │
+│     - docs/youtube/term-map.json              │
 │   출력:                                        │
-│     → docs/guides/{slug}.md                    │
+│     → docs/youtube/scripts/{slug}.md          │
 └──────────────────────────────────────────────┘
                       ↓
 ┌──────────────────────────────────────────────┐
-│ 3. reviewer 에이전트 호출                       │
+│ 3. TTS 발음 검수                                │
 │                                               │
-│   에이전트: .claude/agents/reviewer.md          │
-│   입력:                                        │
-│     - docs/guides/{slug}.md                    │
-│     - docs/research/{slug}-research.md         │
-│     - docs/blog-strategy.md                    │
-│   출력:                                        │
-│     - 검수 리포트 (콘솔 출력)                    │
-│     - 수정된 docs/guides/{slug}.md              │
+│   체크:                                        │
+│     - 대사에 영문 원문 → 0건                    │
+│     - 대사에 아라비아 숫자 → 0건                 │
+│     - 포트원 이름 → 0건                         │
+│     - term-map.json 미등록 용어 → 추가           │
 └──────────────────────────────────────────────┘
                       ↓
 ┌──────────────────────────────────────────────┐
 │ 4. 완료 보고                                    │
 │   - 최종 파일 경로                               │
-│   - 리서치 소스 요약                              │
-│   - 검수 결과 요약                               │
-│   - 경쟁사 대비 차별화 포인트                     │
-│   - 분량                                        │
-│   - 다음 단계 안내 (/publish)                    │
+│   - 영상 예상 길이                               │
+│   - 훅 요약                                     │
+│   - 삽질 포인트 목록                              │
+│   - YouTube 메타데이터 요약                      │
+│   - 다음 단계 안내                               │
 └──────────────────────────────────────────────┘
 ```
 
@@ -92,21 +91,22 @@
 ## 완료 후 출력
 
 ```
-가이드가 완성되었습니다!
+영상 대본이 완성되었습니다!
 
-**파일:** docs/guides/{slug}.md
-**리서치:** docs/research/{slug}-research.md
+**파일:** docs/youtube/scripts/{slug}.md
+**원본 가이드:** docs/guides/{slug}.md
 
 ---
 
-**리서치 소스:** N건
-**검수 결과:** [판정]
-**분량:** N,NNN자
-**경쟁사 대비 차별점:** ...
+**영상 예상 길이:** N분
+**훅:** {훅 한 줄 요약}
+**삽질 포인트:** N개
+**YouTube 제목 후보:** {제목}
 
 ---
 
 **다음 단계:**
-1. 내용 확인 후 피드백
-2. `/publish` 로 openhow 발행
+1. 대본 내용 확인 후 피드백
+2. 씬 스펙 생성 (준비되면)
+3. TTS 생성 → 타임라인 → 렌더링
 ```

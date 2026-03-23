@@ -1,0 +1,31 @@
+{
+  "name": "bootpay-youtube",
+  "version": "1.0.0",
+  "description": "부트페이 YouTube 영상 프로젝트 — 기획자를 위한 결제 실무 채널",
+  "scripts": {
+    "tts": "tsx scripts/tools/generate-tts.ts",
+    "tts:dry": "tsx scripts/tools/generate-tts.ts --dry-run",
+    "timeline": "tsx scripts/tools/build-timeline.ts",
+    "srt": "tsx scripts/tools/generate-srt.ts",
+    "start": "remotion studio --port 3710",
+    "build": "remotion render EpisodeVideo",
+    "preview": "remotion preview"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.249",
+    "@remotion/media-utils": "4.0.249",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^3.7.0",
+    "remotion": "4.0.249",
+    "yaml": "^2.7.1",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@remotion/bundler": "4.0.249",
+    "@types/node": "^25.0.10",
+    "@types/react": "^19.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

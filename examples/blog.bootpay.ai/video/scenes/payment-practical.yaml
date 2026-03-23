@@ -1,0 +1,503 @@
+meta:
+  id: "EP02"
+  slug: "payment-practical"
+  title: "결제, 개발팀한테 넘기기 전에 정리할 것들"
+  created: "2026-03-23"
+
+youtube:
+  tags:
+    - 결제 취소
+    - 결제 환불
+    - 취소 환불 차이
+    - 결제 정산
+    - 결제수단 선택
+    - 카드 취소
+    - 가상계좌 환불
+    - PG 정산
+    - 정산 주기
+    - 결제 기획
+    - 취소 환불 정책
+    - 부분취소
+    - 가상계좌
+    - 간편결제
+    - 휴대폰결제
+    - 캐시플로우
+    - 스타트업 결제
+    - Bootpay
+    - 부트페이
+    - 결제 실무
+    - 기획자
+  description: |
+    결제 도입은 했는데, 취소랑 환불 정책은 정했나요? 정산은 언제 들어오는지 알고 계신가요?
+    취소(전산 되돌림)와 환불(직접 입금)의 차이, 결제수단 조합, 정산 주기까지 기획자가 반드시 알아야 할 실무를 정리했어요.
+
+    이전 편: 결제 기획, 뭐부터 해야 하나요? [링크]
+    📝 블로그 가이드: [링크]
+    💬 도입 상담: https://bootpay.co.kr
+  thumbnail_text: "개발팀한테 넘기기 전에 이거 정하세요"
+
+bgm:
+  - section: "훅"
+    src: "/audio/bgm/tension-build.mp3"
+    volume: 0.25
+    fade_in_sec: 0.5
+    fade_out_sec: 1.5
+  - section: "아웃트로"
+    src: "/audio/bgm/warm-ending.mp3"
+    volume: 0.25
+    fade_in_sec: 1.0
+    fade_out_sec: 2.0
+
+scenes:
+  # ─────────────────────────────────────────────────────────────
+  # 훅 (Hook)
+  # ─────────────────────────────────────────────────────────────
+  - id: hook-01
+    section: 훅
+    type: narration
+    speaker: narrator
+    tts: "고객이 돈 돌려달라고 했는데, 카드 결제는 피지 전산에서 취소 버튼 누르면 바로 되거든요."
+    display_text: "고객이 돈 돌려달라고 했는데, 카드 결제는 PG 전산에서 취소 버튼 누르면 바로 되거든요."
+
+  - id: hook-02
+    section: 훅
+    type: narration
+    speaker: narrator
+    tts: "근데 가상계좌로 결제한 고객은? 고객 계좌번호 받아서 직접 입금해야 돼요."
+    display_text: "근데 가상계좌로 결제한 고객은? 고객 계좌번호 받아서 직접 입금해야 돼요."
+
+  - id: hook-03
+    section: 훅
+    type: narration
+    speaker: narrator
+    tts: "같은 돈 돌려주기인데 하나는 취소고 하나는 환불이에요. 이 차이를 모르면 라이브 첫날부터 씨에스 터집니다."
+    display_text: "같은 \"돈 돌려주기\"인데 하나는 취소고 하나는 환불이에요. 이 차이를 모르면 라이브 첫날부터 CS 터집니다."
+
+  # ─────────────────────────────────────────────────────────────
+  # 인트로
+  # ─────────────────────────────────────────────────────────────
+  - id: intro-01
+    section: 인트로
+    type: greeting
+    speaker: narrator
+    tts: "안녕하세요. 부트페이입니다. 지난 영상에서 결제 도입 전체 그림을 봤잖아요. 피지가 뭔지, 수수료는 어떻게 되는지, 심사는 어떻게 넘는지."
+    display_text: "안녕하세요. 부트페이입니다. 지난 영상에서 결제 도입 전체 그림을 봤잖아요. PG가 뭔지, 수수료는 어떻게 되는지, 심사는 어떻게 넘는지."
+
+  - id: intro-02
+    section: 인트로
+    type: narration
+    speaker: narrator
+    tts: "오늘은 그 다음 단계예요. 결제수단은 뭘 넣어야 하는지, 수단별로 취소랑 환불이 어떻게 다른지, 정산은 언제 들어오는지. 기획자가 개발팀한테 넘기기 전에 꼭 정해야 하는 것들을 정리해볼게요."
+    display_text: "오늘은 그 다음 단계예요. 결제수단은 뭘 넣어야 하는지, 수단별로 취소랑 환불이 어떻게 다른지, 정산은 언제 들어오는지."
+
+  # ─────────────────────────────────────────────────────────────
+  # 본론 1: 결제수단
+  # ─────────────────────────────────────────────────────────────
+  - id: method-01
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "결제수단이 종류가 많잖아요. 신용카드, 체크카드, 간편결제, 계좌이체, 가상계좌, 휴대폰결제. 근데 제 경험상 처음부터 가능한 한 많이 넣는 게 좋아요. 나중에 추가하려면 또 심사받고 개발해야 하거든요."
+    display_text: "결제수단이 종류가 많잖아요. 신용카드, 체크카드, 간편결제, 계좌이체, 가상계좌, 휴대폰결제."
+    highlight: "처음부터 가능한 한 많이 넣는 게 좋아요"
+
+  - id: method-02
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "그리고 결제수단이 없어서 이탈하는 고객은 다시 안 옵니다. 하나씩 짚어볼게요."
+    display_text: "결제수단이 없어서 이탈하는 고객은 다시 안 옵니다."
+    highlight: "다시 안 옵니다"
+
+  - id: method-03
+    section: 본론
+    type: comparison
+    speaker: narrator
+    tts: "먼저 신용카드. 온라인 결제의 기본이에요. 이건 무조건 넣어야 해요. 결제 비중도 가장 높고, 할부도 되고, 취소도 제일 간단하거든요."
+    display_text: "신용카드 — 온라인 결제의 기본"
+    items:
+      - name: "신용카드"
+        desc: "기본, 할부 가능, 취소 간편"
+
+  - id: method-04
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "간편결제. 카카오페이, 네이버페이, 토스페이 같은 거요. 카드 번호 안 넣어도 되니까 전환율이 확 올라요. 특히 모바일 결제 비중이 높은 서비스라면 필수예요."
+    display_text: "간편결제 — 카카오페이, 네이버페이, 토스페이"
+    highlight: "전환율이 확 올라요"
+
+  - id: method-05
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "근데 간편결제는 계약 방식이 두가지가 있어요."
+    display_text: "간편결제 계약 방식: 리셀 vs 직가맹"
+
+  - id: method-06
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "하나는 피지 리셀 방식. 피지사랑 계약할 때 간편결제도 같이 신청하는 거예요. 별도 계약이나 보증보험이 필요 없고, 정산도 피지사에서 한번에 받아요. 편하죠. 근데 단점이 있어요. 구매자 혜택이나 프로모션을 못 걸어요. 그리고 간편결제 정기결제도 안 돼요."
+    display_text: "PG 리셀 방식 — 별도 계약 불필요, 정산 일괄"
+
+  - id: method-07
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "다른 하나는 직가맹 방식. 카카오페이, 네이버페이 같은 간편결제사랑 직접 계약하는 거예요. 프로모션도 걸 수 있고, 간편결제 정기결제도 가능해요."
+    display_text: "직가맹 방식 — 간편결제사와 직접 계약"
+
+  - id: method-08
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "근데 직가맹은 비용이 더 싸서 가는 게 아니에요. 오히려 비쌀 수 있어요."
+    display_text: "직가맹은 비용이 더 싸서 가는 게 아니에요"
+    highlight: "오히려 비쌀 수 있어요"
+
+  - id: method-09
+    section: 본론
+    type: comparison
+    speaker: narrator
+    tts: "많이들 오해하는 게, 직가맹하면 수수료가 내려간다고 생각하시거든요. 건당 수수료율은 좀 낮아질 수 있어요. 근데 직가맹하려면 간편결제사마다 보증보험에 가입해야 하고, 정산도 각각 따로 받아야 하고, 계약이랑 심사도 별도로 해야 해요. 총비용으로 따지면 리셀이랑 비슷하거나 오히려 더 비싸요."
+    display_text: "직가맹 vs 리셀 — 비용이 아니라 기능 차이"
+    items:
+      - name: "리셀"
+        desc: "편함, 총비용 유리, 프로모션 불가"
+      - name: "직가맹"
+        desc: "보증보험+별도정산, 프로모션 가능"
+
+  - id: method-10
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "그러면 왜 직가맹을 하냐? 결국 구매자 혜택 때문이에요. 카카오페이 할인 이벤트, 네이버페이 포인트 적립, 간편결제 정기결제 같은 거요. 리셀로는 이런 게 안 돼요. 직가맹해야 구매자한테 혜택을 줄 수 있어요."
+    display_text: "직가맹 = 구매자 혜택 (프로모션, 정기결제)"
+    highlight: "구매자 혜택"
+
+  - id: method-11
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "그래서 초기에는 리셀로 시작하되, 거래 볼륨이 커지면 직가맹으로 가는 게 맞아요. 볼륨이 크면 구매자 혜택이 전환율에 직접 영향을 주거든요."
+    display_text: "초기 리셀 → 볼륨 커지면 직가맹 전환"
+
+  - id: method-12
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "계좌이체. 카드가 없는 고객을 위한 거예요. 실시간으로 결제가 되고, 피지 전산에서 취소도 돼요. 이건 뒤에서 자세히 이야기할게요."
+    display_text: "계좌이체 — 실시간 결제, PG 전산 취소 가능"
+
+  - id: method-13
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "가상계좌. 고액 결제에서 많이 써요. 비투비 서비스나 교육비, 수강료 같은 데서요. 입금 전용 계좌번호를 발급해주는 건데, 고객이 직접 이체를 해야 하니까 결제 완료까지 시간이 걸려요. 미입금 관리를 따로 해줘야 해요."
+    display_text: "가상계좌 — B2B, 교육비 등 고액 결제"
+
+  - id: method-14
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "휴대폰 결제. 소액 결제에 많이 써요. 디지털 콘텐츠나 인앱 결제에서 특히 많고요. 통신사 요금에 합산해서 청구되니까 카드가 없는 고객, 특히 십대나 이십대 초반 사용자가 많은 서비스라면 꼭 넣어야 해요. 다만 월 결제 한도가 있고, 수수료가 카드보다 좀 높은 편이에요."
+    display_text: "휴대폰 결제 — 소액, 10~20대, 통신사 청구"
+
+  - id: method-15
+    section: 본론
+    type: comparison
+    speaker: narrator
+    tts: "업종별로 추천 조합이 있긴 한데요, 사실 가능하면 처음부터 다 넣는 걸 추천해요. 카드, 간편결제, 계좌이체, 가상계좌, 휴대폰결제. 피지사 계약할 때 한번에 신청하면 되니까 추가 비용이 거의 없어요."
+    display_text: "업종별 추천 결제수단 조합"
+    items:
+      - name: "카드"
+        desc: "필수"
+      - name: "간편결제"
+        desc: "필수"
+      - name: "계좌이체"
+        desc: "권장"
+      - name: "가상계좌"
+        desc: "B2B 필수"
+      - name: "휴대폰"
+        desc: "소액/젊은층"
+
+  - id: method-16
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "나중에 하나씩 추가하면 그때마다 심사받고 개발팀한테 또 요청해야 하거든요. 굳이 뺄 거 하나 고르라면, 비투비 서비스에서는 휴대폰결제가 거의 안 쓰이고, 비투씨에서는 가상계좌가 덜 쓰이는 정도예요."
+    display_text: "B2B → 휴대폰결제 거의 미사용 / B2C → 가상계좌 덜 사용"
+
+  - id: method-17
+    section: 본론
+    type: quote
+    speaker: narrator
+    tts: "근데 넣어놓고 안 쓰이는 건 괜찮은데, 안 넣어서 고객이 이탈하면 그건 매출 손실이에요."
+    display_text: "넣어놓고 안 쓰이는 건 괜찮은데, 안 넣어서 고객이 이탈하면 그건 매출 손실이에요."
+
+  - id: method-tip
+    section: 본론
+    type: quote
+    speaker: narrator
+    tts: "간편결제는 리셀로 시작하세요. 직가맹은 수수료가 싸서 가는 게 아니라, 구매자 혜택 때문에 가는 거예요. 거래 볼륨이 커지면 직가맹으로 전환하는 게 맞고요. 그리고 결제수단은 나중에 추가보다 처음부터 다 넣기가 정답이에요."
+    display_text: "💡 삽질 포인트: 간편결제는 리셀로 시작 → 볼륨 커지면 직가맹 전환"
+
+  # ─────────────────────────────────────────────────────────────
+  # 본론 2: 취소 vs 환불
+  # ─────────────────────────────────────────────────────────────
+  - id: cancel-01
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "자, 이게 오늘 제일 중요한 파트예요. 먼저 용어부터 구분할게요."
+    display_text: "취소 ≠ 환불"
+    highlight: "제일 중요한 파트"
+
+  - id: cancel-02
+    section: 본론
+    type: comparison
+    speaker: narrator
+    tts: "취소는 피지사 전산에서 원래 결제를 되돌리는 거예요. 카드 승인취소, 매입취소 같은 거요. 시스템이 알아서 처리해줘요."
+    display_text: "취소 = PG 전산에서 되돌림 (시스템 처리)"
+    items:
+      - name: "취소"
+        desc: "PG 전산 되돌림, 시스템 자동 처리"
+
+  - id: cancel-03
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "환불은 우리가 고객 계좌로 직접 돈을 보내는 거예요. 가상계좌처럼 자동 취소가 안 되는 결제수단에서 이렇게 해야 해요."
+    display_text: "환불 = 고객 계좌로 직접 입금"
+    items:
+      - name: "환불"
+        desc: "고객 계좌로 직접 송금, 수동 처리"
+
+  - id: cancel-04
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "이 차이를 모르고 기획하면 라이브 후에 난리 납니다."
+    display_text: "이 차이를 모르면 라이브 후에 난리 납니다"
+
+  - id: cancel-05
+    section: 본론
+    type: flow
+    speaker: narrator
+    tts: "먼저 카드 결제. 이건 취소예요. 이게 제일 심플해요. 당일 취소면 승인취소가 돼서, 카드 매출 자체가 없었던 걸로 처리돼요. 고객 카드 명세서에도 안 찍혀요."
+    display_text: "카드 결제 취소 — 당일이면 승인취소"
+    steps:
+      - "당일 취소 → 승인취소 (매출 자체 없었던 것)"
+      - "명세서에 안 찍힘"
+
+  - id: cancel-06
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "근데 여기서 함정이 하나 있어요. 승인 후 시간이 지나면 승인취소가 아니라 매입취소로 바뀌어요. 이러면 카드사 처리 시간이 삼에서 칠영업일 걸려요. 고객한테 언제 돌려받냐는 문의가 들어오는 구간이 바로 여기예요."
+    display_text: "승인 후 시간 경과 → 매입취소 (3~7영업일 소요)"
+    highlight: "3~7영업일"
+
+  - id: cancel-07
+    section: 본론
+    type: comparison
+    speaker: narrator
+    tts: "간편결제도 취소예요. 대부분 원래 결제한 간편결제 수단으로 자동 취소돼요. 카카오페이로 결제했으면 카카오페이 잔액으로 돌아가는 거예요. 이것도 보통 즉시에서 삼영업일 정도 걸려요."
+    display_text: "간편결제 — 자동 취소 (즉시~3영업일)"
+
+  - id: cancel-08
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "휴대폰 결제도 취소에 해당해요. 당월 취소면 통신사 청구에서 빠지고, 익월이면 다음 달 요금에서 차감되거나 고객 계좌로 환불해야 할 수도 있어요. 이 부분은 피지사마다 처리가 다르니까 꼭 확인하세요."
+    display_text: "휴대폰결제 — 당월 취소 OK, 익월은 PG사마다 상이"
+
+  - id: cancel-09
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "문제는 가상계좌예요. 가상계좌는 임시 계좌번호로 입금받는 거라서, 기본적으로 전산 취소가 안 돼요. 고객한테 환불받을 실제 계좌번호를 직접 받아서, 우리가 이체해야 해요."
+    display_text: "가상계좌 — 기본적으로 전산 취소 불가, 직접 환불"
+    highlight: "전산 취소가 안 돼요"
+
+  - id: cancel-10
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "그래서 환불 신청 화면에 계좌번호 입력 필드가 필요하고, 내부적으로 환불 이체 프로세스를 만들어야 해요."
+    display_text: "환불 신청 화면 → 계좌번호 입력 필드 필요"
+
+  - id: cancel-11
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "피지사에서 씨엠에스 이체 특약을 별도로 계약하면 전산으로 자동 환불 처리가 가능해지긴 해요. 근데 기본값은 안 되는 거예요. 추가 계약을 해야 하는 거라서, 기획 단계에서 이 계약이 돼있는지 꼭 확인하세요."
+    display_text: "CMS 이체 특약 별도 계약 시 → 자동 환불 가능 (기본값: 불가)"
+    highlight: "기본값은 안 돼요"
+
+  - id: cancel-12
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "계좌이체는 피지사 전산에서 취소가 돼요. 카드 취소랑 비슷하게 처리된다고 보시면 돼요."
+    display_text: "계좌이체 — PG 전산 취소 가능 (카드와 유사)"
+
+  - id: cancel-tip
+    section: 본론
+    type: quote
+    speaker: narrator
+    tts: "부분 취소도 주의하세요. 카드는 부분 취소가 되는데, 가상계좌는 피지사에 따라 부분 환불이 안 되는 경우가 있어요. 안 되면 전액 환불 후 재결제를 유도해야 하거든요. 이거 기획 단계에서 안 정하면 개발팀이 나중에 이거 어떻게 해요 하고 다시 물어봅니다."
+    display_text: "💡 삽질 포인트: 부분 취소 — 카드 OK, 가상계좌는 PG사별 상이"
+
+  - id: cancel-13
+    section: 본론
+    type: flow
+    speaker: narrator
+    tts: "그래서 기획자가 미리 정해야 할 게 있어요."
+    display_text: "기획자가 미리 정해야 할 취소/환불 정책"
+
+  - id: cancel-14
+    section: 본론
+    type: flow
+    speaker: narrator
+    tts: "하나, 취소 및 환불 가능 기간. 결제 후 며칠까지 돈을 돌려줄 건지. 둘, 부분 취소 및 부분 환불 허용 여부. 주문 중 일부만 돌려줄 수 있게 할 건지. 셋, 환불 프로세스. 가상계좌나 계좌이체 고객한테 실제 계좌를 언제, 어떻게 받을 건지. 넷, 처리 소요시간 안내 문구. 고객한테 취소는 즉시, 환불은 삼에서 칠영업일 소요됩니다 이런 거요."
+    display_text: "취소/환불 정책 체크리스트"
+    steps:
+      - "취소·환불 가능 기간"
+      - "부분 취소·환불 허용 여부"
+      - "환불 프로세스 (계좌 수집 방법)"
+      - "처리 소요시간 안내 문구"
+
+  - id: cancel-15
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "이 네가지를 개발팀한테 넘기기 전에 정리해두세요."
+    display_text: "이 4가지를 개발팀한테 넘기기 전에 정리해두세요."
+
+  # ─────────────────────────────────────────────────────────────
+  # 본론 3: 정산
+  # ─────────────────────────────────────────────────────────────
+  - id: settle-01
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "자, 결제가 됐으면 돈이 들어와야 하잖아요. 근데 고객이 결제한 날 바로 들어오는 게 아니에요. 피지사가 카드사에서 돈을 받고, 수수료 떼고, 우리한테 보내주는 데 시간이 걸리거든요. 이걸 정산 주기라고 해요."
+    display_text: "결제는 오늘, 정산은 다음 주"
+
+  - id: settle-02
+    section: 본론
+    type: flow
+    speaker: narrator
+    tts: "디플러스오라고 해서, 결제일로부터 오영업일 뒤에 정산돼요. 월요일에 결제된 건 다음 주 월요일에, 화요일 결제는 다음 주 화요일에, 이런 식으로 매일 결제가 발생하면 오영업일 뒤에 매일 정산이 들어와요."
+    display_text: "D+5 정산 — 결제일로부터 5영업일 뒤"
+    steps:
+      - "월요일 결제 → 다음 주 월요일 정산"
+      - "화요일 결제 → 다음 주 화요일 정산"
+      - "매일 결제 → 5영업일 뒤 매일 정산"
+
+  - id: settle-03
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "피지사마다 디플러스삼인 데도 있고 디플러스오인 데도 있는데, 대부분 디플러스오 기준이라고 보시면 돼요."
+    display_text: "PG사마다 D+3~D+5 차이, 대부분 D+5 기준"
+
+  - id: settle-04
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "근데 여기서 함정이 하나 있어요. 취소나 환불이 발생하면 그 금액이 정산에서 빠져요. 취소 환불이 많은 달에는 정산 금액이 확 줄어들 수 있거든요. 심하면 정산액이 마이너스가 될 수도 있어요."
+    display_text: "취소·환불 → 정산에서 차감 (마이너스 정산 가능)"
+    highlight: "마이너스"
+
+  - id: settle-05
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "이게 왜 중요하냐면요, 사업 운영 관점에서 보면 광고비는 매일 나가잖아요. 서버비도 매달 나가고, 인건비도 나가고. 근데 매출 정산은 일주일 뒤에 들어와요."
+    display_text: "광고비는 오늘 나가고, 정산은 일주일 뒤"
+
+  - id: settle-06
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "초기 스타트업이면 이 캐시플로우 갭이 꽤 부담이 될 수 있어요. 특히 마케팅 비용을 크게 쓰는 시기에는요."
+    display_text: "초기 스타트업 — 캐시플로우 갭 부담"
+
+  - id: settle-07
+    section: 본론
+    type: narration
+    speaker: narrator
+    tts: "그래서 빠른정산 서비스라는 게 있어요. 피지사에서 수수료를 조금 더 내면 디플러스일이나 디플러스이로 앞당겨주는 거예요. 급하면 쓸 수 있는데, 수수료가 추가로 붙으니까 지금 캐시플로우가 정말 빡빡한가 기준으로 판단하시면 돼요."
+    display_text: "빠른정산 — D+1~D+2 (추가 수수료)"
+
+  # ─────────────────────────────────────────────────────────────
+  # 정리
+  # ─────────────────────────────────────────────────────────────
+  - id: summary-01
+    section: 정리
+    type: narration
+    speaker: narrator
+    tts: "자, 오늘 이야기한 걸 정리해볼게요."
+    display_text: "핵심 정리"
+
+  - id: summary-02
+    section: 정리
+    type: flow
+    speaker: narrator
+    tts: "첫 번째, 결제수단은 처음부터 가능한 한 다 넣으세요. 카드, 간편결제, 계좌이체, 가상계좌, 휴대폰결제. 나중에 추가하려면 또 심사받고 개발해야 해요."
+    display_text: "1. 결제수단은 처음부터 다 넣기"
+    steps:
+      - "카드, 간편결제, 계좌이체, 가상계좌, 휴대폰결제"
+
+  - id: summary-03
+    section: 정리
+    type: narration
+    speaker: narrator
+    tts: "두 번째, 취소랑 환불은 다른 거예요. 카드랑 간편결제는 전산 취소, 가상계좌는 직접 환불. 환불 프로세스는 따로 만들어야 해요."
+    display_text: "2. 취소 ≠ 환불 — 환불 프로세스는 따로 만들기"
+
+  - id: summary-04
+    section: 정리
+    type: narration
+    speaker: narrator
+    tts: "세 번째, 정산은 보통 디플러스오. 캐시플로우 갭을 미리 계산해두세요."
+    display_text: "3. 정산은 D+5 — 캐시플로우 갭 미리 계산"
+
+  - id: summary-05
+    section: 정리
+    type: quote
+    speaker: narrator
+    tts: "이 중에서 하나만 기억하신다면. 결제 만들 때 취소 환불 정책을 같이 만드세요. 라이브 첫날에 취소 환불 씨에스는 반드시 옵니다."
+    display_text: "결제 만들 때 취소·환불 정책을 같이 만드세요. 라이브 첫날에 CS는 반드시 옵니다."
+
+  # ─────────────────────────────────────────────────────────────
+  # 부트페이 CTA
+  # ─────────────────────────────────────────────────────────────
+  - id: cta-01
+    section: CTA
+    type: screenshot
+    speaker: narrator
+    tts: "오늘 이야기한 것들, 부트페이 관리자에서 한번에 관리할 수 있어요. 카드나 간편결제 취소는 관리자 화면에서 버튼 하나로 되고, 가상계좌 환불도 고객 계좌정보 입력하면 자동으로 이체 처리돼요. 수동으로 송금할 필요가 없어요."
+    display_text: "Bootpay 관리자 — 결제/취소/환불 통합 관리"
+    image: "/assets/screenshots/bootpay-admin-cancel.png"
+    caption: "Bootpay 관리자 화면"
+
+  - id: cta-02
+    section: CTA
+    type: narration
+    speaker: narrator
+    tts: "정산도 결제수단별로, 기간별로 조회가 돼서 이번 달 정산 얼마나 들어오지 미리 확인할 수 있어요. 설명란에 링크 남겨둘게요."
+    display_text: "정산 조회 — 결제수단별, 기간별"
+
+  # ─────────────────────────────────────────────────────────────
+  # 아웃트로
+  # ─────────────────────────────────────────────────────────────
+  - id: outro-01
+    section: 아웃트로
+    type: greeting
+    speaker: narrator
+    tts: "다음 영상에서는 구독결제, 빌링키부터 해지율 관리까지 이야기해볼게요. 도움이 됐다면 구독 부탁드려요. 다음 영상에서 만나요."
+    display_text: "다음 영상: 구독결제 — 빌링키부터 해지율 관리까지"

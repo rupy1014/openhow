@@ -28,6 +28,7 @@
 │                                               │
 │ 에이전트: .claude/agents/reviewer.md            │
 │ 입력:                                          │
+│   - docs/rules/*.md (용어 규칙)                 │
 │   - docs/guides/{slug}.md                      │
 │   - docs/research/{slug}-research.md (있으면)   │
 │   - docs/blog-strategy.md                      │
