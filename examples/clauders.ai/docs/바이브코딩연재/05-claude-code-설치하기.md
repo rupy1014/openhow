@@ -22,7 +22,7 @@ order: 05
 이게 진짜 **유능한 신입사원**이지.
 말로만 "네 알겠습니다" 하는 게 아니라, 진짜로 일을 처리해놓는 친구.
 
-![Claude Code vs 웹사이트 차이점](assets/05-claude-vs-terminal.png)
+![Claude Code vs 웹사이트 차이점](./images/05-claude-vs-terminal.png)
 
 오늘은 이 친구를 우리 컴퓨터에 "입사(설치)"시켜볼게.
 

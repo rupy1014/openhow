@@ -116,7 +116,7 @@ export async function getExchangeRate() {
 
 이게 바로 **'실패를 대비하는 설계'**야.
 
-![API 안전장치 (try-catch)](assets/31-api-safety-net.png)
+![API 안전장치 (try-catch)](./images/31-api-safety-net.png)
 
 ---
 

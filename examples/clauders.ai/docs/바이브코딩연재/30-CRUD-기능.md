@@ -66,7 +66,7 @@ order: 30
 
 그래서 우리는 **유효성 검사(Validation)**라는 **문지기**를 세워야 해.
 
-![API 유효성 검사 (문지기)](assets/30-api-gatekeeper.png)
+![API 유효성 검사 (문지기)](./images/30-api-gatekeeper.png)
 
 ### AI에게 지시하기 (상황극)
 
