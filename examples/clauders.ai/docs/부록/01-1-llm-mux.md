@@ -123,7 +123,7 @@ scp ~/.config/llm-mux/auth/*.json your-server:/path/to/llm-mux-auth/
 ```yaml:docker-compose.yaml
 services:
   llm-mux:
-    image: csflow-llm-mux:latest
+    image: llm-mux:latest
     volumes:
       - ./docker/llm-mux-auth:/root/.config/llm-mux/auth
     restart: always
