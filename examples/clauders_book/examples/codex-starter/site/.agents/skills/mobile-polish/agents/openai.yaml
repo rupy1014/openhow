@@ -1,0 +1,6 @@
+interface:
+  display_name: "Mobile Polish"
+  short_description: "site 폴더에서 모바일 가독성만 다듬습니다."
+  default_prompt: "모바일에서 버튼과 본문 간격을 더 읽기 좋게 다듬어줘."
+policy:
+  allow_implicit_invocation: false

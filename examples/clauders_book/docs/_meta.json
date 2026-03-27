@@ -1,0 +1,10 @@
+{
+  "nav": [
+    { "key": "입문", "label": "입문", "order": 1 },
+    { "key": "바이브코딩", "label": "바이브코딩", "order": 2 },
+    { "key": "자동화", "label": "자동화", "order": 3 },
+    { "key": "AI로일하기", "label": "AI로 일하기", "order": 4 },
+    { "key": "기술의큰그림", "label": "기술의 큰 그림", "order": 5 },
+    { "key": "부록", "label": "부록", "order": 6 }
+  ]
+}

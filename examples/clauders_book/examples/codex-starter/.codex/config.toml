@@ -1,0 +1,31 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+model = "gpt-5.4"
+model_reasoning_effort = "medium"
+# Trusted local demo workspace:
+# allow hands-off execution inside the repo sandbox, but keep network off.
+approval_policy = "never"
+sandbox_mode = "workspace-write"
+notify = true
+
+[sandbox_workspace_write]
+network_access = false
+
+[tools]
+web_search = false
+
+[profiles.cautious]
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[profiles.review]
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+approval_policy = "never"
+sandbox_mode = "read-only"
+
+[profiles.fast]
+model = "gpt-5.4-mini"
+model_reasoning_effort = "low"
+approval_policy = "never"
+sandbox_mode = "workspace-write"

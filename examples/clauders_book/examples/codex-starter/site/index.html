@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codex Starter</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <p class="eyebrow">Codex Starter</p>
+        <h1>작은 프로젝트도 작업 환경부터 잡으면 덜 흔들립니다.</h1>
+        <p class="lead">
+          이 예제는 결과물보다 구조를 먼저 보여주기 위해 만들어졌습니다.
+          규칙 파일, 설정 파일, 스킬, 그리고 실제 화면 파일이 한 폴더에 같이 들어 있습니다.
+        </p>
+        <div class="actions">
+          <button id="primary-button" type="button">문구 바꿔보기</button>
+          <button id="secondary-button" type="button">레이아웃 읽어보기</button>
+        </div>
+      </section>
+
+      <section class="cards" aria-label="핵심 포인트">
+        <article class="card">
+          <h2>AGENTS.md</h2>
+          <p>이 프로젝트에서 어떤 식으로 일해야 하는지 알려주는 규칙 파일입니다.</p>
+        </article>
+        <article class="card">
+          <h2>config.toml</h2>
+          <p>모델, 승인, 샌드박스 같은 기본 동작을 잡는 설정 파일입니다.</p>
+        </article>
+        <article class="card">
+          <h2>skills</h2>
+          <p>반복해서 쓰는 작업 방식을 짧은 이름으로 다시 호출할 수 있게 해줍니다.</p>
+        </article>
+      </section>
+
+      <section class="log-section" aria-label="상호작용 로그">
+        <h2>작은 상호작용</h2>
+        <p id="status-text">아직 아무 버튼도 누르지 않았습니다.</p>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

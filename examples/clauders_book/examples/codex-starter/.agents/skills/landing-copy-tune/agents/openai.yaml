@@ -1,0 +1,6 @@
+interface:
+  display_name: "Landing Copy Tune"
+  short_description: "랜딩 페이지 문구만 또렷하게 다듬습니다."
+  default_prompt: "hero와 lead 문구를 더 명확하게 다듬어줘."
+policy:
+  allow_implicit_invocation: false
