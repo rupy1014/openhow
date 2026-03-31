@@ -51,8 +51,8 @@ npm install -g @openai/codex
 Codex에 작업을 넘길 때 반드시 4가지를 포함한다:
 
 1. **TASK** — 원자적 목표 (한 문장)
-2. **EXPECTED** — 성공 기준
-3. **MUST NOT** — 금지 행동
+2. **EXPECTED** — 성공 기준 (테스트 통과, 린터 통과 등 기계적으로 검증 가능한 것)
+3. **MUST NOT** — 금지 행동 (레이어 위반, 의존성 역전 등 아키텍처 제약)
 4. **CONTEXT** — 파일 경로, 패턴, 이전 결과
 
 ### 작업 흐름
@@ -75,6 +75,7 @@ Codex가 사용 불가할 때 (토큰 소진, 네트워크 오류, 인증 만료
 
 - 구현 완료 후 반드시 `/codex:review` 실행
 - 아키텍처 변경이 큰 경우 `/codex:adversarial-review` 추가
+- ⚠️ 리뷰 게이트(Stop hook)를 켜면 Claude↔Codex 루프가 길어질 수 있어. 사용량 주의.
 
 ### 병렬 실행
 
@@ -85,6 +86,8 @@ Codex가 사용 불가할 때 (토큰 소진, 네트워크 오류, 인증 만료
 /codex:rescue --background [작업 B]
 /codex:status
 ```
+
+완료된 작업은 `/codex:result`로 확인, 취소는 `/codex:cancel`.
 ````
 
 ## 완료 확인
