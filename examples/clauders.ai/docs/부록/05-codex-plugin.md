@@ -33,41 +33,14 @@ Claude Code가 코딩 에이전트 시장을 먹고 있거든.
 
 ---
 
-## 어떻게 쓰냐
+## 어떻게 세팅해?
 
-**Step 1.** Codex CLI 설치 (이미 있으면 넘어가)
-
-```bash
-npm install -g @openai/codex
-codex --version
-```
-
-**Step 2.** Claude Code에서 플러그인 설치
-
-```
-/plugin marketplace add openai/codex-plugin-cc
-/plugin install codex@openai-codex
-/reload-plugins
-```
-
-**Step 3.** 설치 확인
-
-```
-/codex:setup
-```
-
-로그인이 안 돼 있으면:
-
-```bash
-codex login
-```
-
-**Step 4.** 아래 세팅 파일을 복사해서 붙여넣어
+아래 세팅 파일을 복사해서 Claude Code에 붙여넣어.
 
 :::copy-embed _embeds/setup-codex-plugin Codex 플러그인 자동 위임 세팅 파일
 :::
 
-이걸 붙여넣으면 `~/.claude/CLAUDE.md`에 역할 분담이 추가돼. 어떤 프로젝트를 열어도 Claude가 기획하고 Codex가 코딩해.
+Codex CLI 설치, 플러그인 설치, `~/.claude/CLAUDE.md` 역할 분담 추가까지 Claude가 알아서 해.
 
 :::tip
 ChatGPT Free 계정이라도 Codex CLI는 쓸 수 있어. 사용량 제한만 다르지.

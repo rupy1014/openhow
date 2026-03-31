@@ -10,6 +10,34 @@ hidden: true
 
 === 여기서부터 복사 ===
 
+OpenAI Codex 플러그인을 설치하고, Claude가 기획/하네스, Codex가 코딩/리뷰를 담당하는 환경을 만들어줘.
+
+공식 레포: https://github.com/openai/codex-plugin-cc
+
+## 1. Codex CLI 설치
+
+`codex --version`으로 설치 여부 확인해줘. 없으면:
+
+```bash
+npm install -g @openai/codex
+```
+
+설치 후 `codex --version`으로 확인.
+
+## 2. 플러그인 설치
+
+아래 3개를 Claude Code에서 순서대로 실행해줘:
+
+```
+/plugin marketplace add openai/codex-plugin-cc
+/plugin install codex@openai-codex
+/reload-plugins
+```
+
+`/codex:setup`으로 설치 확인. 로그인이 안 돼 있으면 `codex login`을 안내해줘.
+
+## 3. 글로벌 CLAUDE.md에 역할 분담 추가
+
 `~/.claude/CLAUDE.md` 파일에 아래 내용을 추가해줘. 기존 내용은 유지하고 맨 아래에 붙여.
 
 ````markdown
@@ -59,7 +87,12 @@ Codex가 사용 불가할 때 (토큰 소진, 네트워크 오류, 인증 만료
 ```
 ````
 
-추가 완료되면 어떤 내용을 넣었는지 한 줄로 알려줘.
+## 완료 확인
+
+모든 단계가 끝나면 아래를 알려줘:
+1. `codex --version` 결과
+2. `/codex:setup` 결과
+3. `~/.claude/CLAUDE.md`에 추가한 내용 요약
 
 === 여기까지 복사 ===
 
