@@ -108,7 +108,7 @@ Codex가 사용 불가할 때 (토큰 소진, 네트워크 오류, 인증 만료
 Codex가 사용할 기본 모델을 설정하려면 `~/.codex/config.toml`:
 
 ```toml
-model = "o4-mini"
+model = "gpt-5.4-mini"
 model_reasoning_effort = "high"
 ```
 

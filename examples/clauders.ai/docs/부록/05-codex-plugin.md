@@ -204,10 +204,12 @@ Claude가 응답할 때마다 Codex가 자동으로 리뷰하는 기능이야.
 
 ## 모델은 뭘 쓰냐
 
-기본값은 `~/.codex/config.toml`에서 설정:
+Codex CLI 기본 모델은 `gpt-5.4`야. 별도 설정 안 하면 이걸 써.
+
+바꾸고 싶으면 `~/.codex/config.toml`:
 
 ```toml
-model = "o4-mini"
+model = "gpt-5.4-mini"
 model_reasoning_effort = "high"
 ```
 
@@ -219,9 +221,10 @@ model_reasoning_effort = "high"
 
 | 모델 | 언제 쓰냐 |
 |------|----------|
-| `o4-mini` | 기본값. 대부분의 코딩 작업 |
-| `spark` (`gpt-5.3-codex-spark`) | 빠르고 가벼운 작업 |
-| config.toml 설정값 | `--model` 안 넘기면 이거 씀 |
+| `gpt-5.4` | 기본값. 코딩 + 추론 + 에이전트 통합 |
+| `gpt-5.4-mini` | 빠르고 저렴한 작업 |
+| `gpt-5.3-codex` | 복잡한 소프트웨어 엔지니어링 전문 |
+| `spark` (`gpt-5.3-codex-spark`) | 실시간급 속도. ChatGPT Pro 전용 |
 
 ---
 

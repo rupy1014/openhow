@@ -3,6 +3,7 @@ slug: 부록-codex-orchestration
 title: "Claude + Codex 오케스트레이션"
 nav: Claude + Codex 오케스트레이션
 order: 5
+hidden: true
 ---
 
 **Claude Max만으로 토큰이 부족할 때 쓰는 방법이야.**
