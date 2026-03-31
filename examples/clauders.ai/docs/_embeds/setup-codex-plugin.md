@@ -10,7 +10,7 @@ hidden: true
 
 === 여기서부터 복사 ===
 
-OpenAI Codex 플러그인을 설치하고, Claude가 오케스트레이터(기획/분석/검증), Codex가 실행자(코딩)를 담당하는 환경을 만들어줘.
+OpenAI Codex 플러그인을 설치하고, Claude가 오케스트레이터(기획/분석/퇴고), Codex가 실행자(코딩)를 담당하는 환경을 만들어줘.
 
 공식 레포: https://github.com/openai/codex-plugin-cc
 
@@ -38,7 +38,7 @@ npm install -g @openai/codex
 
 ## 3. 오케스트레이션 커맨드 생성
 
-`~/.claude/commands/cowork.md` 파일을 생성해줘. 내용은 아래와 같아:
+`~/.claude/commands/cowork.md` 파일을 아래 내용으로 생성해줘:
 
 ````markdown
 ---
@@ -47,104 +47,59 @@ argument-hint: "[작업 설명 — 생략하면 대화 문맥에서 추론]"
 allowed-tools: Read, Glob, Grep, Bash(node:*), Bash(git:*), Agent, AskUserQuestion
 ---
 
-# Codex Work — 오케스트레이션 모드
+# Cowork — 오케스트레이션 모드
 
-당신은 **오케스트레이터**다. 코드를 직접 수정하지 않는다. 분석하고, 계획하고, Codex에 위임하고, 결과를 검증한다.
+당신은 **오케스트레이터**다. 코드를 직접 수정하지 않는다. 분석하고, 계획하고, Codex에 위임하고, 결과를 검증하고, 퇴고한다.
 
 Codex companion 스크립트 경로:
 ```
 CODEX_SCRIPT="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/plugins/marketplaces/openai-codex/plugins/codex}/scripts/codex-companion.mjs"
 ```
 
-모든 Codex 호출에서 이 변수를 사용한다.
-
 ## Phase 0: 작업 파악
 
-사용자 요청:
-`$ARGUMENTS`
+사용자 요청: `$ARGUMENTS`
 
-**$ARGUMENTS가 비어있거나 모호하면:**
-- 이 세션의 대화 흐름을 읽어라.
-- 사용자가 논의한 버그, 기능, 리팩토링 등에서 "다음으로 구현해야 할 것"을 추론하라.
-- 추론한 작업을 사용자에게 한 문장으로 확인받아라: `AskUserQuestion`으로 "이 작업을 진행할까요? → [작업 설명]" 형식. 선택지는:
-  - `네, 진행해주세요 (Recommended)`
-  - `아니요, 다른 작업을 할게요`
-
-**$ARGUMENTS가 명확하면:** 바로 Phase 1로.
+**비어있거나 모호하면:** 대화 문맥에서 추론 → `AskUserQuestion`으로 확인.
+**명확하면:** 바로 Phase 1로.
 
 ## Phase 1: 분석 & 계획
 
-코드를 직접 수정하지 말고, **읽기 전용**으로 분석한다:
-
-1. `Glob`, `Grep`, `Read`로 관련 파일과 구조를 파악한다.
-2. 프로젝트의 CLAUDE.md, 아키텍처 문서를 참고한다.
-3. 작업을 **원자적 단위**로 분해한다 (최대 5개 스텝).
-
-사용자에게 계획을 보여줘라:
-
-```
-## 작업 계획
-
-**목표**: [한 문장]
-
-| # | 스텝 | Codex에 위임할 내용 | 검증 기준 |
-|---|------|-------------------|----------|
-| 1 | ... | ... | ... |
-| 2 | ... | ... | ... |
-```
-
-`AskUserQuestion`으로 확인:
-- `계획대로 진행 (Recommended)`
-- `계획 수정이 필요해요`
+`Glob`, `Grep`, `Read`로 읽기 전용 분석 → 원자적 스텝 분해 (최대 5개) → 사용자에게 계획 제시 → 확인.
 
 ## Phase 2: Codex 위임 실행
 
-각 스텝마다 아래 루프를 실행한다:
+각 스텝마다:
 
-### 2a. Codex에 위임
+### 2a. 위임
+TASK/EXPECTED/MUST NOT/CONTEXT 4요소로 프롬프트 구성 → `codex-companion.mjs task --write` 실행.
 
-Codex에 넘길 프롬프트를 다음 4요소로 구성한다:
+### 2b. 검증 & 퇴고
+1. `git diff --stat`으로 변경량 확인 — 삽입 대비 삭제가 현저히 적으면 중복 의심
+2. `Read` + `Grep`으로 핵심 파일 검증:
+   - EXPECTED 충족? MUST NOT 위반 없음? 프로젝트 컨벤션?
+   - **중복 코드** → 공통 헬퍼 추출 위임
+   - **과도한 변경** → 불필요 부분 롤백 위임
+   - **누락** → 제거 위임
+3. **이슈 발견 시 즉시 Codex에 수정 위임** (보고만 하지 말 것, `--resume-last` 사용)
+4. 이슈 → 수정 위임 → 재검증 루프 최대 3회
 
-```
-TASK: [원자적 목표 — 한 문장]
-EXPECTED: [성공 기준 — 기계적으로 검증 가능한 것]
-MUST NOT: [금지 행동 — 아키텍처 제약, 스타일 규칙 등]
-CONTEXT: [관련 파일 경로, 기존 패턴, 이전 스텝 결과]
-```
+### 2c. 다음 스텝
+- 통과 → 다음 스텝
+- 3회 실패 → 사용자 보고, 요청 시 Claude 직접 수정
 
-실행:
+## Phase 3: 퇴고 & 최종 리뷰
 
-```bash
-CODEX_SCRIPT="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/plugins/marketplaces/openai-codex/plugins/codex}/scripts/codex-companion.mjs" && node "$CODEX_SCRIPT" task --write "TASK: ... EXPECTED: ... MUST NOT: ... CONTEXT: ..."
-```
-
-- 스텝이 복잡하면 `--background` 추가 후 `/codex:status`로 확인을 안내한다.
-- 단순 스텝은 foreground로 실행하고 완료를 기다린다.
-
-### 2b. 결과 검증
-
-Codex 완료 후:
-
-1. `git diff --stat`으로 변경된 파일 확인
-2. 변경된 핵심 파일을 `Read`로 읽어서 검증
-3. 검증 결과를 사용자에게 짧게 보고
-
-### 2c. 재시도 또는 다음 스텝
-
-- **통과**: 다음 스텝으로 진행
-- **문제 발견**: 구체적 수정 지시를 포함하여 Codex에 재위임 (`--resume-last`)
-- **3회 연속 실패**: 사용자에게 보고. 원하면 Claude가 직접 수정.
-
-## Phase 3: 최종 리뷰
-
-모든 스텝 완료 후 전체 변경 요약 + 선택적 Codex 리뷰.
+1. `git diff --stat` 전체 변경 요약
+2. Codex 리뷰 실행 (`codex-companion.mjs review`)
+3. **리뷰 이슈 발견 시 Codex에 수정 위임** (보고만 하지 말 것)
+4. 최종 보고: 목표, 변경 파일, 퇴고 횟수, 검증 상태
 
 ## 핵심 규칙
 
-- **Claude는 코드를 직접 수정하지 않는다.** Edit, Write 도구를 사용하지 마라.
-- 분석/검증에만 Read, Glob, Grep을 사용한다.
+- **Claude는 코드를 직접 수정하지 않는다.** Edit, Write 사용 금지.
 - 모든 코드 변경은 `codex-companion.mjs task --write`를 통해서만.
-- Codex가 사용 불가하면 사용자에게 알리고, 직접 코딩 전환 여부를 물어라.
+- Codex 사용 불가 시 사용자에게 알리고, 직접 코딩 전환 여부를 물어라.
 ````
 
 ## 완료 확인
@@ -160,7 +115,7 @@ Codex 완료 후:
 
 ## 세팅 후 사용법
 
-### 오케스트레이션 모드 (Claude 기획 + Codex 코딩)
+### 오케스트레이션 모드 (Claude 기획 + Codex 코딩 + 퇴고)
 ```
 /cowork 결제 취소 API 만들어줘
 ```

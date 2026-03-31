@@ -68,19 +68,29 @@ Phase 1  Claude: 코드 분석, 작업 분해, 계획 수립
               ↓ (사용자 확인)
 Phase 2  Claude → Codex: TASK/EXPECTED/MUST NOT/CONTEXT 구성 → 위임
          Codex: 구현
-         Claude: git diff 확인, 검증, 필요시 재위임
+         Claude: git diff 확인, 중복/누락/품질 검증
+         ↳ 이슈 발견 → Codex에 수정 재위임 (최대 3회)
               ↓ (스텝마다 반복)
-Phase 3  Claude: 전체 변경 요약, 선택적 Codex 리뷰
+Phase 3  Claude: Codex 리뷰 실행 → 이슈 있으면 또 Codex에 수정 위임
+         최종 보고
 ```
+
+핵심은 **퇴고 루프**야. Claude가 Codex 결과를 검증만 하고 끝내는 게 아니라, 문제가 있으면 Codex에 수정을 다시 시키고, 고쳐진 걸 또 확인해. 실제로 돌려보면:
+
+1. Codex가 코드를 짰는데 중복이 있음 → Claude가 "공통 헬퍼로 추출해" 재위임
+2. Codex가 수정했는데 한 곳이 누락됨 → Claude가 "여기도 바꿔" 재위임
+3. 최종 리뷰에서 깔끔하면 완료
+
+이게 "보고만 하는 Claude"와 "퇴고하는 Claude"의 차이야.
 
 **`/codex:rescue`와 `/cowork`의 차이:**
 
 | | `/codex:rescue` | `/cowork` |
 |--|----------------|---------------|
-| Claude 역할 | 없음 (포워더) | 기획 + 분석 + 검증 |
+| Claude 역할 | 없음 (포워더) | 기획 + 검증 + 퇴고 |
 | 작업 분해 | Codex가 알아서 | Claude가 스텝별 분해 |
-| 검증 루프 | 없음 | 스텝마다 git diff + Read |
-| 재시도 | 없음 | 3회까지 자동 재위임 |
+| 검증 | 없음 | git diff + Read + Grep |
+| 퇴고 | 없음 | 이슈 발견 시 Codex에 수정 재위임 |
 | 대화 문맥 | 사용 안 함 | 문맥에서 작업 추론 가능 |
 
 `/cowork`에 인자를 안 넣으면 대화 문맥에서 "다음에 할 일"을 추론해서 물어봐. 논의하다가 그냥 `/cowork` 치면 돼.
