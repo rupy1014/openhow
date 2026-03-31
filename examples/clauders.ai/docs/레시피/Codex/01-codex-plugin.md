@@ -1,5 +1,5 @@
 ---
-slug: 레시피-codex-plugin
+slug: Codex-plugin
 title: "Codex 플러그인"
 nav: Codex 플러그인
 order: 1
