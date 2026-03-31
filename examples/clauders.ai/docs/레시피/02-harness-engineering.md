@@ -1,11 +1,11 @@
 ---
-slug: 부록-harness-engineering
+slug: 레시피-harness-engineering
 title: "하네스 엔지니어링"
 nav: 하네스 엔지니어링
-order: 7
+order: 2
 ---
 
-**[Codex 플러그인](/부록-codex-plugin) 깔았으면 다음은 이거야.**
+**[Codex 플러그인](/레시피-codex-plugin) 깔았으면 다음은 이거야.**
 
 플러그인만 깔면 Codex가 코드를 짜긴 해. 근데 레이어를 무시하고, 컨벤션을 안 지키고, 문서랑 코드가 따로 놀아. 이걸 잡는 게 하네스 엔지니어링이야.
 

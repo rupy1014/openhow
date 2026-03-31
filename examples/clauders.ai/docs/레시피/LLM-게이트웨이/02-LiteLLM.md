@@ -1,8 +1,8 @@
 ---
-slug: 부록-LiteLLM
+slug: LLM-게이트웨이-LiteLLM
 title: "LiteLLM"
 nav: LiteLLM
-order: 3
+order: 2
 ---
 
 **100개 모델을 코드 한 줄로 바꾸고 싶으면 이거야.**

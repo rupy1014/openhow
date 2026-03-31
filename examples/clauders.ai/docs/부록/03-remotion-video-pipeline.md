@@ -2,7 +2,7 @@
 slug: 부록-remotion-video-pipeline
 title: "Remotion 영상 파이프라인"
 nav: Remotion 영상 파이프라인
-order: 8
+order: 2
 ---
 
 **Claude Code에게 주제 주면 대본부터 YAML 씬 스펙까지 다 써줘.**

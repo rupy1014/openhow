@@ -1,8 +1,8 @@
 ---
-slug: 부록-LLM-게이트웨이
+slug: LLM-게이트웨이
 title: "LLM 게이트웨이"
 nav: LLM 게이트웨이
-order: 1
+order: 0
 ---
 
 **API 키 3개 관리하기 귀찮지 않아?**

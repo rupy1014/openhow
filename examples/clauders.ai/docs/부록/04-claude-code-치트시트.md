@@ -2,7 +2,7 @@
 slug: 부록-claude-code-치트시트
 title: "Claude Code 치트시트"
 nav: 치트시트
-order: 4
+order: 1
 ---
 
 **Claude Code 단축키 + 커맨드 전부 한 장에.**

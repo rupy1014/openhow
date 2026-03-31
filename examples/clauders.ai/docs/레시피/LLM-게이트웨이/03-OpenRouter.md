@@ -1,8 +1,8 @@
 ---
-slug: 부록-OpenRouter
+slug: LLM-게이트웨이-OpenRouter
 title: "OpenRouter"
 nav: OpenRouter
-order: 4
+order: 3
 ---
 
 **설치 없이 바로 쓰고 싶으면 이거야.**

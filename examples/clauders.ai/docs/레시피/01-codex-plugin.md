@@ -1,8 +1,8 @@
 ---
-slug: 부록-codex-plugin
+slug: 레시피-codex-plugin
 title: "Codex 플러그인"
 nav: Codex 플러그인
-order: 6
+order: 1
 ---
 
 **OpenAI가 경쟁사 도구에 공식 플러그인을 만들었어.**
@@ -43,7 +43,7 @@ Claude Code (하네스)
 
 Claude Code 자체가 하네스야. 모델을 둘러싼 도구, 권한, 제약, 검증 — 이게 다 하네스거든. Claude가 작업을 분해하고, Codex가 실행하고, 하네스가 제약을 건다.
 
-근데 이 하네스를 **네 프로젝트에 맞게 세팅**해야 제대로 돌아가. 그건 [다음 편: 하네스 엔지니어링](/부록-harness-engineering)에서 다뤄.
+근데 이 하네스를 **네 프로젝트에 맞게 세팅**해야 제대로 돌아가. 그건 [다음 편: 하네스 엔지니어링](/레시피-harness-engineering)에서 다뤄.
 
 ---
 
@@ -101,4 +101,4 @@ model_reasoning_effort = "high"
 
 ## 한 줄 정리
 
-세팅 파일 붙여넣으면 Claude는 기획, Codex는 코딩 — 알아서 돼. 근데 Codex가 엉뚱한 코드를 안 짜게 하려면 [하네스를 깔아야 해](/부록-harness-engineering).
+세팅 파일 붙여넣으면 Claude는 기획, Codex는 코딩 — 알아서 돼. 근데 Codex가 엉뚱한 코드를 안 짜게 하려면 [하네스를 깔아야 해](/레시피-harness-engineering).

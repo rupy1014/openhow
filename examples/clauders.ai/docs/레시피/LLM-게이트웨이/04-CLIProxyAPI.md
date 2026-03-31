@@ -1,8 +1,8 @@
 ---
-slug: 부록-CLIProxyAPI
+slug: LLM-게이트웨이-CLIProxyAPI
 title: "CLIProxyAPI"
 nav: CLIProxyAPI
-order: 5
+order: 4
 ---
 
 **유저가 자기 구독으로 로그인하게 하고 싶으면 이거야.**

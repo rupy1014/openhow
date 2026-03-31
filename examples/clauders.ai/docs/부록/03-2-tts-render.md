@@ -2,7 +2,7 @@
 slug: 부록-remotion-tts-render
 title: "TTS · 오디오 · 렌더링"
 nav: TTS · 렌더 커맨드
-order: 10
+order: 4
 ---
 
 **씬 스펙이 완성됐으면 TTS 생성하고, 타임라인 검증하고, 렌더링해.**

@@ -2,7 +2,7 @@
 slug: 부록-remotion-write-scene
 title: "/write · /scene 커맨드"
 nav: /write · /scene
-order: 9
+order: 3
 ---
 
 **대본 쓰는 것부터 YAML 씬 스펙까지 Claude Code 커맨드 두 개로 끝나.**

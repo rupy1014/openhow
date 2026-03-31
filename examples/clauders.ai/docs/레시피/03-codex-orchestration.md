@@ -1,8 +1,8 @@
 ---
-slug: 부록-codex-orchestration
+slug: 레시피-codex-orchestration
 title: "Claude + Codex 오케스트레이션"
 nav: Claude + Codex 오케스트레이션
-order: 5
+order: 3
 hidden: true
 ---
 
