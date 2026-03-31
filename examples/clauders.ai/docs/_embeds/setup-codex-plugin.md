@@ -10,7 +10,7 @@ hidden: true
 
 === 여기서부터 복사 ===
 
-OpenAI Codex 플러그인을 설치하고, Claude가 기획/하네스, Codex가 코딩/리뷰를 담당하는 환경을 만들어줘.
+OpenAI Codex 플러그인을 설치하고, Claude가 오케스트레이터(기획/분석/판단), Codex가 실행자(코딩/리뷰)를 담당하는 환경을 만들어줘.
 
 공식 레포: https://github.com/openai/codex-plugin-cc
 
