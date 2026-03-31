@@ -26,7 +26,7 @@ npm install -g @openai/codex
 
 ## 2. 플러그인 설치
 
-아래 3개를 Claude Code에서 순서대로 실행해줘:
+`/plugin` 명령은 사용자가 직접 입력해야 해. 아래 3줄을 **순서대로 입력하라고 안내**해줘:
 
 ```
 /plugin marketplace add openai/codex-plugin-cc
@@ -34,7 +34,7 @@ npm install -g @openai/codex
 /reload-plugins
 ```
 
-`/codex:setup`으로 설치 확인. 로그인이 안 돼 있으면 `codex login`을 안내해줘.
+3개 다 입력했으면 `/codex:setup`으로 확인하라고 알려줘. 로그인이 안 돼 있으면 터미널에서 `codex login`을 실행하라고 안내해줘.
 
 ## 3. 글로벌 CLAUDE.md에 역할 분담 추가
 
