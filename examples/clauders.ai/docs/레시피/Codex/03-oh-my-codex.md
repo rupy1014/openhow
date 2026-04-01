@@ -43,7 +43,32 @@ omx hud
 | `$plan` | 큰 작업 들어가기 전에 | 전략 분해가 빨라져 |
 | `$autopilot` | 반복 실행을 길게 맡길 때 | 6단계 자율 실행 흐름을 바로 켜 |
 
-이 중 핵심은 `$ralph`야. 단순히 "코드 짜는 스킬"이 아니라 "완료될 때까지 루프를 돌리는 운영자"에 가까워. 구현하고, 검증하고, 아키텍트 리뷰를 받고, deslop 하고, 남은 오류를 다시 잡고, 끝날 때까지 재시도하는 흐름이라서 막연한 태스크를 맡길수록 차이가 커.
+이 중 핵심은 `$ralph`야. 단순히 "코드 짜는 스킬"이 아니라 "완료될 때까지 루프를 돌리는 운영자"에 가까워:
+
+:::canvas-flow
+{
+  "nodes": [
+    { "id": "impl", "label": "구현", "col": 0, "row": 0, "type": "process" },
+    { "id": "verify", "label": "검증", "col": 1, "row": 0, "type": "process" },
+    { "id": "review", "label": "아키텍트\n리뷰", "col": 2, "row": 0, "type": "process" },
+    { "id": "deslop", "label": "deslop\n정리", "col": 3, "row": 0, "type": "process" },
+    { "id": "done", "label": "완료", "col": 4, "row": 0, "type": "success" }
+  ],
+  "edges": [
+    { "from": "impl", "to": "verify" },
+    { "from": "verify", "to": "review" },
+    { "from": "review", "to": "deslop" },
+    { "from": "deslop", "to": "done" },
+    { "from": "verify", "to": "impl" },
+    { "from": "review", "to": "impl" }
+  ],
+  "direction": "LR",
+  "cols": 5,
+  "rows": 1
+}
+:::
+
+실패하면 구현으로 되돌아가서 다시 도는 루프야. 막연한 태스크를 맡길수록 차이가 커.
 
 ### Tier 2: 품질 올릴 때 꺼내는 스킬
 
@@ -57,9 +82,22 @@ omx hud
 
 ### 패턴 A: 막연한 아이디어를 코드로 바꿀 때
 
-```text
-$deep-interview -> $plan --consensus -> $autopilot
-```
+:::canvas-flow
+{
+  "nodes": [
+    { "id": "di", "label": "$deep-interview\n요구사항 압축", "col": 0, "row": 0, "type": "process" },
+    { "id": "pl", "label": "$plan --consensus\n전략 합의", "col": 1, "row": 0, "type": "process" },
+    { "id": "ap", "label": "$autopilot\n자율 실행", "col": 2, "row": 0, "type": "success" }
+  ],
+  "edges": [
+    { "from": "di", "to": "pl" },
+    { "from": "pl", "to": "ap" }
+  ],
+  "direction": "LR",
+  "cols": 3,
+  "rows": 1
+}
+:::
 
 아이디어 단계에선 바로 구현보다 질문이 먼저여야 해. `$deep-interview`가 요구사항을 압축해 주고, `$plan --consensus`가 실행 전략을 합의 형태로 정리하고, `$autopilot`이 실제 작업을 밀어.
 
@@ -95,11 +133,28 @@ omx team shutdown
 
 ### 패턴 D: 조사와 분석
 
-```text
-$analyze
-```
+`$analyze`를 걸면 좋은 분석 출력은 이 흐름을 닮아:
 
-좋은 분석 출력은 `가설 -> 증거 -> file:line 레퍼런스 -> 다음 액션` 순서를 닮아. "느낌상 여기 문제 같아"가 아니라 "이 파일 몇 줄 근처가 왜 의심되는지"를 뽑아야 해.
+:::canvas-flow
+{
+  "nodes": [
+    { "id": "h", "label": "가설 수립", "col": 0, "row": 0, "type": "process" },
+    { "id": "e", "label": "증거 수집", "col": 1, "row": 0, "type": "process" },
+    { "id": "r", "label": "file:line\n레퍼런스", "col": 2, "row": 0, "type": "process" },
+    { "id": "a", "label": "다음 액션\n제시", "col": 3, "row": 0, "type": "success" }
+  ],
+  "edges": [
+    { "from": "h", "to": "e" },
+    { "from": "e", "to": "r" },
+    { "from": "r", "to": "a" }
+  ],
+  "direction": "LR",
+  "cols": 4,
+  "rows": 1
+}
+:::
+
+"느낌상 여기 문제 같아"가 아니라 "이 파일 몇 줄 근처가 왜 의심되는지"를 뽑아야 해.
 
 ### 세션 복구도 꽤 강해
 
