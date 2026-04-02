@@ -1,5 +1,8 @@
 {
   "content": "docs",
   "workspace": "clauders",
-  "title": "클로더즈"
+  "title": "클로더즈",
+  "scan": {
+    "exclude": ["AI회사"]
+  }
 }

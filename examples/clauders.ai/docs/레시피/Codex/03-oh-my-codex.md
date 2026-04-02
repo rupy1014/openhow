@@ -166,15 +166,40 @@ omx resume
 
 장시간 작업, 터미널 종료, tmux 충돌, 일시적 rate limit 뒤에 이어붙일 때 특히 좋아.
 
-### 멀티 프로바이더 팀도 가능해
+### 패턴 E: Codex가 코딩하고 Claude가 퇴고만 하는 분업
 
-한 팀 안에 Codex, Claude, Gemini 워커를 섞는 패턴도 있어:
+한 팀 안에 Codex와 Claude 워커를 섞을 수 있어. 환경변수 하나로 돼:
+
+```bash
+OMX_TEAM_WORKER_CLI_MAP=codex,codex,claude omx team 3:executor "결제 취소 API 추가"
+```
+
+이러면 Codex 워커 2개가 구현을 밀고, Claude 워커 1개가 리뷰를 맡아.
+
+왜 이렇게 나누냐? Claude가 코드를 직접 만지지 않으면 리뷰 시선이 더 또렷해져. 구현 루프(코딩 → 검증 → 재시도)는 Codex 안에서 계속 이어지고, Claude는 diff 기준으로 아키텍처 경계, 네이밍, 테스트 빠진 구멍만 잡아주면 돼.
+
+| 환경변수 | 역할 |
+|---------|------|
+| `OMX_TEAM_WORKER_CLI_MAP` | 워커별 CLI 지정. `codex,codex,claude` 이런 식으로 |
+| `OMX_TEAM_WORKER_CLI` | 전체 워커를 한 CLI로 통일. MAP이 있으면 무시돼 |
+
+이 패턴이 잘 맞는 상황:
+
+| 상황 | 왜 잘 맞냐 |
+|------|-----------|
+| 수정-검증 반복이 긴 작업 | 실행 루프를 Codex에 몰아둘수록 덜 끊겨 |
+| 완료 기준을 엄격하게 걸고 싶을 때 | Codex가 끝까지 밀고 Claude가 마지막에 퇴고해 |
+| 리뷰 품질을 높이고 싶을 때 | 구현자와 리뷰어가 분리돼서 눈이 안 썩어 |
+
+반대로 작은 수정 하나만 급히 넘길 땐 [Codex 플러그인](./01-codex-plugin.md)의 `/cowork`이 더 가벼워.
+
+Gemini까지 섞어서 3종 조합도 가능해:
 
 ```bash
 OMX_TEAM_WORKER_CLI_MAP=codex,claude,gemini omx team 3:executor "작업"
 ```
 
-이런 조합은 "빠른 탐색은 Gemini, 긴 코드 수선은 Codex, 리뷰는 Claude"처럼 역할 배치를 다르게 줄 때 재미가 나. 다만 운영 난도는 확 올라가. 모델마다 맥락 유지 방식, 검증 습관, 파일 수정 스타일이 달라서 팀 리드 역할을 하는 사람이 공통 AGENTS.md를 더 빡빡하게 적는 편이 좋아.
+다만 프로바이더를 섞을수록 운영 난도는 올라가. 모델마다 맥락 유지 방식, 검증 습관, 파일 수정 스타일이 달라서 공통 AGENTS.md를 더 빡빡하게 적는 편이 좋아.
 
 ### 알림 연동도 걸어두면 편해
 
