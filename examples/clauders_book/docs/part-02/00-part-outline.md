@@ -1,0 +1,31 @@
+---
+slug: part-02-outline
+title: "Part 2 개요"
+nav: Part 2 개요
+status: draft
+---
+
+# Part 2 개요 — 기초 다지기, 바이브코딩 입문
+
+## 이 파트의 역할
+이 파트는 자동화 책에서 잠깐 새는 길이 아니라, **자동화를 이해할 수 있게 만드는 바닥 공사**다.
+
+- 5장: AI에게 일을 잘 시키는 기본 감각과 서비스 제작 흐름
+- 6장: Git, 배포, 환경변수, 공개 링크
+- 7장: MVP, PMF, 피드백 루프, 빌더 마인드셋
+
+## 독자가 남겨야 할 변화
+- 화면/서버/API/데이터가 각각 무엇인지 감이 생긴다.
+- Git과 배포를 “무조건 어려운 것”으로만 보지 않게 된다.
+- 작은 서비스를 만들고 세상에 내놓는 흐름을 한 번 끝까지 본다.
+- 시행착오를 줄이는 언어를 익힌다.
+
+## 꼭 지켜야 할 것
+- 사전식 설명보다 실제 흐름이 먼저다.
+- 서비스는 작아야 한다.
+- 기획, 구현, 배포, 피드백이 한 흐름으로 이어져야 한다.
+
+## 참고 소스
+- `examples/clauders_book/docs/toc-final.md`
+- `examples/clauders_book/docs/writing-guide.md`
+- `examples/clauders_book/docs/source-map.md`
