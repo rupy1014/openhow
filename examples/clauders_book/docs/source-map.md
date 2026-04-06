@@ -9,7 +9,7 @@ status: draft
 
 > 기준 목차: [toc-final](./toc-final)
 
-## Part 1. Codex로 자동화 시작하기
+## Part 1. ChatGPT 시대, Codex로 자동화 시작하기
 
 ### 01장 한 줄 설치, 바로 실습
 - `examples/clauders.ai/docs/입문/01-설치.md` — 설치 흐름과 최소 준비물
@@ -54,7 +54,13 @@ status: draft
 - `examples/clauders.ai/docs/바이브코딩연재/19-배포하기.md` — 링크로 공개되는 감각
 - `examples/clauders.ai/docs/입문/05-비용관리.md` — 배포 비용/운영 감각
 
-### 07장 빌더로 천천히 성장하기
+### 07장 PG 붙이기
+- `examples/clauders.ai/docs/바이브코딩연재/13-서비스들이-대화하는-방법-api.md` — 외부 결제 API를 붙이는 기본 감각
+- `examples/clauders.ai/docs/바이브코딩연재/31-외부-API.md` — 외부 서비스 연동 관점
+- `examples/clauders.ai/docs/입문/05-비용관리.md` — 결제/운영 비용 감각
+- `examples/clauders.ai/docs/바이브코딩연재/19-배포하기.md` — 테스트 후 실제 환경에 연결하는 흐름
+
+### 08장 나도 한번 만들어볼까
 - `examples/clauders.ai/docs/바이브코딩/02-2-안만들것.md` — MVP 범위 자르기
 - `examples/clauders.ai/docs/바이브코딩/07-피드백.md` — 빠른 피드백 루프
 - `examples/clauders.ai/docs/바이브코딩/08-5-안티패턴.md` — 흔한 함정 정리
@@ -62,19 +68,19 @@ status: draft
 
 ## Part 3. 자동화 구조 읽기
 
-### 08장 자동화 시스템은 어떻게 구성될까
+### 09장 OpenClaw로 자동화 구조 읽기
 - `examples/clauders.ai/docs/AI회사/00-AI회사.md` — 큰 그림
 - `examples/clauders.ai/docs/AI회사/03-멀티-에이전트는-어떻게-짜.md` — 역할 구조
 - `examples/clauders.ai/docs/레시피/03-codex-orchestration.md` — 오케스트레이션 관점
 - `examples/clauders.ai/docs/웨비나/openclaw-to-kakaotalk.md` — OpenClaw 사례
 
-### 09장 완전 자동화는 왜 아직 어려운가
+### 10장 자동화는 왜 한 번에 완성되지 않을까
 - `examples/clauders.ai/docs/AI회사/06-막히면-어디부터-봐.md` — 장애/한계 지점
 - `examples/clauders.ai/docs/AI회사/90-팩트체크와-개선.md` — 정확도와 검증
 - `examples/clauders.ai/docs/자동화/00-4가지기능.md` — 구조 대비 한계 설명
 - `examples/clauders.ai/docs/바이브코딩/08-한계와다음.md` — 과장 방지용 관점
 
-### 10장 AI가 팀처럼 일한다는 건 무슨 뜻일까?
+### 11장 AI가 팀처럼 일한다는 건 무슨 뜻일까?
 - `examples/clauders.ai/docs/AI회사/01-Paperclip은-뭐야.md` — 사례 소개
 - `examples/clauders.ai/docs/AI회사/03-멀티-에이전트는-어떻게-짜.md` — 역할 분담
 - `examples/clauders.ai/docs/AI회사/04-할일과-heartbeat은-어떻게-굴러.md` — 운영 루프
@@ -82,24 +88,24 @@ status: draft
 
 ## Part 4. 실전 자동화 유즈케이스
 
-### 11장 쓰레드 자동화와 뉴스봇 만들기
+### 12장 뉴스봇과 쓰레드 자동화
 - `examples/clauders.ai/docs/AI로일하기/00-AI로일하기.md` — 실무 맥락
 - `examples/clauders.ai/docs/자동화/03-사례모음.md` — 사례 확장
 - `examples/clauders.ai/docs/바이브코딩연재/25-자동화-아이디어.md` — 아이디어 발상
 - `examples/clauders.ai/docs/바이브코딩연재/28-정기-실행.md` — 정기 실행/봇화
 
-### 12장 유튜브 자동화 워크플로우 만들기
+### 13장 유튜브 자동화
 - `examples/clauders.ai/docs/부록/03-remotion-video-pipeline.md` — 영상 파이프라인
 - `examples/clauders.ai/docs/부록/03-2-tts-render.md` — TTS/렌더링 단계
 - `examples/clauders.ai/docs/부록/06-영상초안-1화-이력서데모.md` — 실제 산출물 흐름
 - `examples/clauders.ai/_drafts/유튜브/*` — 필요시 사례 확장
 
-### 13장 문서와 발표자료 자동화
+### 14장 문서와 발표자료 자동화
 - `examples/clauders.ai/docs/AI로일하기/04-바이브PPT.md` — 발표자료 자동화
 - `examples/clauders.ai/docs/AI로일하기/05-바이브제안서.md` — 제안서 자동화
 - `examples/clauders.ai/docs/AI로일하기/07-프로젝트브레인.md` — 문서 축적/재사용
 
-### 14장 내가 일하는 곳에 자동화 적용하기
+### 15장 내 일에 자동화 붙이기
 - `examples/clauders.ai/docs/AI로일하기/01-내업무에적용하기.md` — 업무 적용 관점
 - `examples/clauders.ai/docs/자동화/03-사례모음.md` — 업종 확장
 - `examples/clauders.ai/docs/AI로일하기/08-AI서비스-원가분석.md` — 현실성/비용 감각

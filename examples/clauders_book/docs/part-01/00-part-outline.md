@@ -5,7 +5,7 @@ nav: Part 1 개요
 status: draft
 ---
 
-# Part 1 개요 — Codex로 자동화 시작하기
+# Part 1 개요 — ChatGPT 시대, Codex로 자동화 시작하기
 
 ## 이 파트의 역할
 초반 4장은 설치 설명이 아니라 **자동화 감각을 심는 파트**다.
