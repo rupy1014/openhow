@@ -1,0 +1,8 @@
+{
+  "nav": [
+    { "key": "part-01", "label": "1. Codex로 자동화 시작", "order": 1 },
+    { "key": "part-02", "label": "2. 바이브코딩 입문", "order": 2 },
+    { "key": "part-03", "label": "3. OpenClaw와 구조 읽기", "order": 3 },
+    { "key": "part-04", "label": "4. 실전 유즈케이스", "order": 4 }
+  ]
+}

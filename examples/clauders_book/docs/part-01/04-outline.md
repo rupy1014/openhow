@@ -3,6 +3,7 @@ slug: 04-outline
 title: "04장 개요"
 nav: 04장 개요
 status: draft
+draft: true
 ---
 
 # 04장 개요 — 웹소설 자동화

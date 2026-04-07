@@ -3,6 +3,7 @@ slug: 01-outline
 title: "01장 개요"
 nav: 01장 개요
 status: draft
+draft: true
 ---
 
 # 01장 개요 — 한 줄 설치, 바로 실습

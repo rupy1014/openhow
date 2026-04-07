@@ -3,6 +3,7 @@ slug: part-01-outline
 title: "Part 1 개요"
 nav: Part 1 개요
 status: draft
+draft: true
 ---
 
 # Part 1 개요 — ChatGPT 시대, Codex로 자동화 시작하기

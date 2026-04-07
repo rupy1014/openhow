@@ -3,6 +3,7 @@ slug: 03-outline
 title: "03장 개요"
 nav: 03장 개요
 status: draft
+draft: true
 ---
 
 # 03장 개요 — 완전 초보자를 위한 설명

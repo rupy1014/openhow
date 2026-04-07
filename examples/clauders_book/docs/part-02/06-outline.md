@@ -3,6 +3,7 @@ slug: 06-outline
 title: "06장 개요"
 nav: 06장 개요
 status: draft
+draft: true
 ---
 
 # 06장 개요 — 만든 서비스를 직접 배포해보기

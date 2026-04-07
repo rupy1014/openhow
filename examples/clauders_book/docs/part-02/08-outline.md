@@ -3,6 +3,7 @@ slug: 08-outline
 title: "08장 개요"
 nav: 08장 개요
 status: draft
+draft: true
 ---
 
 # 08장 개요 — 나도 한번 만들어볼까

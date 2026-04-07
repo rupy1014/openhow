@@ -3,6 +3,7 @@ slug: 07-outline
 title: "07장 개요"
 nav: 07장 개요
 status: draft
+draft: true
 ---
 
 # 07장 개요 — PG 붙이기

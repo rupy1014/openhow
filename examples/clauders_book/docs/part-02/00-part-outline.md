@@ -3,6 +3,7 @@ slug: part-02-outline
 title: "Part 2 개요"
 nav: Part 2 개요
 status: draft
+draft: true
 ---
 
 # Part 2 개요 — 기초 다지기, 바이브코딩 입문

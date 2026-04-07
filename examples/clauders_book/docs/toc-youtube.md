@@ -1,6 +1,10 @@
 ---
-
-## slug: toc-youtube title: "유튜브 콘텐츠 전략 & TOC" nav: 유튜브 전략 status: draft
+slug: toc-youtube
+title: "유튜브 콘텐츠 전략 & TOC"
+nav: 유튜브 전략
+status: draft
+draft: true
+---
 
 # 유튜브 홍보 전략 & 콘텐츠 TOC
 

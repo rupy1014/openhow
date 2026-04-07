@@ -3,6 +3,7 @@ slug: 02-outline
 title: "02장 개요"
 nav: 02장 개요
 status: draft
+draft: true
 ---
 
 # 02장 개요 — 자동화 감 잡기

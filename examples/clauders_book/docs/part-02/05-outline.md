@@ -3,6 +3,7 @@ slug: 05-outline
 title: "05장 개요"
 nav: 05장 개요
 status: draft
+draft: true
 ---
 
 # 05장 개요 — AI 캐릭터 채팅 서비스 빠르게 만들어보기
