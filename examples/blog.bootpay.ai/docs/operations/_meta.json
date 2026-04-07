@@ -1,0 +1,12 @@
+{
+  "badge": "운영자",
+  "badgeColor": "#10b981",
+  "items": {
+    "operations-checklist": { "label": "운영 체크리스트", "order": 0 },
+    "success-rate-diagnosis": { "label": "성공률 진단", "order": 1 },
+    "cancel-refund-policy": { "label": "취소·환불 정책", "order": 2 },
+    "payment-order-mismatch": { "label": "결제·주문 불일치", "order": 3 },
+    "fraud-detection": { "label": "이상거래 탐지", "order": 4 },
+    "outage-communication": { "label": "장애 대응", "order": 5 }
+  }
+}

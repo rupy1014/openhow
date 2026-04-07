@@ -1,0 +1,10 @@
+{
+  "badge": "기획자·개발자",
+  "badgeColor": "#8b5cf6",
+  "items": {
+    "ai-prd-guide": { "label": "AI PRD 작성법", "order": 0 },
+    "ai-automation-scope": { "label": "자동화 범위 설정", "order": 1 },
+    "ai-verification": { "label": "AI 결과 검증", "order": 2 },
+    "ai-document-search": { "label": "문서 검색 활용", "order": 3 }
+  }
+}
