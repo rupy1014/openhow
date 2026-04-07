@@ -3,6 +3,7 @@ slug: 뉴스봇만들기-시작하기
 title: "시작하기"
 nav: 시작하기
 order: 1
+thumbnail: "./images/img-NB01.png"
 ---
 
 **3번 딸깍이면 뉴스봇이 돌아가.**

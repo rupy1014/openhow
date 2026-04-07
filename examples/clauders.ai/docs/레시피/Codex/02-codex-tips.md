@@ -3,6 +3,7 @@ slug: Codex-tips
 title: "Codex 잘 쓰는 법"
 nav: Codex 잘 쓰는 법
 order: 2
+thumbnail: "./images/img-CX02.png"
 ---
 
 **잘 쓰는 사람은 처음부터 길게 안 싸워. 결과 먼저 잠그고, 에이전트가 헤매지 못하게 레일을 깔아.**

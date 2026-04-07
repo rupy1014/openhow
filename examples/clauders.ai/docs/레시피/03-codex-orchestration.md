@@ -4,6 +4,7 @@ title: "Claude + Codex 오케스트레이션"
 nav: Claude + Codex 오케스트레이션
 order: 3
 hidden: true
+thumbnail: "./images/img-RC03.png"
 ---
 
 **Claude Max만으로 토큰이 부족할 때 쓰는 방법이야.**

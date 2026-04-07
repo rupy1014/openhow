@@ -3,6 +3,7 @@ slug: 바이브코딩연재-05
 title: "Git 기초"
 nav: Git 기초
 order: 05
+thumbnail: "./images/img-VS05.png"
 ---
 
 

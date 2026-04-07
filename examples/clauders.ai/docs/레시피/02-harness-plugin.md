@@ -3,6 +3,7 @@ slug: 레시피-harness-plugin
 title: "하네스 플러그인"
 nav: 하네스 플러그인
 order: 2
+thumbnail: "./images/img-RC02.png"
 ---
 
 **말이 아무리 빨라도 마구(harness) 없이는 마차를 못 끌어. AI도 마찬가지야.**

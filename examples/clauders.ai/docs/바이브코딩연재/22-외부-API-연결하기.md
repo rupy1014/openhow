@@ -3,6 +3,7 @@ slug: 바이브코딩연재-22
 title: "외부 API 연결하기"
 nav: 외부 API 연결하기
 order: 22
+thumbnail: "./images/img-VS22.png"
 ---
 
 

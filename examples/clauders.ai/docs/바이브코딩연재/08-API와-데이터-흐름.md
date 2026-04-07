@@ -3,6 +3,7 @@ slug: 바이브코딩연재-08
 title: "API와 데이터 흐름"
 nav: API와 데이터 흐름
 order: 08
+thumbnail: "./images/img-VS08.png"
 ---
 
 

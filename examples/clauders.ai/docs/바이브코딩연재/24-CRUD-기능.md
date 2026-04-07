@@ -3,6 +3,7 @@ slug: 바이브코딩연재-24
 title: "CRUD 기능 (살아있는 데이터)"
 nav: CRUD 기능 (살아있는 데이터)
 order: 24
+thumbnail: "./images/img-VS24.png"
 ---
 
 

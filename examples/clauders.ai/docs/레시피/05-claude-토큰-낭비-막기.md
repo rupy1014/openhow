@@ -3,6 +3,7 @@ slug: 레시피-claude-토큰-낭비-막기
 title: "Claude 토큰 낭비 막기"
 nav: Claude 토큰 낭비 막기
 order: 5
+thumbnail: "./images/img-RC05.png"
 ---
 
 **토큰이 빨리 녹는 건 AI가 멍청해서가 아니야. 세팅이 새고 있는 거야.**

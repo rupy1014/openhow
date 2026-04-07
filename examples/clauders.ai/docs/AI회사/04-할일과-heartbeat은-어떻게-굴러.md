@@ -3,6 +3,7 @@ slug: AI회사-04-할일과-heartbeat은-어떻게-굴러
 title: "할일과 heartbeat은 어떻게 굴러?"
 nav: 할일과 heartbeat은 어떻게 굴러?
 order: 4
+thumbnail: "./images/img-AC04.png"
 ---
 
 **Paperclip에선 일이랑 실행이 분리돼 있어.**

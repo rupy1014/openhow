@@ -3,6 +3,7 @@ slug: LLM-게이트웨이-CLIProxyAPI
 title: "CLIProxyAPI"
 nav: CLIProxyAPI
 order: 4
+thumbnail: "./images/img-LG04.png"
 ---
 
 **유저가 자기 구독으로 로그인하게 하고 싶으면 이거야.**

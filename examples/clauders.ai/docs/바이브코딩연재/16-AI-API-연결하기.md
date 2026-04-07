@@ -3,6 +3,7 @@ slug: 바이브코딩연재-16
 title: "AI API 연결하기"
 nav: AI API 연결하기
 order: 16
+thumbnail: "./images/img-VS16.png"
 ---
 
 

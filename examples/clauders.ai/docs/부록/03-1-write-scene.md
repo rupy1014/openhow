@@ -3,6 +3,7 @@ slug: 부록-remotion-write-scene
 title: "/write · /scene 커맨드"
 nav: /write · /scene
 order: 3
+thumbnail: "./images/img-AP03-1.png"
 ---
 
 **대본 쓰는 것부터 YAML 씬 스펙까지 Claude Code 커맨드 두 개로 끝나.**

@@ -3,6 +3,7 @@ slug: LLM-게이트웨이
 title: "LLM 게이트웨이"
 nav: LLM 게이트웨이
 order: 0
+thumbnail: "./images/img-LG00.png"
 ---
 
 **API 키 3개 관리하기 귀찮지 않아?**

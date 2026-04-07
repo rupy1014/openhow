@@ -3,6 +3,7 @@ slug: 바이브코딩연재-03
 title: "Claude Code 설치하기"
 nav: Claude Code 설치하기
 order: 03
+thumbnail: "./images/img-VS03.png"
 ---
 
 

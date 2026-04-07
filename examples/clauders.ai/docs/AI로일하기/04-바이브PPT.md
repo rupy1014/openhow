@@ -3,6 +3,7 @@ slug: AI로일하기-바이브PPT
 title: "바이브 PPT"
 nav: 바이브 PPT
 order: 1
+thumbnail: "./images/img-AW04.png"
 ---
 
 **마크다운으로 내용 쓰고, AI한테 발표 자료로 뽑아.**

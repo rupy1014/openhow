@@ -3,6 +3,7 @@ slug: 튜토리얼-hello-world
 title: "Hello World"
 nav: Hello World
 order: 3
+thumbnail: "./images/img-IM03.png"
 ---
 
 ```text:VSCode 터미널

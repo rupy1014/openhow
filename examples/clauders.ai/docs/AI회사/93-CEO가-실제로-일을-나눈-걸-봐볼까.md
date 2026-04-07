@@ -3,6 +3,7 @@ slug: AI회사-93-CEO가-실제로-일을-나눈-걸-봐볼까
 title: "CEO가 실제로 일을 나눈 걸 봐볼까?"
 nav: CEO가 일을 나눠봤어
 order: 93
+thumbnail: "./images/img-AC93.png"
 ---
 
 92편에서

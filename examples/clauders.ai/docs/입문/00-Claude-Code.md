@@ -3,6 +3,7 @@ slug: 튜토리얼-Claude-Code
 title: "Claude Code"
 nav: Claude Code
 order: 0
+thumbnail: "./images/img-IM00.png"
 ---
 
 **AI한테 말로 시키면, AI가 직접 파일을 만들고 고쳐.**

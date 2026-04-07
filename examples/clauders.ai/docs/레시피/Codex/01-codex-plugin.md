@@ -3,6 +3,7 @@ slug: Codex-plugin
 title: "Codex 플러그인"
 nav: Codex 플러그인
 order: 1
+thumbnail: "./images/img-CX01.png"
 ---
 
 **OpenAI가 경쟁사 도구에 공식 플러그인을 만들었어.**

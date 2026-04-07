@@ -3,6 +3,7 @@ slug: Codex-oh-my-codex
 title: "oh-my-codex"
 nav: oh-my-codex
 order: 3
+thumbnail: "./images/img-CX03.png"
 ---
 
 **Codex를 혼자 오래 붙잡고 돌리는 대신, 역할이 갈린 팀처럼 굴리고 싶을 때 보는 글이야.**

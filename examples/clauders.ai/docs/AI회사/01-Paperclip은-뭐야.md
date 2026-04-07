@@ -3,6 +3,7 @@ slug: AI회사-01-Paperclip은-뭐야
 title: "Paperclip은 뭐야?"
 nav: Paperclip은 뭐야?
 order: 1
+thumbnail: "./images/img-AC01.png"
 ---
 
 **Paperclip은 AI 팀 운영판이야.**

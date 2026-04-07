@@ -3,6 +3,7 @@ slug: AI회사-92-지금-당장-Paperclip-처음-세팅해보기
 title: "지금 당장 Paperclip 처음 세팅해보기"
 nav: 지금 당장 처음 세팅해보기
 order: 92
+thumbnail: "./images/img-AC92.png"
 ---
 
 **말로만 보면 감이 안 와. 한 번 직접 켜보면 훨씬 빨라.**

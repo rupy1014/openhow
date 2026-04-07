@@ -3,6 +3,7 @@ slug: Codex
 title: "Codex"
 nav: Codex
 order: 0
+thumbnail: "./images/img-CX00.png"
 ---
 
 **OpenAI가 만든 코딩 에이전트야. Claude Code처럼 터미널에서 돌아가.**
