@@ -1,29 +1,30 @@
 # Static Export (`openhow export`)
 
+## 결론: 프로덕션 배포는 `publish`, export는 보조 도구
+
+프로덕션 배포는 `openhow publish`가 담당한다. publish는 이미 SSG HTML + 정적 JSON을 R2에 생성하며, Worker는 R2 프록시 역할만 한다. 커스텀 도메인, 인증, paywall 등 운영 기능은 모두 Worker가 처리하므로 별도 정적 호스팅을 두면 도메인/인프라가 이중 관리된다.
+
+`openhow export`는 다음 용도로 사용한다:
+
+- **로컬 프리뷰** — publish 전에 결과물을 로컬에서 확인 (`npx serve dist`)
+- **백업/아카이브** — 워크스페이스를 HTML 파일로 보존
+- **외부 호스팅** — openhow 인프라 밖에서 독립 배포가 필요한 특수한 경우
+
+---
+
 ## 배경
 
-`openhow publish`는 콘텐츠를 Worker + R2로 퍼블리시한다. 공개 콘텐츠만 있는 워크스페이스(예: blog.bootpay.ai)는 Worker 의존 없이 **완전한 정적 사이트**로 배포할 수 있어야 한다.
+`openhow publish`는 콘텐츠를 Worker + R2로 퍼블리시한다. 공개 콘텐츠만 있는 워크스페이스는 Worker 의존 없이 완전한 정적 사이트로 뽑아볼 수 있어야 한다.
 
-## 목표
+## publish와의 관계
 
-```bash
-openhow export [path]
-```
-
-로컬 마크다운 → 정적 HTML + CSS + JS + JSON + 이미지를 `dist/` 폴더에 출력.
-Cloudflare Pages, Vercel, Netlify, GitHub Pages 등 어디든 배포 가능.
-
-## publish와의 차이
-
-| | `publish` | `export` |
+| | `publish` (프로덕션) | `export` (보조) |
 |---|---|---|
 | 출력 | Worker API → R2 | 로컬 `dist/` 폴더 |
-| 인증 | OAuth 토큰 필요 | 불필요 |
-| 이미지 | R2 업로드 (`/api/assets/...`) | 로컬 복사 (`/assets/...`) |
-| 동영상 | Cloudflare Stream UID 변환 | 스킵 (warning) |
-| 유료/비공개 콘텐츠 | paywall, 접근 제어 | 지원 안 함 (공개 전용) |
-| SSG HTML | R2에 저장 | `dist/` 에 `.html` 파일로 출력 |
-| JSON 데이터 | R2 `_data/` | `dist/_data/` |
+| 커스텀 도메인 | Worker가 자동 처리 | 직접 설정 필요 |
+| 인증/paywall | 지원 | 미지원 (공개 전용) |
+| 이미지 | R2 업로드 + CDN | 로컬 복사 |
+| 동영상 | Cloudflare Stream | 미지원 |
 
 ## CLI 인터페이스
 
@@ -65,13 +66,6 @@ dist/
         └── {slug}.json                   # 문서별 데이터
 ```
 
-### URL 매핑
-
-| 슬러그 | 파일 경로 | URL |
-|--------|----------|-----|
-| `index` | `dist/index.html` | `/` |
-| `getting-started/foo` | `dist/getting-started/foo/index.html` | `/getting-started/foo` |
-
 ## 재사용 코드
 
 publish 커맨드의 다음 인프라를 그대로 사용:
@@ -82,10 +76,11 @@ publish 커맨드의 다음 인프라를 그대로 사용:
 - `parseAssetTarget()`, `toWorkspaceAssetPath()` — 이미지 경로 파싱
 - `optimizeImageBuffer()` — 이미지 최적화 (sharp)
 
-**달라지는 것**: 이미지 경로를 `/api/assets/...` 대신 `/assets/...`로 리라이트.
+이미지 경로만 `/api/assets/...` 대신 `/assets/...`로 리라이트.
 
 ## 제한사항
 
 - **공개 콘텐츠 전용** — 인증/paywall 필요한 문서는 export 불가
 - **동영상 미지원** — `:::video` 디렉티브는 스킵 (Cloudflare Stream 의존)
 - **검색** — manifest.json 기반 클라이언트 사이드 검색만 가능
+- **프로덕션 배포용이 아님** — 커스텀 도메인은 `publish` + Worker가 처리
