@@ -6,6 +6,8 @@
     "tts": "tsx scripts/tools/generate-tts.ts",
     "tts:dry": "tsx scripts/tools/generate-tts.ts --dry-run",
     "timeline": "tsx scripts/tools/build-timeline.ts",
+    "content-cards:check": "tsx scripts/tools/validate-content-cards.ts",
+    "content-cards:fix": "tsx scripts/tools/validate-content-cards.ts --write",
     "srt": "tsx scripts/tools/generate-srt.ts",
     "start": "remotion studio --port 3710",
     "build": "remotion render EpisodeVideo",
