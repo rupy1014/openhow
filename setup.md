@@ -12,7 +12,7 @@ openhow는 단일 SDK가 아니라, 하나의 모노레포에 4가지 성격이 
 | 성격 | 패키지 | 핵심 파일 | 역할 |
 |------|--------|----------|------|
 | **CLI 도구** | `@openhow/cli` | `cli.ts`, `scanner/`, `commands/` | 로컬 뷰어 + 클라우드 퍼블리시 |
-| **웹 뷰어** | `@openhow/viewer` | `views/`, `components/`, `stores/` | 문서 열람 SPA |
+| **웹 뷰어** | `@openhow/viewer` | `pages/`, `layouts/`, `components/`, `stores/` | 문서 열람 SPA (React) |
 | **API 서버** | `@openhow/worker` | `routes/`, `db/`, `middleware/` | 인증, CRUD, 검색, 에셋 |
 | **AI 통합** | worker 내장 | `/manual.md`, `/llms.txt` | LLM 온보딩 + 모네타이제이션 가이드 |
 

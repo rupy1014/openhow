@@ -9,7 +9,7 @@ Scope: `/Users/taesupyoon/sideProjects/mdshare` (root), with primary code in `/c
 - Monorepo packages:
   - `core/packages/types` (`@openhow/types`)
   - `core/packages/cli` (`@openhow/cli`)
-  - `core/packages/viewer` (Vue 3 app)
+  - `core/packages/viewer` (React app, current production frontend)
   - `core/packages/worker` (Cloudflare Worker API)
 
 ## 2) Cursor/Copilot Rules Check
@@ -125,11 +125,10 @@ Production deploy order:
 - Wrap external I/O boundaries in `try/catch`.
 - In viewer, keep safe fallback UI/state on failures.
 
-### 7.6 Vue/Frontend Conventions
-- Use `script setup lang="ts"` + Composition API.
-- Keep remote data in Pinia stores.
+### 7.6 Frontend Conventions
+- `core/packages/viewer` is the current frontend. Use React + hooks + existing Zustand stores there.
 - Use `API_BASE` and `credentials: 'include'` for authenticated fetches.
-- Preserve lazy-loaded route style in `router.ts`.
+- Preserve lazy-loaded route style in `router.tsx` / `router.ts`.
 
 ### 7.7 Worker/Backend Conventions
 - Keep route modules under `core/packages/worker/src/routes/*`.
@@ -170,7 +169,7 @@ Claude (orchestrator)
 | Package | Path |
 |---------|------|
 | API (Hono Worker) | `core/packages/worker` |
-| Frontend (Vue 3) | `core/packages/viewer` |
+| Frontend (React) | `core/packages/viewer` |
 | CLI | `core/packages/cli` |
 | Shared types | `core/packages/types` |
 
