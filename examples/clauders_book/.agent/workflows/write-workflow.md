@@ -66,11 +66,12 @@ outline 파일의 title에 `[실전]`이 포함되면 **practice**, 아니면 **
 
 | 파일 | 용도 |
 |------|------|
+| `doc/index.md` | **골든 샘플** — 톤의 기준점 (반드시 먼저 읽기) |
 | `docs/part-{NN}/{XX}-outline.md` | 챕터 구조 + 핵심 메시지 |
 | `backlog/{path1}`, `backlog/{path2}` ... | source-map.md에서 추출한 원본 초안 |
 | `brain/gap-analysis.md` | 레퍼런스 대비 7가지 gap |
 | `brain/chapter-template.md` | 개념/실습 표준 구조 |
-| `brain/tone-guide.md` | 구어적 경어체 규칙 |
+| `brain/tone-guide.md` | 구어적 경어체 규칙 + 구간별 톤 구분 |
 
 ### 읽지 않는 것
 
@@ -88,6 +89,7 @@ outline 파일의 title에 `[실전]`이 포함되면 **practice**, 아니면 **
   - backlog/{path1}
   - backlog/{path2}
 
+먼저 doc/index.md(골든 샘플)를 읽고 이 톤을 기준으로 삼아.
 brain/ 가이드 3개를 반드시 읽고 적용해.
 출력 파일: docs/part-{NN}/{XX}-chapter.md
 ```
