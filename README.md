@@ -79,10 +79,9 @@ AI 내부 동작:
 1. get_started              → CLI 설치 + 로그인 가이드
 2. get_workspace_template   → 프로젝트 유형별 폴더 구조/설정
 3. search_docs / get_doc    → 설정, 스타일, 접근 레벨 문서 조회
-4. setup-workspace 프롬프트 → 전체 실행 계획 생성
 ```
 
-### 5 Tools + 1 Prompt
+### 5 Tools
 
 | Tool | Description |
 |------|-------------|
@@ -91,10 +90,6 @@ AI 내부 동작:
 | `get_doc` | 특정 문서 전체 마크다운 조회 |
 | `list_docs` | 사용 가능한 문서 목록 |
 | `get_workspace_template` | 유형별(docs/course/blog) 폴더 구조 + 설정 템플릿 |
-
-| Prompt | Description |
-|--------|-------------|
-| `setup-workspace` | 워크스페이스 생성~퍼블리시 전체 실행 계획 |
 
 ---
 
