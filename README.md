@@ -259,6 +259,12 @@ freeSections: 2    # 처음 2개 섹션만 무료 공개
 
 최신순 정렬. 날짜 prefix로 자동 정렬. 주간 뉴스레터, 설교, 개발 로그 등.
 
+```bash
+openhow init --template team-blog
+```
+
+팀 블로그형 preset을 쓰면 카테고리/저자/featured 랜딩을 가진 editorial blog 스캐폴드를 바로 만들 수 있습니다.
+
 ### 실제 사례
 
 - [AI Vibe Coding Book](https://github.com/rupy1014/ai-jobdori) — 20챕터 프로그래밍 강의 (챕터 1-2 무료, 이후 유료)

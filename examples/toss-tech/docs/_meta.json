@@ -1,0 +1,7 @@
+{
+  "nav": [
+    { "key": "engineering", "label": "Engineering", "icon": "⚙️", "order": 0 },
+    { "key": "design", "label": "Design", "icon": "✦", "order": 1 },
+    { "key": "product", "label": "Product", "icon": "📈", "order": 2 }
+  ]
+}

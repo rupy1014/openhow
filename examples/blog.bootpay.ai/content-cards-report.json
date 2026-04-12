@@ -1,0 +1,99 @@
+{
+  "docsRoot": "/Users/taesupyoon/sideProjects/openhow/examples/blog.bootpay.ai/docs",
+  "generatedAt": "2026-04-09T07:56:21.528Z",
+  "summary": {
+    "markdownDocs": 4,
+    "docsUsingContentCards": 0,
+    "docsUsingOldRecommendationPattern": 0,
+    "rewrittenFiles": 0,
+    "issueCount": 0,
+    "issueCountsByKind": {},
+    "docsWithMissingMetadata": 4,
+    "missingMetadataFieldCounts": {
+      "title": 4,
+      "thumbnail": 4,
+      "description": 4
+    }
+  },
+  "issues": [],
+  "docs": [
+    {
+      "filePath": "docs/design-improvement-plan.md",
+      "slug": "design-improvement-plan",
+      "oldRecommendationSectionCount": 0,
+      "contentCardBlockCount": 0,
+      "contentCardBlocks": [],
+      "issues": []
+    },
+    {
+      "filePath": "docs/getting-started/payment-getting-started.md",
+      "slug": "getting-started/payment-getting-started",
+      "oldRecommendationSectionCount": 0,
+      "contentCardBlockCount": 0,
+      "contentCardBlocks": [],
+      "issues": []
+    },
+    {
+      "filePath": "docs/guides/payment-getting-started.md",
+      "slug": "guides/payment-getting-started",
+      "oldRecommendationSectionCount": 0,
+      "contentCardBlockCount": 0,
+      "contentCardBlocks": [],
+      "issues": []
+    },
+    {
+      "filePath": "docs/guides/subscription-planning.md",
+      "slug": "guides/subscription-planning",
+      "oldRecommendationSectionCount": 0,
+      "contentCardBlockCount": 0,
+      "contentCardBlocks": [],
+      "issues": []
+    }
+  ],
+  "metadataAudit": {
+    "docsWithMissingFields": 4,
+    "missingFieldCounts": {
+      "title": 4,
+      "thumbnail": 4,
+      "description": 4
+    },
+    "docs": [
+      {
+        "filePath": "docs/design-improvement-plan.md",
+        "slug": "design-improvement-plan",
+        "missingFields": [
+          "title",
+          "thumbnail",
+          "description"
+        ]
+      },
+      {
+        "filePath": "docs/getting-started/payment-getting-started.md",
+        "slug": "getting-started/payment-getting-started",
+        "missingFields": [
+          "title",
+          "thumbnail",
+          "description"
+        ]
+      },
+      {
+        "filePath": "docs/guides/payment-getting-started.md",
+        "slug": "guides/payment-getting-started",
+        "missingFields": [
+          "title",
+          "thumbnail",
+          "description"
+        ]
+      },
+      {
+        "filePath": "docs/guides/subscription-planning.md",
+        "slug": "guides/subscription-planning",
+        "missingFields": [
+          "title",
+          "thumbnail",
+          "description"
+        ]
+      }
+    ]
+  }
+}

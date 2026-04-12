@@ -1,0 +1,46 @@
+{
+  "docsWithMissingFields": 4,
+  "missingFieldCounts": {
+    "title": 4,
+    "thumbnail": 4,
+    "description": 4
+  },
+  "docs": [
+    {
+      "filePath": "docs/design-improvement-plan.md",
+      "slug": "design-improvement-plan",
+      "missingFields": [
+        "title",
+        "thumbnail",
+        "description"
+      ]
+    },
+    {
+      "filePath": "docs/getting-started/payment-getting-started.md",
+      "slug": "getting-started/payment-getting-started",
+      "missingFields": [
+        "title",
+        "thumbnail",
+        "description"
+      ]
+    },
+    {
+      "filePath": "docs/guides/payment-getting-started.md",
+      "slug": "guides/payment-getting-started",
+      "missingFields": [
+        "title",
+        "thumbnail",
+        "description"
+      ]
+    },
+    {
+      "filePath": "docs/guides/subscription-planning.md",
+      "slug": "guides/subscription-planning",
+      "missingFields": [
+        "title",
+        "thumbnail",
+        "description"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "content": "docs",
+  "workspace": "toss-tech",
+  "title": "Toss Tech 팀 블로그 예제",
+  "description": "카테고리, 저자, 썸네일, 에디토리얼 랜딩을 갖춘 team blog 스타일의 openhow blog 예제입니다.",
+  "type": "blog",
+  "preset": "team-blog",
+  "sort": "date-desc",
+  "theme": {
+    "preset": "blue",
+    "primary": "#0064ff",
+    "dark": false
+  },
+  "teamBlog": {
+    "originUrl": "https://toss.tech/",
+    "rssUrl": "https://toss.tech/rss.xml",
+    "ctaLabel": "원문 보기",
+    "series": [
+      {
+        "title": "토스페이먼츠 레거시 개편 이야기 멈춰있던 PG 시스템의 시간을 다시 흐르게 한 스토리",
+        "description": "",
+        "url": "https://toss.tech/series/payments-legacy",
+        "articleCount": 11
+      },
+      {
+        "title": "접근성 업무일지 토스의 접근성 이야기",
+        "description": "",
+        "url": "https://toss.tech/series/universal_design",
+        "articleCount": 4
+      },
+      {
+        "title": "Simplicity 4 토스 디자인 컨퍼런스 Simplicity 4의 비하인드 스토리",
+        "description": "",
+        "url": "https://toss.tech/series/simiplicity4",
+        "articleCount": 6
+      },
+      {
+        "title": "토스증권 Realtime Data Team 하루 수 조원의 금융거래를 실시간으로 정확하게 처리하는 기술과 경험을 소개합니다.",
+        "description": "",
+        "url": "https://toss.tech/series/securities-realtime-data",
+        "articleCount": 10
+      }
+    ]
+  },
+  "footer": {
+    "company": "Toss Tech Example",
+    "info": "이 예제는 toss.tech의 정보구조를 참고해 openhow blog를 팀 블로그 스타일로 구성한 데모입니다.",
+    "copyright": "© 2026 openhow example. Not affiliated with Viva Republica.",
+    "links": [
+      {
+        "label": "openhow",
+        "url": "https://openhow.io"
+      },
+      {
+        "label": "Inspiration",
+        "url": "https://toss.tech/"
+      }
+    ]
+  }
+}
