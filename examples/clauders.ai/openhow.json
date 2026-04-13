@@ -3,6 +3,6 @@
   "workspace": "clauders",
   "title": "클로더즈",
   "scan": {
-    "exclude": ["AI회사"]
+    "exclude": ["AI회사", "웨비나"]
   }
 }
