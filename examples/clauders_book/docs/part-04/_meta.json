@@ -1,11 +1,8 @@
 {
-  "label": "4. 실전 유즈케이스",
+  "label": "4. 콘텐츠를 세상에 내보내기",
   "order": 4,
   "items": {
-    "13-chapter": { "label": "13장 뉴스봇 자동화", "order": 1 },
-    "14-chapter": { "label": "14장 SNS 발행", "order": 2 },
-    "15-chapter": { "label": "15장 유튜브 자동화", "order": 3 },
-    "16-chapter": { "label": "16장 문서와 발표자료", "order": 4 },
-    "17-chapter": { "label": "17장 내 일에 자동화 붙이기", "order": 5 }
+    "14-chapter": { "label": "14장 SNS API 연결하기", "order": 1 },
+    "15-chapter": { "label": "15장 자동 발행 파이프라인 완성", "order": 2 }
   }
 }

@@ -1,0 +1,10 @@
+{
+  "label": "1. Codex로 자동화 시작",
+  "order": 1,
+  "items": {
+    "01-chapter": { "label": "01장 한 줄 설치, 바로 실습", "order": 1 },
+    "02-chapter": { "label": "02장 자동화 감 잡기", "order": 2 },
+    "03-chapter": { "label": "03장 완전 초보자를 위한 설명", "order": 3 },
+    "04-chapter": { "label": "04장 웹소설 자동화", "order": 4 }
+  }
+}

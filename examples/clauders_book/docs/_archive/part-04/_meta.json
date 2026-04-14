@@ -1,0 +1,11 @@
+{
+  "label": "4. 실전 유즈케이스",
+  "order": 4,
+  "items": {
+    "13-chapter": { "label": "13장 뉴스봇 자동화", "order": 1 },
+    "14-chapter": { "label": "14장 SNS 발행", "order": 2 },
+    "15-chapter": { "label": "15장 유튜브 자동화", "order": 3 },
+    "16-chapter": { "label": "16장 문서와 발표자료", "order": 4 },
+    "17-chapter": { "label": "17장 내 일에 자동화 붙이기", "order": 5 }
+  }
+}

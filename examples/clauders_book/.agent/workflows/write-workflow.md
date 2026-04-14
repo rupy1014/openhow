@@ -9,10 +9,10 @@
 
 | Part | 챕터 | 디렉토리 |
 |------|------|---------|
-| part-01 | 01-04 | `docs/part-01/` |
-| part-02 | 05-08 | `docs/part-02/` |
-| part-03 | 09-12 | `docs/part-03/` |
-| part-04 | 13-17 | `docs/part-04/` |
+| part-01 | 01-06 | `docs/part-01/` |
+| part-02 | 07-09 | `docs/part-02/` |
+| part-03 | 10-13 | `docs/part-03/` |
+| part-04 | 14-15 | `docs/part-04/` |
 
 ## 챕터 유형 판별
 
@@ -34,10 +34,10 @@ outline 파일의 title에 `[실전]`이 포함되면 **practice**, 아니면 **
    - `status: writing` 또는 `status: reviewing`이면 resume-workflow로 위임
 
 2. 챕터 번호 → Part/디렉토리 매핑
-   - 01-04 → `docs/part-01/`
-   - 05-08 → `docs/part-02/`
-   - 09-12 → `docs/part-03/`
-   - 13-17 → `docs/part-04/`
+   - 01-06 → `docs/part-01/`
+   - 07-09 → `docs/part-02/`
+   - 10-13 → `docs/part-03/`
+   - 14-15 → `docs/part-04/`
 
 3. outline 파일 읽기: `docs/part-{NN}/{XX}-outline.md`
    - 없으면 에러: "아웃라인이 없습니다. 먼저 outline을 작성하세요."

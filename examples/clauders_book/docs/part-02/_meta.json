@@ -1,10 +1,9 @@
 {
-  "label": "2. 바이브코딩 입문",
+  "label": "2. 코덱스로 콘텐츠 자동화 시작하기",
   "order": 2,
   "items": {
-    "05-chapter": { "label": "05장 서비스 만들기", "order": 1 },
-    "06-chapter": { "label": "06장 배포하기", "order": 2 },
-    "07-chapter": { "label": "07장 결제 붙이기", "order": 3 },
-    "08-chapter": { "label": "08장 자기만의 프로젝트", "order": 4 }
+    "07-chapter": { "label": "07장 커맨드와 에이전트", "order": 1 },
+    "08-chapter": { "label": "08장 블로그 연재 자동화", "order": 2 },
+    "09-chapter": { "label": "09장 뉴스봇 만들기", "order": 3 }
   }
 }

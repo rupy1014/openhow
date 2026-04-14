@@ -1,0 +1,10 @@
+{
+  "label": "2. 바이브코딩 입문",
+  "order": 2,
+  "items": {
+    "05-chapter": { "label": "05장 서비스 만들기", "order": 1 },
+    "06-chapter": { "label": "06장 배포하기", "order": 2 },
+    "07-chapter": { "label": "07장 결제 붙이기", "order": 3 },
+    "08-chapter": { "label": "08장 자기만의 프로젝트", "order": 4 }
+  }
+}

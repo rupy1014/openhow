@@ -1,10 +1,10 @@
 {
-  "label": "3. OpenClaw와 구조 읽기",
+  "label": "3. 오픈클로 — 에이전트에게 일을 맡기다",
   "order": 3,
   "items": {
-    "09-chapter": { "label": "09장 OpenClaw 설치하기", "order": 1 },
-    "10-chapter": { "label": "10장 자동화 구조 읽기", "order": 2 },
-    "11-chapter": { "label": "11장 왜 한 번에 안 되나", "order": 3 },
-    "12-chapter": { "label": "12장 AI가 팀처럼 일한다는 건", "order": 4 }
+    "10-chapter": { "label": "10장 오픈클로 설치하고 첫 대화하기", "order": 1 },
+    "11-chapter": { "label": "11장 워크스페이스 꾸미기", "order": 2 },
+    "12-chapter": { "label": "12장 블로그를 오픈클로에게 맡기기", "order": 3 },
+    "13-chapter": { "label": "13장 뉴스봇을 오픈클로에게 맡기기", "order": 4 }
   }
 }
