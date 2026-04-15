@@ -2,7 +2,7 @@
   "label": "4. 콘텐츠를 세상에 내보내기",
   "order": 4,
   "items": {
-    "14-chapter": { "label": "14장 SNS API 연결하기", "order": 1 },
-    "15-chapter": { "label": "15장 자동 발행 파이프라인 완성", "order": 2 }
+    "13-chapter": { "label": "13장 뉴스봇을 SNS에 자동 발행하기", "order": 1 },
+    "14-chapter": { "label": "14장 자동 발행 파이프라인 완성", "order": 2 }
   }
 }
