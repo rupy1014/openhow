@@ -177,7 +177,7 @@ Google뿐 아니라 ChatGPT, Perplexity, Claude 같은 **AI 검색 엔진에서 
 
 ## 다음 장
 
-→ [최종 실습 — 90일 실행 로드맵 만들기](/%EB%B0%94%EC%9D%B4%EB%B8%8C%EB%A7%88%EC%BC%80%ED%8C%85/32-90%EC%9D%BC-%EB%B0%94%EC%9D%B4%EB%B8%8C-%EB%A7%88%EC%BC%80%ED%8C%85-%EC%8B%A4%ED%96%89-%EB%A1%9C%EB%93%9C%EB%A7%B5)
+→ [36. 최종 실습 — 90일 실행 로드맵 만들기](/바이브마케팅/36-90일-실행-로드맵)
 
 ---
 
