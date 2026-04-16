@@ -409,10 +409,10 @@ THREADS_USER_ID=여러분의_스레드_사용자_ID
 
 ### 1-2. 오픈클로에게 스레드 기능 추가하기
 
-이제 터미널을 열고 오픈클로(Claude Code)에게 새로운 도구를 장착해 줍시다. 아래 명령어를 딱 한 줄만 복사해서 붙여넣으세요.
+이제 터미널을 열고 오픈클로(코덱스)에게 새로운 도구를 장착해 줍시다. 아래 명령어를 딱 한 줄만 복사해서 붙여넣으세요.
 
 ```bash
-claude mcp add threads --env THREADS_ACCESS_TOKEN=$THREADS_ACCESS_TOKEN -- npx -y @modelcontextprotocol/server-threads
+codex mcp add threads --env THREADS_ACCESS_TOKEN=$THREADS_ACCESS_TOKEN -- npx -y @modelcontextprotocol/server-threads
 
 01 위 명령어를 입력하고 Enter를 누릅니다.
 02 잠시 기다리면 "MCP server 'threads' added successfully"라는 메시지가 뜹니다.
@@ -444,7 +444,7 @@ INSTAGRAM_BUSINESS_ACCOUNT_ID=여러분의_인스타그램_비즈니스_ID
 이번에도 터미널 명령 한 줄로 끝냅니다. 인스타그램 전용 MCP 서버를 연결하는 과정입니다.
 
 ```bash
-claude mcp add instagram --env INSTAGRAM_TOKEN=$INSTAGRAM_PAGE_ACCESS_TOKEN -- npx -y @modelcontextprotocol/server-instagram
+codex mcp add instagram --env INSTAGRAM_TOKEN=$INSTAGRAM_PAGE_ACCESS_TOKEN -- npx -y @modelcontextprotocol/server-instagram
 
 01 명령어를 실행하고 성공 메시지를 확인합니다.
 02 다시 한번 `/mcp`를 입력해 보세요. 이제 `threads`와 `instagram`이 나란히 여러분의 명령을 기다리고 있을 겁니다.
@@ -460,7 +460,7 @@ claude mcp add instagram --env INSTAGRAM_TOKEN=$INSTAGRAM_PAGE_ACCESS_TOKEN -- n
 
 ### 3-1. 스레드에 첫 인사 건네기
 
-01 터미널(Claude Code)에서 아래와 같이 말해 보세요.
+01 터미널(코덱스)에서 아래와 같이 말해 보세요.
 > "Threads에 '안녕하세요! 제 AI 조수가 처음으로 올리는 글입니다. #OpenClaw #자동화'라고 올려줘."
 
 02 오픈클로가 "스레드 도구를 사용해 글을 게시하겠습니다"라고 답하며 작업을 시작할 겁니다.
@@ -505,9 +505,9 @@ claude mcp add instagram --env INSTAGRAM_TOKEN=$INSTAGRAM_PAGE_ACCESS_TOKEN -- n
 
 ## 여기서 막혔나요?
 
-**Q. `claude mcp add` 명령어를 쳤는데 "command not found"라고 나와요.**
+**Q. `codex mcp add` 명령어를 쳤는데 "command not found"라고 나와요.**
 
-**A.** `claude` 명령어(Claude Code)가 제대로 설치되지 않았거나 터미널이 인식하지 못하는 상태입니다. `npm install -g @anthropic-ai/claude-code`로 다시 설치해 보시거나, 터미널을 완전히 껐다 켜보세요.
+**A.** `codex` 명령어(코덱스)가 제대로 설치되지 않았거나 터미널이 인식하지 못하는 상태입니다. 01장의 설치 과정을 다시 확인하시거나, 터미널을 완전히 껐다 켜보세요.
 
 **Q. "Invalid OAuth Access Token"이라는 에러가 뜨면서 글이 안 올라가요.**
 
@@ -596,7 +596,7 @@ MCP는 오픈클로에게 스레드와 인스타그램이라는 스마트폰을 
 ```text
 [발행 에이전트]: 뉴스 요약을 바탕으로 Threads 포스트를 작성했습니다.
 "와, 이제 AI가 코드만 짜는 게 아니라 기획까지 돕는군요! 
-오늘 발표된 Claude Code 업데이트 소식 정리해 드려요..."
+오늘 발표된 코덱스 업데이트 소식 정리해 드려요..."
 (Threads API 호출 중... 발행 완료!)
 
 ```
