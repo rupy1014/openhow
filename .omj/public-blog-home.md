@@ -1,6 +1,6 @@
 ---
 
-## status: building created: 2026-04-13 updated: 2026-04-15 <!-- 퍼널 전환: 구독→무료 DAU/MAU 중심 -->
+## status: building created: 2026-04-13 updated: 2026-04-17 <!-- Phase 4: 워크스페이스 톤 디자인 시스템 통일 + 스텁 필터링 -->
 
 # public-blog-home — openhow 홈을 공개 블로그 랜딩으로 전환
 
@@ -59,6 +59,18 @@ openhow 콘텐츠가 로그인 뒤에 숨어있어서 외부 유입 경로가 �
   - hero/media: 복잡한 radial-gradient → `var(--surface-elevated)` 단색
   - CTA 버튼: shadow hover → `opacity: 0.88` 전환
   - dark mode shadow 블록 삭제
+
+- [x] **Phase 3: 비로그인 랜딩 스왑** — `Home.tsx`에서 `MarketingHome` → `PublicBlogHome` 교체
+  - 현재: 비로그인 방문 시 hero/슬로건/3단계 CTA 등 마케팅 카피(MarketingHome)가 뜸
+  - 목표: 랜딩 즉시 큐레이션된 콘텐츠(PublicBlogHome) 노출 — SSG 워크스페이스 홈과 동일한 톤
+  - MarketingHome.tsx(252줄) / Home.css(408줄) 제거 완료
+
+- [x] **Phase 4: 디자인 시스템 통일 + 데이터 품질 필터** — 워크스페이스 톤으로 재설계
+  - Worker: 설명·OG·아티클 모두 없는 스텁 워크스페이스(9개) 서버측 제외
+  - 프론트: 거대 Hero(460px) 제거 → 워크스페이스 그리드 우선. fallback 문구("워크스페이스에 담긴 공개 아티클을 차례대로 만나보세요.") 삭제. 빈 섹션 자동 숨김
+  - 카드 톤: `.course-card`/`.team-blog-series-card`와 동일한 border + 16px radius + soft gradient + primary-color kicker + translateY hover
+  - 0화 워크스페이스는 "N화 시리즈" 대신 타입 배지만 노출, CTA는 "둘러보기"
+  - `--publication-card-radius-lg`, `--shadow-md`, `--surface-muted` 등 viewer 전역 토큰 사용 (하드코딩 제거)
 
 ## Not
 
@@ -163,6 +175,27 @@ openhow 콘텐츠가 로그인 뒤에 숨어있어서 외부 유입 경로가 �
   - Admin UI 설정 노출은 별도 의도(`workspace-ux-improvement`)로 분리하는 게 적정. 홈 피벗은 기존 DB 값을 읽기만 하면 됨.
 - **의도 변경**: What에 "Admin UI display 설정 노출" 추가했으나, 홈 피벗과 독립적으로 진행 가능.
 
+### 2026-04-17: [signal] 랜딩이 여전히 마케팅 카피 — 큐레이션 홈 원함
+- **시도**: 로컬에서 `/` 접속 확인
+- **결과**: `Home.tsx:31` 에서 `MarketingHome`(252줄, hero/슬로건/3단계/워크스페이스 타입 소개) 렌더. PublicBlogHome은 구현 완료됐으나 라우팅 연결 안 됨
+- **배운 것**:
+  - 2026-04-13 커밋이 유실된 상태 그대로 남아있었음 (footprint 기록과 실제 코드 불일치)
+  - 유저 피드백: 거창한 카피 불필요, 바로 큐레이션 되는 홈이 맞음 — SSG 워크스페이스 홈과 톤 통일
+- **의도 변경**: Phase 3 추가, status는 `building` 유지
+
+### 2026-04-17: [signal] Phase 3 후 재확인 — 큐레이션이 상당히 별로
+- **시도**: PublicBlogHome 렌더 후 스크린샷 검증
+- **결과**: 3가지 근본 원인
+  1. 공개 워크스페이스 14개 중 **아티클 0개** — feed의 popular/latest/tutorials/cases/faqs/featured/newAuthors 전부 빈 배열
+  2. 스텁 워크스페이스 9개(Documentation x2, Felix, sermons, youtube 등)가 필터 없이 노출
+  3. Hero 460px + "0화 시리즈" + 동일한 fallback description 반복 → 큐레이션이 아니라 placeholder grid로 보임
+- **배운 것**:
+  - 서버 피드 쿼리에 `articleCount === 0 && !description && !ogImage` 스텁 제외 필요
+  - 프론트 fallback 문구는 "덜 별로"로 보이지 않음 — null이면 숨겨야 진짜 큐레이션 톤
+  - 디자인 시스템 문제 이전에 데이터 현실을 그대로 노출하는 게 문제의 중심. 필터 + 빈 섹션 숨김만으로도 디자인이 살아남
+  - 카드 톤을 viewer 전역 토큰(`--publication-card-radius-lg`, `--surface-muted`, `--shadow-md`)으로 맞추면 workspace landing과 시각 일체감이 확보됨
+- **의도 변경**: Phase 4 추가 (Worker 스텁 필터 + 프론트 레이아웃 재설계), 완료
+
 ### 2026-04-14: /omj:build Phase 1 피벗 구현
 
 - **시도**: 공개 피드 API v2 (sort/articleCount/firstArticleSlug 추가) + PublicBlogHome을 워크스페이스 쇼케이스로 피벗
@@ -179,7 +212,12 @@ openhow 콘텐츠가 로그인 뒤에 숨어있어서 외부 유입 경로가 �
 - core/packages/worker/src/index.ts — `/api/public` 라우트 등록 (2026-04-13)
 - core/packages/viewer/src/pages/PublicBlogHome.tsx — toss.tech 스타일 공개 블로그 홈 컴포넌트 신규 (2026-04-13) → 피벗 대상
 - core/packages/viewer/src/pages/PublicBlogHome.css — 공개 블로그 홈 스타일 신규 (2026-04-13) → 피벗 대상
-- core/packages/viewer/src/pages/Home.tsx — 비로그인 시 마케팅 페이지 → PublicBlogHome으로 교체 (2026-04-13)
+- core/packages/viewer/src/pages/Home.tsx — 비로그인 시 마케팅 페이지 → PublicBlogHome으로 교체 (2026-04-13 기록됐으나 유실, 2026-04-17 재적용)
+- core/packages/viewer/src/pages/MarketingHome.tsx — 삭제 (2026-04-17, 252줄)
+- core/packages/viewer/src/pages/Home.css — 삭제 (2026-04-17, 408줄)
+- core/packages/worker/src/routes/public-feed.ts — 워크스페이스 스텁(설명·OG·아티클 모두 없음) 제외 필터 추가 (2026-04-17)
+- core/packages/viewer/src/pages/PublicBlogHome.tsx — Phase 4 재설계, 596줄 → 325줄 (Hero 제거, 워크스페이스 그리드 우선, 빈 섹션 자동 숨김) (2026-04-17)
+- core/packages/viewer/src/pages/PublicBlogHome.css — 워크스페이스 톤으로 전면 재작성, `pbh-*` prefix (2026-04-17)
 
 ## Backlog
 

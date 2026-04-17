@@ -1,8 +1,8 @@
 ---
 status: building
 created: 2026-04-13
-updated: 2026-04-13
-iteration: 1
+updated: 2026-04-17
+iteration: 2
 ---
 
 # Workspace 관리 페이지 UX 개선
@@ -17,6 +17,7 @@ CLI/API로 기능은 갖춰졌지만, 실제 사용자가 UI에서 접근하고 
 - 댓글 기능 대시보드 접근성 개선 검토
 - 대시보드 인덱스 페이지 개선 (빈 플레이스홀더 → 워크스페이스 허브)
 - 전반적 UX 갭 검토 및 개선
+- [x] workspace home sub-nav 슬롯 "최근 본 문서" 패널 (허전함 해소) — **metric: MainNav 있는 workspace 홈에서 3-column 렌더 + 방문 이력 표시 (2026-04-17)**
 
 ## Not
 (탐색하면서 채운다)
@@ -50,8 +51,26 @@ CLI/API로 기능은 갖춰졌지만, 실제 사용자가 UI에서 접근하고 
 - core/packages/viewer/src/layouts/AdminLayout.tsx — 사이드바에 "댓글" 링크 추가 (2026-04-13)
 - core/packages/viewer/src/router.tsx — /dashboard/:ws/comments 라우트 등록 (2026-04-13)
 
+- core/packages/viewer/src/hooks/useRecentDocs.ts — 최근 본 문서 tracking 훅 신설 (localStorage 기반, 최대 10개, 5초 debounce, storage 이벤트 동기화) (2026-04-17, iteration 2)
+- core/packages/viewer/src/components/RecentItemsPanel.tsx — 최근 항목 패널 컴포넌트 신설 (empty state, 상대시간, 지우기) (2026-04-17, iteration 2)
+- core/packages/viewer/src/components/RecentItemsPanel.css — 패널 스타일 (Navigation 톤 맞춤) (2026-04-17, iteration 2)
+- core/packages/viewer/src/pages/DocPage.tsx — 문서 방문 시 `record()` 호출 useEffect 추가, index/readme는 워크스페이스 루트로 저장 (2026-04-17, iteration 2)
+- core/packages/viewer/src/layouts/UnifiedLayout.tsx — `isWorkspaceHomeWithMainNav` 도입, workspace-docs + MainNav 있을 때 Publication/Document branch 모두 sub-nav 슬롯을 RecentItemsPanel로 주입 (2026-04-17, iteration 2)
+
+## Learnings
+
+### 2026-04-17: (iteration 2) workspace home sub-nav 슬롯 개선
+- **시도**: workspace home (`/w/:ws`) 진입 시 2-nav 구조에서 sub-nav 자리가 비어 허전하다는 UX 피드백 → 최근 본 문서 패널로 채우기
+- **결과**: DocPage에 방문 기록 + UnifiedLayout에서 workspace-docs + MainNav 존재 시에만 sub-nav 슬롯에 RecentItemsPanel 주입. Codex 리뷰에서 이번 변경분 이슈 0.
+- **배운 것**:
+  - `hasSidebar = (isSimplePage || hasMainNav) ? false : ...` 계산식 때문에 현재 2-nav 실동작이 거의 없었음. `isWorkspaceHomeWithMainNav` 같은 파생 플래그를 별도로 도입하면 `isSimplePage` 전역 의미를 건드리지 않고 예외 슬롯을 주입 가능.
+  - localStorage 기반 최근항목은 SSR/로그아웃/공용 디바이스에서 그대로 남는 게 브라우저 기본 동작. privacy가 더 중요하다면 user-scoped storage + 로그아웃 시 정리 훅 필요.
+  - Codex review가 working tree 전체를 보므로, 이전 세션에서 밀려 있던 변경이 함께 P1/P2로 잡힘 → 커밋 주기 짧게 유지하는 게 리뷰 신호/노이즈 구분에 유리.
+- **Scope**: _root
+
 ## Backlog
-(아직 없음)
+- 최근 항목 패널 privacy 옵션 — user-scoped storage 또는 로그아웃 시 clear 훅
+- 빈 workspace (MainNav 없는 blog/team 타입) 홈의 허전함은 별도 해결 필요 (지금은 풀폭 WorkspaceDocs 유지)
 
 ## Learnings
 

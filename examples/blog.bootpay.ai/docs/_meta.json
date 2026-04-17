@@ -1,9 +1,0 @@
-{
-  "nav": [
-    { "key": "getting-started", "label": "결제 처음 도입할 때", "icon": "💳", "order": 0 },
-    { "key": "subscription", "label": "구독 결제 기획할 때", "icon": "🔄", "order": 1 },
-    { "key": "commerce", "label": "쇼핑몰 결제 붙일 때", "icon": "🛒", "order": 2 },
-    { "key": "operations", "label": "운영 중 꼭 알아야 할 것", "icon": "⚙️", "order": 3 },
-    { "key": "ai", "label": "AI 활용", "icon": "🤖", "order": 4 }
-  ]
-}
