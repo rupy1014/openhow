@@ -2,6 +2,7 @@
 status: seed
 created: 2026-04-13
 updated: 2026-04-13
+iteration: 1
 ---
 
 # article-reading-ux — 아티클 읽기 경험 고도화

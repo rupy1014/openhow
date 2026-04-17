@@ -2,6 +2,7 @@
 status: done
 created: 2026-04-13
 updated: 2026-04-13
+iteration: 1
 ---
 
 # 페이지 이동 시 스크롤 위치 초기화

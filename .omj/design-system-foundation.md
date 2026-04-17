@@ -2,6 +2,7 @@
 status: seed
 created: 2026-04-13
 updated: 2026-04-13
+iteration: 1
 ---
 
 # design-system-foundation — 디자인 시스템 기반 정비

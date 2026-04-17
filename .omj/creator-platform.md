@@ -1,6 +1,8 @@
 ---
 status: done
 created: 2026-04-15
+updated: 2026-04-17
+iteration: 1
 ---
 
 # creator-platform — AX 전문 지식 공간 + 구독자 모으기

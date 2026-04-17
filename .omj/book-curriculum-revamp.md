@@ -2,6 +2,7 @@
 status: exploring
 created: 2026-04-14
 updated: 2026-04-14
+iteration: 1
 ---
 
 # 책 커리큘럼 개편 — 편집자 피드백 반영

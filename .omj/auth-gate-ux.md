@@ -1,6 +1,8 @@
 ---
 status: exploring
 created: 2026-04-13
+updated: 2026-04-17
+iteration: 1
 ---
 
 # auth-gate-ux — 공개 워크스페이스에서 로그인 잔상 제거

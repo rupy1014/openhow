@@ -2,6 +2,7 @@
 status: building
 created: 2026-04-13
 updated: 2026-04-13
+iteration: 1
 ---
 
 # Workspace 관리 페이지 UX 개선
