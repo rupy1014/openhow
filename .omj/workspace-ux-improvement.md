@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-13
 updated: 2026-04-17
-iteration: 2
+iteration: 3
 ---
 
 # Workspace 관리 페이지 UX 개선
@@ -15,7 +15,7 @@ CLI/API로 기능은 갖춰졌지만, 실제 사용자가 UI에서 접근하고 
 - 타입별 레이아웃 스켈레톤 미리보기 (생성 전에 어떤 모습인지 시각적으로 확인)
 - 게시글 작성 UX 편의성 개선 검토
 - 댓글 기능 대시보드 접근성 개선 검토
-- 대시보드 인덱스 페이지 개선 (빈 플레이스홀더 → 워크스페이스 허브)
+- [x] 대시보드 인덱스 페이지 개선 (빈 플레이스홀더 → 워크스페이스 허브) — **metric: `/dashboard` 진입 시 owned+member 카드 그리드 렌더, 자동 리다이렉트 제거 (2026-04-17)**
 - 전반적 UX 갭 검토 및 개선
 - [x] workspace home sub-nav 슬롯 "최근 본 문서" 패널 (허전함 해소) — **metric: MainNav 있는 workspace 홈에서 3-column 렌더 + 방문 이력 표시 (2026-04-17)**
 
@@ -57,7 +57,23 @@ CLI/API로 기능은 갖춰졌지만, 실제 사용자가 UI에서 접근하고 
 - core/packages/viewer/src/pages/DocPage.tsx — 문서 방문 시 `record()` 호출 useEffect 추가, index/readme는 워크스페이스 루트로 저장 (2026-04-17, iteration 2)
 - core/packages/viewer/src/layouts/UnifiedLayout.tsx — `isWorkspaceHomeWithMainNav` 도입, workspace-docs + MainNav 있을 때 Publication/Document branch 모두 sub-nav 슬롯을 RecentItemsPanel로 주입 (2026-04-17, iteration 2)
 
+- core/packages/viewer/src/pages/admin/Dashboard.tsx — 18줄 placeholder → 워크스페이스 허브 (fetch, 로딩 스켈레톤, 에러 재시도, 카드 그리드, 역할 뱃지, 액션 링크, member 역할은 "새 문서" 숨김) (2026-04-17, iteration 3)
+- core/packages/viewer/src/pages/admin/Dashboard.css — 허브 카드/뱃지/스켈레톤/에러 스타일. `.action-btn`은 `.dashboard-view`로 scope해 글로벌 누수 방지 (2026-04-17, iteration 3)
+- core/packages/viewer/src/layouts/AdminLayout.tsx — `/dashboard` 자동 리다이렉트 제거, `useSearchParams`로 `?create=workspace` 쿼리 one-shot 다이얼로그 트리거, `selectedWorkspace`는 `/dashboard` 루트에서만 클리어(`/dashboard/keys`는 유지) (2026-04-17, iteration 3)
+- core/packages/viewer/src/locales/ko.ts, en.ts — `dashboard.hub.*` 키 블록 추가 (title, subtitle, role, actions, errorBody 등) (2026-04-17, iteration 3)
+
 ## Learnings
+
+### 2026-04-17: (iteration 3) dashboard index 워크스페이스 허브
+- **시도**: `/dashboard` 빈 placeholder를 워크스페이스 카드 그리드 허브로 전환. 자동 리다이렉트 제거, empty/error/loading/hub 4상태, 역할별 액션 노출.
+- **결과**: 5개 파일(Dashboard.tsx/css, AdminLayout.tsx, ko.ts, en.ts), 490 lines 변경. Codex 리뷰 2라운드 총 5건(P2 4건 + P3 1건) 수정 후 완료. tsc 통과.
+- **배운 것**:
+  - `AdminLayout`에는 initial load useEffect 내부에 "workspace 있으면 첫 번째로 자동 이동" 분기가 있어 허브 페이지가 사실상 가려져 있었음. 허브를 살리려면 리다이렉트 제거가 선행 필요.
+  - i18n 누수: 기존 컴포넌트가 locale store 사용 중이면 새 마크업도 반드시 locale에 키 등록해야 EN locale 사용자가 mixed-language UI를 안 보게 됨. 초기 프롬프트에서 scope 줄이려 locale 제외한 것이 P2 regression으로 돌아옴 — 같은 페이지의 i18n 부채는 fresh start가 아닌 한 `locales/` 포함 필수.
+  - `.action-btn` 같은 generic 클래스명은 viewer 전역에서 이미 쓰고 있어(AdminDocs 아이콘 버튼, CommentsSection Reply 등) CSS page-level 파일에서 bare selector로 정의하면 페이지 전환 후 다른 화면까지 스타일이 바뀜. 페이지 전용 CSS는 반드시 컨테이너 클래스로 scope(`.dashboard-view .action-btn` 등).
+  - `/dashboard/keys` 같은 workspace-agnostic 서브라우트는 `params.workspace`가 없지만 sidebar 컨텍스트는 유지해야 함. "params 없으면 selectedWorkspace 클리어"를 무조건 적용하면 keys 페이지에서 사이드바가 사라지는 regression. `pathname === '/dashboard'` 예외 처리 필요.
+  - Codex가 `--resume-last`로 이전 세션 메모리를 잡을 때 무관한 파일까지 autonomous로 수정하는 drift 관찰 — 범위 이탈 발견 시 즉시 `git checkout HEAD -- <files>`로 되돌리고, surgical한 1-line fix는 Edit 도구 직접이 안전.
+- **Scope**: _root
 
 ### 2026-04-17: (iteration 2) workspace home sub-nav 슬롯 개선
 - **시도**: workspace home (`/w/:ws`) 진입 시 2-nav 구조에서 sub-nav 자리가 비어 허전하다는 UX 피드백 → 최근 본 문서 패널로 채우기
