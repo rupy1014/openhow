@@ -1,7 +1,7 @@
 ---
-status: seed
+status: killed
 created: 2026-04-13
-updated: 2026-04-13
+updated: 2026-04-17
 iteration: 1
 ---
 
@@ -33,6 +33,7 @@ toss.tech 같은 정돈된 UI는 개별 컴포넌트가 아니라 시맨틱 토�
 - Storybook 등 별도 도구 도입
 
 ## Footprint
+
 (아직 없음 — /omj:build 실행 후 자동 기록)
 
 ## Backlog
@@ -44,5 +45,15 @@ toss.tech 같은 정돈된 UI는 개별 컴포넌트가 아니라 시맨틱 토�
 ## Learnings
 
 ### 2026-04-13: seed 생성
+
 - **배경**: toss.tech 분석에서 시맨틱 CSS 변수 + 일관된 디자인 스케일이 정돈된 느낌의 핵심임을 확인
 - **초기 메모**: public-blog-home 의도의 전제 조건으로 생성. 홈 와이어프레임과 병행하여 토큰 정의 → 홈 구현 시 즉시 적용하는 흐름
+
+### 2026-04-17: killed — 타 intent가 흡수 (absorbed by proxy)
+
+- **사유**: 이 intent의 What 항목들이 실제로 다른 intent에서 실행됨:
+  - **시맨틱 토큰 + 다크모드** → `core/unified-layout.md` (done, iter 10) 에서 main.css 전역 CSS 변수 체계로 구현
+  - **카드 컴포넌트 표준화** → `public-blog-home.md` Phase 2 (카드/헤더 디자인 리뉴얼) 에서 실행
+  - **타이포/여백/블로그 톤** → `blog-workspace-style-polish.md` (building) 에서 bootpay 레퍼런스 기반으로 구현 중
+- **결론**: 독립 intent로 유지할 이유 없음. 별도 수행 필요가 아니라 이미 다른 축에서 진행됨
+- **학습 자산**: 향후 "디자인 시스템 전면 정비"가 필요해지면 `core/` 하위 신규 intent로 다시 세울 것 (예: `core/design-tokens-v2.md`)

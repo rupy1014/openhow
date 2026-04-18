@@ -1,6 +1,9 @@
 ---
-
-## status: building created: 2026-04-13 updated: 2026-04-17 <!-- Phase 4: 워크스페이스 톤 디자인 시스템 통일 + 스텁 필터링 -->
+status: building
+created: 2026-04-13
+updated: 2026-04-17
+iteration: 4
+---
 
 # public-blog-home — openhow 홈을 공개 블로그 랜딩으로 전환
 

@@ -1,8 +1,10 @@
 ---
-status: exploring
+status: done
 created: 2026-04-14
-updated: 2026-04-14
+updated: 2026-04-17
 iteration: 1
+archived: 2026-04-17
+project: clauders_book
 ---
 
 # 책 커리큘럼 개편 — 편집자 피드백 반영

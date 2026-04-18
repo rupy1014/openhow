@@ -11,8 +11,8 @@ iteration: 1
 SPA에서 A 페이지 하단에서 B 페이지로 이동하면 스크롤이 top 0으로 안 돌아가고 하단 그대로 유지되어 UX가 어색하다. serve(개발)와 publish(배포) 양쪽 모두 동일 증상.
 
 ## What
-- [ ] 페이지(route) 전환 시 자동으로 scrollTo(0, 0) 처리
-- [ ] 브라우저 뒤로가기/앞으로가기 시에는 이전 스크롤 위치 복원 (네이티브 동작 유지)
+- [x] 페이지(route) 전환 시 자동으로 scrollTo(0, 0) 처리 — `useScrollToTop.ts` + 4개 레이아웃 적용 (Footprint 참고)
+- [x] 브라우저 뒤로가기/앞으로가기 시에는 이전 스크롤 위치 복원 — `useNavigationType()` POP 감지로 유지
 
 ## Not
 (탐색하면서 채운다)

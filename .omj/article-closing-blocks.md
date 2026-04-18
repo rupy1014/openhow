@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-17
 updated: 2026-04-17
-iteration: 2
+iteration: 3
 ---
 
 # article-closing-blocks — 아티클 말미의 "다음 단계" 블록 시각 분리
@@ -100,6 +100,20 @@ iteration: 2
 
 ## Footprint
 
+### 2026-04-17 iter3 — related 블록 카드 그리드 전환
+
+- **문제**: iter2 출시 직후 "글씨만 빽빽해서 피로하다" 피드백. 리스트 형식이 쇼핑몰 추천상품처럼 한눈에 안 들어옴.
+- **변경**: `::: related` 본문이 **링크 리스트**이면 자동으로 `md-content-cards` 그리드로 렌더. `::: integrate`/`::: contact` 는 기존 리스트 유지 (외부 URL 맥락 다름).
+- **썸네일 fallback**: 페이지 frontmatter 에 `thumbnail` 없으면 **제목 첫 2글자 + 해시 그라디언트 카드**. 6색 팔레트 (violet/cyan/amber/rose/emerald/slate). 같은 슬러그는 항상 같은 색 (deterministic).
+- **호환성**: 기존 `::: related` 를 그대로 쓴 글은 카드로 자동 전환. 자유 마크다운을 쓴 경우 generic container 로 fallback (regex 검증 실패 시).
+- **수정 파일 (5개)**:
+  - `core/packages/viewer/src/utils/markdown.ts` — `parseRelatedLinkList`, `renderRelatedCard`, `hashSlug`, `extractInitials`, `LETTER_PALETTE` 추가. `containerExtension` tokenizer/renderer 에 related 분기.
+  - `core/packages/cli/src/ssg/renderMarkdown.ts` — 동일 로직 미러.
+  - `core/packages/viewer/src/styles/markdown.css` — `.md-content-cards--related`, `.md-content-card__thumbnail--letter`, `.md-content-card__letter` 스타일.
+  - `core/packages/cli/src/ssg/ssgStyles.ts` — SSG CSS 동일 미러.
+  - `core/packages/cli/src/ssg/renderMarkdown.test.ts` — related 3종 테스트 추가 (resolved 썸네일 / letter fallback / 자유 마크다운 fallback).
+- **검증**: `pnpm --filter @openhow/cli test` 66 테스트 통과, `pnpm --filter @openhow/viewer build` 성공.
+
 ### 2026-04-17 iter2 — Phase 1 MVP 구현
 
 - **수정 파일 (4개)**:
@@ -124,6 +138,14 @@ iteration: 2
 ### 2026-04-17 iter1: seed
 - 저자 마크다운 패턴이 H2-H3-H3 과분 위계 + blockquote 본문 충돌 + 링크 3종 혼재
 - 플랫폼이 클로징 블록을 1급 UI로 지원해야 일관성 확보 가능
+
+### 2026-04-17 iter3: related 카드 전환
+- "글씨만 빽빽해서 피로"는 평범한 리스트 UI 의 구조적 한계. 같은 closing container 래퍼를 유지하되 본문만 카드 그리드로 바꿔 **정보 밀도 vs 시각 피로** 균형을 맞춤.
+- 기존 `::: content-cards` extension 을 재활용하지 않고 `::: related` 본문 링크 리스트를 자동 승격하는 쪽을 선택한 이유:
+  - 저자 문법을 안 건드려도 됨 (51편 bootpay 글 마이그레이션 부담 없음)
+  - 작성자가 직접 설명을 적는 `— 설명` 이 카드 description 으로 그대로 매핑됨
+- **letter fallback 이 "기본 이미지 5개 돌려쓰기" 보다 낫다**: 중복감 없음, 정보 전달 (PG/구독 같은 2글자가 주제 힌트), 에셋 관리 비용 0. Notion/Linear/네이버 카페 카테고리와 같은 패턴.
+- 해시 기반 색상: `slug` 문자 코드 % 6 → 같은 글은 항상 같은 색 → 기억하기 쉬움. 의도성 있는 스타일로 읽힘.
 
 ### 2026-04-17 iter2: 기술 범위 확정 + 이름 충돌 해결
 - **렌더러 오인 정정**: 기존 doc의 "Plate.js 기반" 은 오류. 실제는 **marked.js + custom extensions**. DocPage.tsx 는 `dangerouslySetInnerHTML` 로 HTML 문자열 주입.
