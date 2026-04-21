@@ -10,6 +10,7 @@ dist/
 
 # mdshare temp files
 temp/
+.omj/tmp/
 
 # Private AI assistant config (not for public repo)
 CLAUDE.md

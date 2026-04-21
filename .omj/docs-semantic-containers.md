@@ -1,6 +1,6 @@
 ---
 name: docs-semantic-containers
-status: exploring
+status: done
 iteration: 2
 domain: platform
 stage: mvp
@@ -112,6 +112,12 @@ openhow가 serve하는 외부 SDK 문서(현재 bootpay-contents 132개 MD)가 *
 - **2026-04-21 iter 2**: ai-docs(VitePress/Nuxt)는 `<Parameters>`, `<ResponseFields>`, `<ErrorCodes>` 처럼 **Vue 컴포넌트 슬롯에 MD 테이블 자동 파싱** 패턴을 쓴다. openhow는 marked v11이라 Vue가 없으므로 `:::parameters` fenced container 내부에 MD 테이블을 두고, 토크나이저에서 `this.lexer.blockTokens()` 로 하위 테이블 토큰 생성 → 렌더 시 `<table>` 그대로 출력 + CSS로 컬럼 배지 주입이 표준 경로. 불가피한 JS 후처리는 SPA hook 또는 CSS nth-child 셀렉터로 대체.
 
 ## Footprint
+
+- **2026-04-21 iter 2 (done)** — API 문서용 4개 확장(`:::endpoint`, `:::parameters`, `:::response-fields`, `:::error-codes`) 을 SPA/SSG 양쪽에 추가. `checkout/create.md`의 4곳을 신규 확장으로 치환. `core/CLAUDE.md`에 "API 문서용 확장" 섹션 추가.
+  - core 변경(Codex Step 1): `packages/viewer/src/utils/markdown.ts` (+263), `packages/viewer/src/styles/markdown.css` (+234), `packages/cli/src/ssg/ssgStyles.ts` (+234). `data-depth` 는 DOMPurify `ALLOWED_ATTR` 에 자동 편입됨.
+  - bootpay-contents 변경(Claude 직접): `checkout/create.md` 1파일 4곳 치환 (요청 파라미터 → `:::parameters`, GET URL+Basic Auth → `:::endpoint`, 주문 조회 응답 → `:::response-fields`, 에러 코드 → `:::error-codes`).
+  - docs: `core/CLAUDE.md` 에 "## API 문서용 확장 (endpoint / parameters / response-fields / error-codes)" 섹션 +84줄 추가.
+  - 검증 status: `viewer build ✓ (tsc -b + vite build, 2.43s)` / `cli build ✗ (iter 1부터 이어지는 기존 타입 에러 `publish.ts:1203 isPaidWorkspace`, 이번 작업과 무관)` / `localhost:3501 렌더 확인은 CLI 빌드 복구 후 가능`. 그 외 MUST NOT 위반 없음(extension 등록 순서 유지, responsibility 로직 변경 없음, 새 파일 생성 없음).
 
 - **2026-04-21 iter 1 (done)** — `:::responsibility` 확장을 SPA/SSG 양쪽에 추가하고, bootpay-contents 7개 MD 파일의 "내가/Bootpay" info+table 블록을 치환. `checkout/create.md`의 "연동 흐름" 9단계 테이블을 기존 `:::canvas-sequence`로 PoC 변환. `core/CLAUDE.md`에 `## Responsibility Split (마크다운 확장)` 섹션 추가.
   - core 변경(Codex Step 1): `packages/viewer/src/utils/markdown.ts` (+133), `packages/viewer/src/styles/markdown.css` (+127), `packages/cli/src/ssg/ssgStyles.ts` (+109)
