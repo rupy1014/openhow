@@ -1,7 +1,7 @@
 ---
 name: docs-semantic-containers
 status: done
-iteration: 2
+iteration: 3
 domain: platform
 stage: mvp
 created: 2026-04-21
@@ -22,6 +22,41 @@ openhow가 serve하는 외부 SDK 문서(현재 bootpay-contents 132개 MD)가 *
 읽는 개발자 입장에서 "지금 보는 표가 책임 분담인지, 파라미터 스펙인지, 시퀀스 흐름인지" 한눈에 안 들어옴. 문서 품질이 openhow의 **판매 포인트(SDK 문서 호스팅)** 인데, 경쟁 SaaS(Mintlify/Stripe Docs) 대비 시각적 단조로움이 걸림돌.
 
 ## What
+
+### (v1 iter 3) — 이번 빌드
+
+iter 2가 `create.md` 1파일에만 적용된 상태로 마감됐는데, 사용자 피드백:
+- `cancel-withdraw.md` 는 "API 엔드포인트 / **PUT** url / 인증: Basic Auth" 가 3줄로 흩어져 렌더됨 → `:::endpoint` 적용 누락
+- "응답" 섹션의 `#### 성공 응답 + ```json` 구조는 탭 컴포넌트로 처리되어야 함 (ai-docs `ResponseExample.vue` 패턴)
+
+**신규 마크다운 확장 1종** (SPA + SSG):
+
+- **`:::response`** — 내부에 여러 `#### 라벨 + \`\`\`json` 쌍을 **탭 UI**로 변환
+  - 문법:
+    ```
+    :::response
+    #### 성공 응답
+    ```json
+    { "status": 1 }
+    ```
+
+    #### 404 응답
+    ```json
+    { "code": 404 }
+    ```
+    :::
+    ```
+  - 파싱: 내부 body를 `this.lexer.blockTokens()` 로 파싱 → heading(h1~h4) + 다음 code 토큰을 쌍으로 묶기. heading 없이 code만 있으면 "성공 응답" / "응답 N" 기본 라벨.
+  - **렌더 DOM 재사용**: 기존 `md-code-group` 구조 그대로 + `md-code-group--response` variant modifier만 추가. 이 방식으로 `hydrateScript.ts` 의 `initCodeGroupDelegation` JS 핸들러 그대로 사용 (수정 불필요).
+  - 1개 응답만 있어도 탭 1개로 렌더.
+
+**`cancel-withdraw.md` 치환 4곳** (Claude 직접):
+1. "## API 엔드포인트 \n\n **PUT** url \n\n 인증: Basic Auth" → `:::endpoint`
+2. "## 요청 파라미터" + 테이블 → `:::parameters`
+3. "## 응답" > "#### 성공 응답 + json" → `:::response`
+4. "## 에러 코드" + 테이블 → `:::error-codes`
+
+**문서화** — `core/CLAUDE.md`의 "API 문서용 확장" 섹션 말미에 `:::response` 하위 섹션 추가.
 
 ### (v1 iter 2) — 이번 빌드
 
@@ -94,6 +129,9 @@ openhow가 serve하는 외부 SDK 문서(현재 bootpay-contents 132개 MD)가 *
 - **iter 2**: `:::tip` / `:::warning` 강화 — openhow `alertExtension`/`containerExtension`이 이미 ai-docs `Admonition.vue`와 동등 기능
 - **iter 2**: `<ApiEndpoint>` 등 HTML 태그 그대로 포팅 — openhow는 marked 기반, Vue SFC 아님. `:::xxx` fenced container 문법만 사용
 - **iter 2**: `create.md` 외 다른 파일 치환 — iter 2는 검증 목표 페이지 1개만. 나머지는 v2 반복에서
+- **iter 3**: `:::response` 의 prev sibling 자동 라벨링(ai-docs ResponseExample.vue 방식) — openhow는 MD 토큰 기반이라 bare code block 위 heading을 "자동으로 라벨화" 처리는 heuristic 실패 가능. 대신 **명시적 `#### 라벨` 을 inside `:::response`** 패턴으로 강제 (안전하고 예측 가능).
+- **iter 3**: `cancel-withdraw.md` 외 유사 패턴 파일 일괄 치환 — iter 3 목적은 "`:::response` 확장이 실제로 동작한다"의 확인. 나머지는 iter 4+ 자동 마이그레이션 툴로 일괄 처리.
+- **iter 3**: `:::response` 내부 code block이 json 외 yaml/xml인 경우 — 현재는 구분 없이 그대로 렌더. SDK 문서 특성상 JSON 위주이므로 색상 코딩은 불필요.
 
 ## Backlog
 
@@ -110,8 +148,20 @@ openhow가 serve하는 외부 SDK 문서(현재 bootpay-contents 132개 MD)가 *
 - **2026-04-21 [signal]**: Codex cowork-run.sh는 writable root 제약이 있어 `~/sideProjects/openhow/` 밖 경로(예: `~/sideProjects/youtube/channels/bootpay-contents/...`)에 대해 `PermissionError: Operation not permitted`로 거부한다. 크로스 워크스페이스 치환 작업은 Codex가 아닌 Claude 직접 Edit으로 수행해야 한다. Build 프로토콜의 "Fallback to Claude direct coding" 판단 조건에 **writable-root 밖 파일**을 추가 고려.
 - **2026-04-21 [signal]**: `openhow serve`(CLI) 렌더는 `@openhow/cli`의 **빌드된** SSG를 사용. `markdown.ts` 확장 추가만으로는 serve 화면에 반영되지 않고 `pnpm --filter @openhow/cli build` 통과가 필요함. 현재 `core/packages/cli/src/commands/publish.ts:1203`의 `isPaidWorkspace` 미정의 타입 에러(이번 작업 전부터 존재, 다른 작업 브랜치 영향)로 CLI 빌드 실패 → 브라우저 검증 불가 상태. 사용자가 해당 타입 에러 해결 후 재빌드 필요.
 - **2026-04-21 iter 2**: ai-docs(VitePress/Nuxt)는 `<Parameters>`, `<ResponseFields>`, `<ErrorCodes>` 처럼 **Vue 컴포넌트 슬롯에 MD 테이블 자동 파싱** 패턴을 쓴다. openhow는 marked v11이라 Vue가 없으므로 `:::parameters` fenced container 내부에 MD 테이블을 두고, 토크나이저에서 `this.lexer.blockTokens()` 로 하위 테이블 토큰 생성 → 렌더 시 `<table>` 그대로 출력 + CSS로 컬럼 배지 주입이 표준 경로. 불가피한 JS 후처리는 SPA hook 또는 CSS nth-child 셀렉터로 대체.
+- **2026-04-21 iter 3**: 탭 UI가 필요한 새 확장은 `md-code-group` DOM 구조를 **재사용(variant modifier)** 하는 게 최단거리. `hydrateScript.ts` 의 `initCodeGroupDelegation` 는 `.md-code-group__tab` 셀렉터에 하드코딩이라 generic하게 고치는 것보다 래퍼 클래스를 `md-code-group md-code-group--response` 로 부여하는 쪽이 diff 최소. 탭 동작 로직 검증도 재활용 가능.
+- **2026-04-21 iter 3 [signal]**: iter 2 완료 직후 사용자가 `cancel-withdraw.md` 페이지를 실제로 확인하고 "엔드포인트가 1 컴포넌트로 안 묶였다" 지적 → **iter 2가 `create.md` 1파일에만 치환한 게 스코프 실수**였음. 다음 반복부터는 "치환 범위"를 intent의 What 항목으로 명시적으로 정의하거나, 확장 추가와 전체 파일 전파를 별도 iter로 쪼갤 때 **전파가 빠졌다는 잔여 부채를 명시적으로 표기**해야 함 (사용자가 놓친 케이스를 발견해야 할 부담을 줄임).
+- **2026-04-21 iter 3 polish [signal]**: 블로그 워크스페이스(`workspace-type: blog` → `body.blog-detail`)의 페이지-전역 규칙(`.doc-page.blog-detail .markdown-content table { margin: 2rem 0 }`, `.markdown-content :not(pre) > code { padding/bg/border-radius }`, `.markdown-content p { margin: 1.75rem 0 }`)이 API 확장 컴포넌트(`.md-error-codes table`, `.md-endpoint__url`, `.md-param`, `.md-error-code`, `.md-container-body p`) 를 **specificity로 덮는다** (0,3,1~0,3,2 vs 0,2,1~0,2,2). 대응: 컴포넌트 전용 typography/layout 속성에 `!important` 를 기본값으로 붙여 "컨테이너 안에선 페이지 규칙 무시" 시맨틱 보장. 새 API 확장을 추가할 때 baseline 으로 적용해야 함.
+- **2026-04-21 iter 3 polish**: SPA 와 SSG 의 CSS 변수 정의가 갈라져 있었음 — SSG는 `--bg-elevated`, SPA는 `--surface-elevated`. API 확장 rule 이 `--bg-elevated` 를 쓰고 있었는데 SPA 에선 미정의라 wrap 배경이 투명으로 깨짐. 해결: SPA `main.css` Tier 3 블록에 `--bg-elevated: var(--surface-elevated)` 앨리어스 추가. 교훈: 양쪽에 같은 값(px 단위)뿐 아니라 **같은 변수 이름**도 필요. 새 var 를 한쪽에 정의할 땐 반대편에 미리 앨리어스.
+- **2026-04-21 iter 3 polish [signal]**: 페이지 하단 "추천 콘텐츠 / 실제 연동할 때 / 도입 문의" 3개 closing 컨테이너가 **blog-detail 페이지에서 시각적으로 무겁고 도배된 느낌** 이라는 사용자 피드백. 원인은 두 층: (a) `.md-container--closing` 자체가 gradient + 두꺼운 dashed top + 5px left border + drop shadow 로 강조 callout 수준의 비중이었고, (b) `.doc-page.blog-detail .markdown-content .md-container:not(.md-container--untitled)` (0,3,2) 가 그 위에 gradient + border-left + shadow 를 한 번 더 얹었음. 해결: closing 컨테이너를 **hairline 분리선 + 작은 헤더 + 리스트/카드** 의 "조용한 다음 단계" 푸터로 재설계하고, blog-detail 광역 override 의 `:not()` 체인에 `md-container--closing` 도 추가. 교훈: 동일 마크다운 확장이어도 **역할(callout vs footer)** 이 다르면 base rule 에서 시각 비중을 분리해야 하고, blog-detail 광역 override 는 "새로 추가하는 footer 류 컴포넌트" 를 항상 예외 처리해야 함.
 
 ## Footprint
+
+- **2026-04-21 iter 3 (done)** — `:::response` 탭 확장을 SPA/SSG 양쪽에 추가. DOM은 기존 `md-code-group` 재사용 + `md-code-group--response` variant modifier. `hydrateScript.ts` 의 탭 전환 JS는 수정 없이 재활용. `cancel-withdraw.md` 의 4곳을 신규 확장으로 치환. `core/CLAUDE.md` 의 "API 문서용 확장" 섹션 말미에 `:::response` 하위 섹션 추가.
+  - core 변경(Codex Step 1): `packages/viewer/src/utils/markdown.ts` (+90: `parseResponseItems` + `responseExtension`), `packages/viewer/src/styles/markdown.css` (+25: variant), `packages/cli/src/ssg/ssgStyles.ts` (+25: variant)
+  - bootpay-contents 변경(Claude 직접): `developer/commerce/orders/cancel-withdraw.md` 1파일 4곳 — `## API 엔드포인트` → `:::endpoint`, 요청 파라미터 → `:::parameters`, 성공 응답 → `:::response`, 에러 코드 → `:::error-codes`
+  - docs: `core/CLAUDE.md` "## API 문서용 확장" 섹션에 `### :::response` 하위 섹션 +39줄 추가
+  - 검증 status: `viewer build ✓ (2.54s)` / `cli build ✗ (iter 1~2와 동일한 기존 타입 에러 `publish.ts:1203 isPaidWorkspace`, 이번 작업과 무관)` / `hydrateScript.ts` 미수정 — 탭 전환 JS는 기존 코드-그룹 핸들러가 `md-code-group md-code-group--response` 에도 그대로 동작.
+  - 잔여 부채: iter 1~3 확장 4+1종이 `create.md` + `cancel-withdraw.md` 2파일에만 적용됨. bootpay-contents 나머지 API reference 파일(~40+) 에 동일 확장을 전파하는 작업은 v2 반복 (자동 마이그레이션 스크립트 병행 검토).
 
 - **2026-04-21 iter 2 (done)** — API 문서용 4개 확장(`:::endpoint`, `:::parameters`, `:::response-fields`, `:::error-codes`) 을 SPA/SSG 양쪽에 추가. `checkout/create.md`의 4곳을 신규 확장으로 치환. `core/CLAUDE.md`에 "API 문서용 확장" 섹션 추가.
   - core 변경(Codex Step 1): `packages/viewer/src/utils/markdown.ts` (+263), `packages/viewer/src/styles/markdown.css` (+234), `packages/cli/src/ssg/ssgStyles.ts` (+234). `data-depth` 는 DOMPurify `ALLOWED_ATTR` 에 자동 편입됨.
