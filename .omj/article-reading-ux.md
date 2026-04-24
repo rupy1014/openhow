@@ -1,7 +1,7 @@
 ---
 status: seed
 created: 2026-04-13
-updated: 2026-04-17
+updated: 2026-04-22
 iteration: 2
 ---
 
@@ -35,7 +35,7 @@ iteration: 2
 
 ## What
 
-- [hypothesis] **아티클 TOC 사이드바 감사** — MainLayout TOC를 BlogLayout에도 적용. heading 기반 자동 생성 + 현재 위치 하이라이트 → **metric: 블로그 아티클에서 TOC 렌더 + 스크롤 동기화**
+- [superseded] ~~**아티클 TOC 사이드바 감사**~~ — `core/article-image-sidecar` 가 우측 aside 슬롯을 이미지 패널로 전환하기로 결정됨 (2026-04-22). TOC 자체를 제거하는 방향이라 본 항목은 실행 대상 아님
 - [hypothesis] **피드백 위젯** — 글 하단 "도움이 되었나요?" 👍/👎 반응 수집. 간단한 카운터 저장 → **metric: 반응 기록되고 집계값이 어드민에 표시**
 - [hypothesis] **공유 버튼** — URL 복사 / X / 카카오톡. 본문 말미 고정 위치 → **metric: 클릭 시 해당 SNS 공유 또는 URL 복사 완료 토스트**
 
@@ -55,7 +55,7 @@ iteration: 2
 
 - [ ] 읽기 시간 추정 표시 ("약 5분 읽기")
 - [ ] 글꼴 크기 조절 위젯
-- [ ] 하이라이트/북마크 기능
+- [ ] ~~하이라이트/북마크 기능~~ → `reader-block-highlight.md` 로 승격 (2026-04-22)
 - [ ] 읽기 이력 기반 개인화 추천
 
 ## Learnings
