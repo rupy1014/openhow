@@ -11,6 +11,10 @@ dist/
 # mdshare temp files
 temp/
 .omj/tmp/
+.omj/.runtime/
+
+# openhow publish cache (per-project og-images + cache files)
+.openhow/
 
 # Private AI assistant config (not for public repo)
 CLAUDE.md
@@ -18,8 +22,8 @@ CLAUDE.md
 !examples/*/CLAUDE.md
 
 # Private repos (local only, not for GitHub)
-core/
-csflow.ai/
+/core/
+/csflow.ai/
 examples/ai-docs/
 
 # Secrets
@@ -40,6 +44,7 @@ client_secret*.json
 *.log
 npm-debug.log*
 examples/clauders.ai/docs/AI로일하기/뉴스봇만들기/max5-clone.zip
+examples/clauders.ai/docs-backlog/AI로일하기/뉴스봇만들기/max5-clone.zip
 __pycache__/
 .omx/
 .serena/

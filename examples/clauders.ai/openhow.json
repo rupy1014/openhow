@@ -1,8 +1,37 @@
 {
   "content": "docs",
   "workspace": "clauders",
-  "title": "클로더즈",
+  "title": "클로더즈 입문",
+  "type": "blog",
+  "sort": "menu",
+  "slugPolicy": "ascii-kebab-error",
+  "joinPolicy": "invite_only",
+  "defaultAccessLevel": "team",
+  "freePreviewDocs": 4,
+  "navigation": {
+    "mode": "sidebar"
+  },
   "scan": {
-    "exclude": ["AI회사", "웨비나"]
+    "exclude": [
+      "index.md",
+      "toc.md",
+      "cohort-plan.md",
+      "evaluation-rubric.md",
+      "milestone-templates.md",
+      "project-scope-guide.md",
+      "embeds/**",
+      "images/**",
+      "**/_meta.json"
+    ]
+  },
+  "footer": {
+    "company": "잡돌쌤",
+    "copyright": "© 2026 잡돌쌤. All rights reserved.",
+    "social": [
+      {
+        "type": "youtube",
+        "url": "https://youtube.com/@jobdori"
+      }
+    ]
   }
 }
