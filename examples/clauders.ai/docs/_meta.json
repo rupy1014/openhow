@@ -1,0 +1,51 @@
+{
+  "nav": [
+    {
+      "key": "getting-started",
+      "label": "시작하기",
+      "icon": "🚀",
+      "order": 0,
+      "badge": "1주차"
+    },
+    {
+      "key": "claude-code-intro",
+      "label": "초보 개념잡기",
+      "icon": "🧭",
+      "order": 1,
+      "badge": "1주차"
+    },
+    {
+      "key": "automation",
+      "label": "자동화 입문",
+      "icon": "🤖",
+      "order": 2,
+      "badge": "2주차"
+    },
+    {
+      "key": "build-service",
+      "label": "서비스 만들기",
+      "icon": "🛠️",
+      "order": 3,
+      "badge": "3주차"
+    },
+    {
+      "key": "vibe-coding",
+      "label": "본격 바이브 코딩",
+      "icon": "💻",
+      "order": 4
+    },
+    {
+      "key": "demo-night",
+      "label": "데모나잇",
+      "icon": "🎤",
+      "order": 5,
+      "badge": "4주차"
+    },
+    {
+      "key": "appendix",
+      "label": "부록",
+      "icon": "📎",
+      "order": 6
+    }
+  ]
+}

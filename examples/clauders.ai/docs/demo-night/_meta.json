@@ -1,0 +1,15 @@
+{
+  "label": "데모나잇",
+  "order": 5,
+  "items": {
+    "01-overview": {
+      "label": "데모나잇 가이드",
+      "order": 1
+    },
+    "02-graduation": {
+      "label": "졸업",
+      "order": 2
+    }
+  },
+  "badge": "4주차"
+}

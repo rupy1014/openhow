@@ -1,0 +1,9 @@
+{
+  "label": "부록",
+  "order": 6,
+  "items": {
+    "01-mcp-basics": { "label": "MCP 기초", "order": 1 },
+    "02-browser-automation": { "label": "브라우저 자동화", "order": 2 },
+    "03-multi-tool-config": { "label": "멀티 툴 공유 설정", "order": 3 }
+  }
+}

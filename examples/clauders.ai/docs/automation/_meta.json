@@ -1,0 +1,23 @@
+{
+  "label": "자동화 입문",
+  "order": 2,
+  "items": {
+    "01-four-features": {
+      "label": "4가지 기능",
+      "order": 1
+    },
+    "02-delegate-blog": {
+      "label": "작업 맡기기",
+      "order": 2
+    },
+    "03-patterns": {
+      "label": "사례 모음",
+      "order": 3
+    },
+    "04-homework": {
+      "label": "숙제",
+      "order": 4
+    }
+  },
+  "badge": "2주차"
+}

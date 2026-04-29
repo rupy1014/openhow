@@ -1,0 +1,19 @@
+{
+  "label": "초보 개념잡기",
+  "order": 1,
+  "items": {
+    "01-model-choice": {
+      "label": "AI 기초",
+      "order": 1
+    },
+    "02-direction": {
+      "label": "감 잡기",
+      "order": 2
+    },
+    "03-good-prompts": {
+      "label": "일 잘 시키기",
+      "order": 3
+    }
+  },
+  "badge": "1주차"
+}

@@ -1,0 +1,22 @@
+{
+  "model": "claude-sonnet-4-6",
+  "max_tokens": 1200,
+  "system": [
+    {
+      "type": "text",
+      "text": "You are a concise product analyst. Always answer in Korean. Keep the output under 5 bullet points. Return only the final result, with no preamble.",
+      "cache_control": {
+        "type": "ephemeral"
+      }
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "이 PRD를 읽고 핵심 요구사항만 5개 불릿으로 정리해. 길게 설명하지 마."
+    }
+  ],
+  "output_config": {
+    "effort": "low"
+  }
+}

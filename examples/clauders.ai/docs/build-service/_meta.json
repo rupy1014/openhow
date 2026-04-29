@@ -1,0 +1,59 @@
+{
+  "label": "서비스 만들기",
+  "order": 2,
+  "items": {
+    "00-overview": {
+      "label": "전체 흐름",
+      "order": 0
+    },
+    "01-idea": {
+      "label": "아이디어",
+      "order": 1
+    },
+    "02-lean-plan": {
+      "label": "바이브 기획",
+      "order": 2
+    },
+    "03-prd": {
+      "label": "PRD 작성",
+      "order": 3
+    },
+    "04-tech": {
+      "label": "기술 선택",
+      "order": 4
+    },
+    "05-architecture": {
+      "label": "구조 잡기",
+      "order": 5
+    },
+    "06-build-frontend": {
+      "label": "프론트엔드 이해",
+      "order": 6
+    },
+    "07-build-backend": {
+      "label": "백엔드 이해",
+      "order": 7
+    },
+    "08-git": {
+      "label": "Git",
+      "order": 8
+    },
+    "09-fix": {
+      "label": "고치는 법",
+      "order": 9
+    },
+    "10-deploy": {
+      "label": "배포",
+      "order": 10
+    },
+    "11-feedback": {
+      "label": "피드백",
+      "order": 11
+    },
+    "12-pmf": {
+      "label": "PMF 찾기",
+      "order": 12
+    }
+  },
+  "badge": "3주차"
+}

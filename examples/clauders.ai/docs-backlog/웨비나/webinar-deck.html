@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>clauders.ai 4기 웨비나 — 오픈클로에서 카카오톡 비서까지</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root {
+  --blue: #0064FF;
+  --dark: #191F28;
+  --gray-900: #333D4B;
+  --gray-700: #4E5968;
+  --gray-500: #8B95A1;
+  --gray-300: #D1D6DB;
+  --gray-100: #F2F4F6;
+  --gray-50: #F9FAFB;
+  --white: #FFFFFF;
+  --green: #00C853;
+  --red: #F44336;
+  --orange: #FF6D00;
+  --yellow: #FEE500;
+}
+
+html{scroll-behavior:smooth;scroll-snap-type:y mandatory;overflow-x:hidden}
+body{font-family:'Pretendard Variable',-apple-system,system-ui,sans-serif;color:var(--dark);background:var(--dark);-webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden}
+
+.s{width:100vw;height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.s-in{width:100%;max-width:1200px;padding:0 80px;display:flex;flex-direction:column;justify-content:center;height:100%}
+
+/* themes */
+.bg-w{background:var(--white);color:var(--dark)}
+.bg-d{background:var(--dark);color:var(--white)}
+.bg-g{background:var(--gray-50);color:var(--dark)}
+.bg-b{background:var(--blue);color:var(--white)}
+
+/* nav dots */
+.dots{position:fixed;right:28px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:10px}
+.dots a{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);display:block;transition:.3s}
+.dots a.on{background:var(--blue);transform:scale(1.4)}
+.bg-w .dots a,.bg-g .dots a{background:rgba(0,0,0,0.1)}
+
+.pn{position:absolute;bottom:36px;right:56px;font-size:14px;font-weight:500;opacity:0.2}
+
+/* typography */
+.label{font-size:18px;font-weight:600;color:var(--blue);margin-bottom:14px;letter-spacing:0.04em;text-transform:uppercase}
+.bg-d .label,.bg-b .label{color:rgba(255,255,255,0.45)}
+.bg-b .label{color:rgba(255,255,255,0.65)}
+h1{font-size:64px;font-weight:800;line-height:1.18;letter-spacing:-0.03em}
+h2{font-size:52px;font-weight:800;line-height:1.22;letter-spacing:-0.03em}
+h3{font-size:32px;font-weight:700;line-height:1.35;letter-spacing:-0.02em}
+.desc{font-size:24px;color:var(--gray-700);line-height:1.7;margin-top:20px;max-width:700px;font-weight:400}
+.bg-d .desc,.bg-b .desc{color:rgba(255,255,255,0.6)}
+.blue{color:var(--blue)}
+.bg-d .blue{color:#4D9AFF}
+
+/* layouts */
+.row{display:flex;gap:60px;align-items:center;flex:1}
+.col{flex:1}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+
+/* card */
+.c{border-radius:16px;padding:32px 28px}
+.c-w{background:var(--white);border:1px solid var(--gray-100)}
+.c-gl{background:var(--gray-100)}
+.c-dk{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.06)}
+.c h4{font-size:22px;font-weight:700;margin-bottom:10px;letter-spacing:-0.01em}
+.c p{font-size:18px;color:var(--gray-600);line-height:1.65}
+.bg-d .c p{color:rgba(255,255,255,0.55)}
+
+/* big number */
+.bn{font-size:72px;font-weight:800;line-height:1;letter-spacing:-0.03em}
+.bn-label{font-size:18px;color:var(--gray-500);margin-top:10px;font-weight:500}
+.bg-d .bn-label{color:rgba(255,255,255,0.4)}
+
+/* table */
+table{width:100%;border-collapse:collapse;font-size:20px}
+th{text-align:left;padding:16px 0;font-weight:600;color:var(--gray-500);font-size:16px;border-bottom:2px solid var(--gray-300)}
+td{padding:18px 0;border-bottom:1px solid var(--gray-100);vertical-align:top}
+.bg-d th{color:rgba(255,255,255,0.3);border-bottom-color:rgba(255,255,255,0.08)}
+.bg-d td{border-bottom-color:rgba(255,255,255,0.05)}
+
+/* list */
+.lst{list-style:none;display:flex;flex-direction:column;gap:22px;margin-top:32px}
+.lst li{font-size:22px;line-height:1.6;display:flex;gap:16px;align-items:baseline}
+.lst .n{width:34px;height:34px;border-radius:10px;background:var(--gray-100);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0}
+.bg-d .lst .n{background:rgba(255,255,255,0.06);color:#4D9AFF}
+
+/* flow */
+.flow{display:flex;align-items:center;gap:0;margin:40px 0}
+.flow-s{flex:1;text-align:center;padding:32px 16px;border-radius:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)}
+.flow-s strong{display:block;font-size:22px;font-weight:700;margin-bottom:6px}
+.flow-s span{font-size:16px;opacity:0.45}
+.flow-a{font-size:28px;opacity:0.2;padding:0 6px;flex-shrink:0}
+
+/* code block */
+.code{background:rgba(0,0,0,0.04);border-radius:12px;padding:28px 32px;font-family:'SF Mono','Fira Code',monospace;font-size:18px;line-height:1.8;white-space:pre-line}
+.bg-d .code{background:rgba(255,255,255,0.04)}
+
+/* badge */
+.badge{display:inline-block;padding:6px 16px;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:0.02em}
+
+/* cycle */
+.cycle{display:flex;align-items:center;gap:0;margin:32px 0;flex-wrap:wrap}
+.cycle-s{padding:14px 24px;border-radius:12px;font-size:18px;font-weight:600;background:var(--gray-100);color:var(--gray-900)}
+.cycle-a{padding:0 8px;font-size:20px;color:var(--gray-300)}
+.cycle-s.active{background:var(--blue);color:var(--white)}
+.cycle-s.warn{background:var(--orange);color:var(--white)}
+.bg-d .cycle-s{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.6)}
+.bg-d .cycle-a{color:rgba(255,255,255,0.15)}
+.bg-d .cycle-s.active{background:var(--blue);color:var(--white)}
+.bg-d .cycle-s.warn{background:var(--orange);color:var(--white)}
+
+/* vs comparison */
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:center;margin-top:40px}
+.vs-side{padding:36px;border-radius:16px;text-align:center}
+.vs-mid{font-size:32px;font-weight:800;color:var(--gray-300);padding:0 24px}
+.bg-d .vs-mid{color:rgba(255,255,255,0.1)}
+
+/* chat bubble */
+.chat{display:flex;flex-direction:column;gap:16px;margin:32px 0}
+.chat-row{display:flex;gap:12px;align-items:flex-end}
+.chat-row.right{flex-direction:row-reverse}
+.chat-bubble{max-width:420px;padding:16px 20px;border-radius:16px;font-size:20px;line-height:1.6}
+.chat-bubble.in{background:var(--gray-100);color:var(--dark);border-bottom-left-radius:4px}
+.chat-bubble.out{background:var(--yellow);color:var(--dark);border-bottom-right-radius:4px}
+.chat-name{font-size:14px;font-weight:600;color:var(--gray-500);margin-bottom:4px}
+.chat-time{font-size:13px;color:var(--gray-300);align-self:flex-end}
+
+@media print{html{scroll-snap-type:none}.s{page-break-after:always;height:auto;min-height:100vh}.dots{display:none}}
+</style>
+</head>
+<body>
+
+<nav class="dots" id="dots"></nav>
+
+<!-- 01. 표지 -->
+<section class="s bg-d" id="s1">
+<div class="s-in" style="align-items:center;text-align:center">
+  <p class="label" style="color:rgba(255,255,255,0.35)">clauders.ai 4기 웨비나</p>
+  <h1 style="margin-bottom:28px">오픈클로에서<br><span class="blue">카카오톡 AI 비서</span>까지</h1>
+  <p class="desc" style="text-align:center;margin:0 auto;color:rgba(255,255,255,0.45)">오픈클로를 써보고, 뜯어보고, 직접 만든<br>카카오톡 자동응답 사례와 바이브 코딩 이야기</p>
+  <div style="margin-top:56px;display:flex;gap:48px;font-size:18px;color:rgba(255,255,255,0.25);font-weight:500">
+    <span>윤태섭</span><span>clauders.ai</span><span>2026. 03</span>
+  </div>
+</div>
+<div class="pn">01 / 11</div>
+</section>
+
+<!-- 02. 훅: 카톡에 AI를 심었습니다 -->
+<section class="s bg-w" id="s2">
+<div class="s-in">
+  <p class="label">Demo</p>
+  <h2 style="margin-bottom:12px">카톡에 AI를<br>심었습니다</h2>
+  <p class="desc" style="margin-bottom:36px">고객이 카톡을 보내면, 2초 만에 AI가 답장합니다.</p>
+  <div class="chat">
+    <div class="chat-row">
+      <div>
+        <div class="chat-name">고객</div>
+        <div class="chat-bubble in">내일 오후 3시 예약 가능한가요?</div>
+      </div>
+      <div class="chat-time">오후 2:31</div>
+    </div>
+    <div class="chat-row right">
+      <div>
+        <div class="chat-name" style="text-align:right;color:var(--blue)">냥팀장 (AI)</div>
+        <div class="chat-bubble out">내일 오후 3시 가능합니다! 성함 알려주시면 바로 잡아드릴게요 😊</div>
+      </div>
+      <div class="chat-time">오후 2:31</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:24px;margin-top:24px">
+    <div class="c c-gl" style="flex:1;padding:24px;text-align:center">
+      <div style="font-size:36px;font-weight:800;color:var(--green)">2~5초</div>
+      <div style="font-size:16px;color:var(--gray-500);margin-top:6px">응답 레이턴시</div>
+    </div>
+    <div class="c c-gl" style="flex:1;padding:24px;text-align:center">
+      <div style="font-size:36px;font-weight:800;color:var(--blue)">0.32원</div>
+      <div style="font-size:16px;color:var(--gray-500);margin-top:6px">건당 비용</div>
+    </div>
+    <div class="c c-gl" style="flex:1;padding:24px;text-align:center">
+      <div style="font-size:36px;font-weight:800;color:var(--dark)">No API</div>
+      <div style="font-size:16px;color:var(--gray-500);margin-top:6px">카카오톡 API 없이 동작</div>
+    </div>
+  </div>
+</div>
+<div class="pn" style="color:rgba(0,0,0,0.12)">02 / 11</div>
+</section>
+
+<!-- 03. 오픈클로, 어떻게들 쓰시나요? -->
+<section class="s bg-g" id="s3">
+<div class="s-in">
+  <p class="label">OpenClaw</p>
+  <h2 style="margin-bottom:20px">오픈클로,<br>어떻게들 쓰시나요?</h2>
+  <p class="desc" style="margin-bottom:48px">요즘 핫한 오픈클로 — 써보신 분?</p>
+  <div class="g3">
+    <div class="c c-w" style="text-align:center;padding:40px 28px">
+      <div style="font-size:40px;margin-bottom:16px">💬</div>
+      <h4>비서</h4>
+      <p style="font-size:16px;line-height:1.6;margin-top:8px">텔레그램으로 잡무 처리<br>"오늘 일정 알려줘"</p>
+    </div>
+    <div class="c c-w" style="text-align:center;padding:40px 28px">
+      <div style="font-size:40px;margin-bottom:16px">⏰</div>
+      <h4>Cron 스케줄러</h4>
+      <p style="font-size:16px;line-height:1.6;margin-top:8px">주기적으로 알아서 돌아감<br>뉴스 브리핑, 모니터링</p>
+    </div>
+    <div class="c c-w" style="text-align:center;padding:40px 28px">
+      <div style="font-size:40px;margin-bottom:16px">🖥️</div>
+      <h4>프로젝트 작업</h4>
+      <p style="font-size:16px;line-height:1.6;margin-top:8px">Claude Code처럼<br>코드 작성/수정 시키기</p>
+    </div>
+  </div>
+</div>
+<div class="pn" style="color:rgba(0,0,0,0.12)">03 / 11</div>
+</section>
+
+<!-- 04. 나도 써봤다 + 굳이? -->
+<section class="s bg-d" id="s4">
+<div class="s-in">
+  <div class="row">
+    <div class="col">
+      <p class="label">My Experience</p>
+      <h2>나도 써봤다</h2>
+      <p class="desc">맥미니 M4 16기가를 사서<br>셋업하고 돌려봤다.</p>
+      <div style="margin-top:40px">
+        <div style="font-size:22px;font-weight:600;margin-bottom:20px;color:rgba(255,255,255,0.9)">자연스럽게 역할이 갈렸다</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="padding:16px 24px;border-radius:12px;background:rgba(0,100,255,0.1);border:1px solid rgba(0,100,255,0.15)">
+            <span style="font-size:15px;color:#4D9AFF;font-weight:600;letter-spacing:0.02em">CLAUDE CODE</span>
+            <p style="font-size:19px;color:rgba(255,255,255,0.9);margin-top:4px;font-weight:500">코드 작성, 버그 수정, 기능 구현</p>
+          </div>
+          <div style="padding:16px 24px;border-radius:12px;background:rgba(255,109,0,0.08);border:1px solid rgba(255,109,0,0.12)">
+            <span style="font-size:15px;color:var(--orange);font-weight:600;letter-spacing:0.02em">오픈클로</span>
+            <p style="font-size:19px;color:rgba(255,255,255,0.9);margin-top:4px;font-weight:500">자동화, 모니터링, 리뷰, 결과 보고</p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:32px;padding:20px 28px;background:rgba(255,109,0,0.1);border-radius:12px;border-left:3px solid var(--orange)">
+        <p style="font-size:20px;font-weight:700;color:var(--orange)">범용 AI 에이전트 플랫폼을<br>cron 러너로만 쓰고 있었다</p>
+      </div>
+    </div>
+    <div class="col" style="display:flex;flex-direction:column;gap:24px">
+      <div class="c c-dk" style="padding:32px">
+        <h4 style="color:#4D9AFF">Claude Code</h4>
+        <p style="color:rgba(255,255,255,0.75)">프로젝트 컨텍스트를 이미 알고,<br>파일 구조를 보면서 정확하게 수정</p>
+        <div style="margin-top:16px"><span class="badge" style="background:rgba(0,100,255,0.15);color:#4D9AFF">더 생산적</span></div>
+      </div>
+      <div class="c c-dk" style="padding:32px">
+        <h4 style="color:var(--orange)">오픈클로 (Codex)</h4>
+        <p style="color:rgba(255,255,255,0.75)">텔레그램 모바일에서 프롬프트 치다 보니<br>맥락 전달이 어려움</p>
+        <div style="margin-top:16px"><span class="badge" style="background:rgba(255,109,0,0.15);color:var(--orange)">만족도 낮음</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="pn">04 / 11</div>
+</section>
+
+<!-- 05. 뜯어보니 4가지 + 직접 만들자 -->
+<section class="s bg-w" id="s5">
+<div class="s-in">
+  <p class="label">Anatomy → Replace</p>
+  <h2 style="margin-bottom:36px">뜯어보니 4가지,<br>전부 대체 가능했다</h2>
+  <table>
+    <thead><tr><th style="width:40px">#</th><th style="width:200px">오픈클로</th><th style="width:240px">대체한 방법</th><th>왜 더 나은가</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1</strong></td><td><strong>LLM Gateway</strong></td><td>OpenRouter 직접 호출</td><td>중간 레이어 제거, 레이턴시 <strong style="color:var(--green)">15초→2초</strong></td></tr>
+      <tr><td><strong>2</strong></td><td><strong>Tool Orchestration</strong></td><td>LLM function calling</td><td>범용 도구 대신 <strong>비즈니스 맞춤</strong> 도구만</td></tr>
+      <tr><td><strong>3</strong></td><td><strong>Cron / Scheduling</strong></td><td>Claude Code 프로젝트</td><td>코드베이스를 아는 상태에서 실행 → 더 정확</td></tr>
+      <tr><td><strong>4</strong></td><td><strong>Session / Multi-Agent</strong></td><td>방별 persona + DB</td><td>카카오톡 방 구조에 맞춘 세션 관리</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:36px;padding:28px 36px;background:rgba(0,100,255,0.04);border-radius:16px;border-left:4px solid var(--blue)">
+    <p style="font-size:22px;font-weight:700;color:var(--blue)">오픈클로의 진짜 가치 = "이렇게 만들면 된다"는 아키텍처 레퍼런스</p>
+    <p style="font-size:18px;color:var(--gray-500);margin-top:8px">아이디어를 차용하고, 직접 만들자 — 텔레그램이 아니라 <strong>사람들이 이미 쓰는 곳에</strong></p>
+  </div>
+</div>
+<div class="pn" style="color:rgba(0,0,0,0.12)">05 / 11</div>
+</section>
+
+<!-- 06. 카카오톡에 봇을 심는다? (아키텍처) -->
+<section class="s bg-d" id="s6">
+<div class="s-in">
+  <p class="label">How</p>
+  <h2 style="margin-bottom:16px">카카오톡에 봇을 심는다?</h2>
+  <p class="desc" style="margin-bottom:40px">API도 없는데? — 메신저봇R에서 힌트를 얻었다</p>
+  <div class="flow">
+    <div class="flow-s"><strong>카톡 알림 도착</strong><span>NotificationListener</span></div>
+    <div class="flow-a">→</div>
+    <div class="flow-s"><strong>sender, room 추출</strong><span>debounce 1~3초</span></div>
+    <div class="flow-a">→</div>
+    <div class="flow-s" style="border-color:rgba(0,100,255,0.3)"><strong style="color:#4D9AFF">SoulEngine</strong><span>의도분류 + LLM 호출</span></div>
+    <div class="flow-a">→</div>
+    <div class="flow-s" style="border-color:rgba(254,229,0,0.3)"><strong style="color:var(--yellow)">RemoteInput 답장</strong><span>카톡이 메시지 전송</span></div>
+  </div>
+  <div class="g3" style="margin-top:16px">
+    <div class="c c-dk" style="padding:28px">
+      <h4 style="font-size:19px">Android가 두뇌</h4>
+      <p style="font-size:17px;margin-top:8px;line-height:1.7">서버 왕복 없이<br>알림 → 바로 LLM → 바로 답장<br>서버 죽어도 서비스 유지</p>
+    </div>
+    <div class="c c-dk" style="padding:28px">
+      <h4 style="font-size:19px">정규 API만 사용</h4>
+      <p style="font-size:17px;margin-top:8px;line-height:1.7">해킹 아님 — Android 표준<br>NotificationListenerService<br>RemoteInput API</p>
+    </div>
+    <div class="c c-dk" style="padding:28px">
+      <h4 style="font-size:19px">아키텍처 단순화</h4>
+      <p style="font-size:17px;margin-top:8px;line-height:1.7">처음: 카톡→Android→Worker→Tunnel→Mac→OpenClaw<br>지금: 카톡→Android→<strong style="color:var(--green)">OpenRouter→답장</strong></p>
+    </div>
+  </div>
+</div>
+<div class="pn">06 / 11</div>
+</section>
+
+<!-- 07. 바이브 코딩으로 풀스택 -->
+<section class="s bg-g" id="s7">
+<div class="s-in">
+  <p class="label">Vibe Coding</p>
+  <h2 style="margin-bottom:40px">바이브 코딩으로<br>한 사람이 풀스택을</h2>
+  <div class="g3" style="margin-bottom:40px">
+    <div class="c c-w" style="padding:28px;text-align:center"><p style="font-size:16px;color:var(--gray-500)">Android</p><h4 style="margin:8px 0 0">Kotlin</h4></div>
+    <div class="c c-w" style="padding:28px;text-align:center"><p style="font-size:16px;color:var(--gray-500)">Worker API</p><h4 style="margin:8px 0 0">TypeScript</h4></div>
+    <div class="c c-w" style="padding:28px;text-align:center"><p style="font-size:16px;color:var(--gray-500)">Frontend</p><h4 style="margin:8px 0 0">Vanilla JS</h4></div>
+    <div class="c c-w" style="padding:28px;text-align:center"><p style="font-size:16px;color:var(--gray-500)">프록시</p><h4 style="margin:8px 0 0">Nginx</h4></div>
+    <div class="c c-w" style="padding:28px;text-align:center"><p style="font-size:16px;color:var(--gray-500)">인증</p><h4 style="margin:8px 0 0">Supabase</h4></div>
+    <div class="c" style="padding:28px;text-align:center;background:rgba(0,100,255,0.06);border:1px solid rgba(0,100,255,0.12)"><p style="font-size:16px;color:var(--blue)">페어 프로그래머</p><h4 style="margin:8px 0 0;color:var(--blue)">Claude Code</h4></div>
+  </div>
+  <div style="padding:28px 36px;background:var(--white);border-radius:16px;border-left:4px solid var(--blue)">
+    <p style="font-size:24px;font-weight:700;color:var(--dark)">"이거 어떻게 구현하지?"가 아니라<br><span class="blue">"뭘 만들지?"</span>에 집중할 수 있다</p>
+  </div>
+</div>
+<div class="pn" style="color:rgba(0,0,0,0.12)">07 / 11</div>
+</section>
+
+<!-- 08. QA 케이스 폭발 -->
+<section class="s bg-d" id="s8">
+<div class="s-in">
+  <p class="label">The Real Problem</p>
+  <h2 style="margin-bottom:12px">QA 케이스가<br>폭발한다</h2>
+  <p class="desc" style="margin-bottom:36px">바이브 코딩의 진짜 트러블은 코드를 못 짜는 게 아니다</p>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px">
+    <div class="c c-dk" style="padding:24px"><h4 style="font-size:17px;color:var(--red)">에코 루프</h4><p style="font-size:15px;margin-top:6px">내 답장을 다시 캡처 → 무한루프</p></div>
+    <div class="c c-dk" style="padding:24px"><h4 style="font-size:17px;color:var(--orange)">rapid-fire</h4><p style="font-size:15px;margin-top:6px">3초 안에 메시지 5개 → 5개 다 답?</p></div>
+    <div class="c c-dk" style="padding:24px"><h4 style="font-size:17px;color:var(--orange)">[SKIP] 판단</h4><p style="font-size:15px;margin-top:6px">"이건 나한테 한 말 아닌데"</p></div>
+    <div class="c c-dk" style="padding:24px"><h4 style="font-size:17px;color:var(--red)">unsolicited</h4><p style="font-size:15px;margin-top:6px">안 물어봤는데 요약 던지기</p></div>
+  </div>
+  <div style="display:flex;gap:32px;align-items:center">
+    <div style="flex:1">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:14px;color:rgba(255,255,255,0.35);font-weight:600;letter-spacing:0.04em;margin-bottom:4px">커밋 로그</div>
+        <div style="padding:10px 16px;border-radius:8px;background:rgba(255,255,255,0.04);font-family:'SF Mono','Fira Code',monospace;font-size:15px;color:rgba(255,255,255,0.6)">"Fix echo/unsolicited summary/rapid-fire issues"</div>
+        <div style="padding:10px 16px;border-radius:8px;background:rgba(255,255,255,0.04);font-family:'SF Mono','Fira Code',monospace;font-size:15px;color:rgba(255,255,255,0.6)">"Fix re-scan matching already-responded triggers"</div>
+        <div style="padding:10px 16px;border-radius:8px;background:rgba(255,255,255,0.04);font-family:'SF Mono','Fira Code',monospace;font-size:15px;color:rgba(255,255,255,0.6)">"Fix auto_reply=0 group chat still responding"</div>
+      </div>
+      <p style="margin-top:20px;font-size:20px;color:rgba(255,255,255,0.7)">AI가 코드를 짜주는 시대에, 개발자의 진짜 가치는<br><strong style="color:#4D9AFF">"뭘 테스트해야 하는지 아는 것"</strong></p>
+    </div>
+    <div style="text-align:center;flex-shrink:0">
+      <div style="font-size:18px;opacity:0.4;margin-bottom:8px">현재 자동 테스트</div>
+      <div class="bn blue">130</div>
+      <div class="bn-label">시나리오 / 24 도메인</div>
+    </div>
+  </div>
+</div>
+<div class="pn">08 / 11</div>
+</section>
+
+<!-- 09. 현실 — MVP 오버스펙 + 단톡방 + 오픈클로 귀환 -->
+<section class="s bg-w" id="s9">
+<div class="s-in">
+  <div class="row">
+    <div class="col">
+      <p class="label">Reality</p>
+      <h2>솔직한<br>이야기</h2>
+      <p class="desc">MVP를 너무 크게 잡았다.<br>한 사람이 감당하기엔 스코프가 너무 넓었다.</p>
+      <ol class="lst" style="margin-top:28px">
+        <li><div class="n">1</div><div>자동응답 + 예약 + 입금확인 + 결제 + 파트너<br><span style="font-size:18px;color:var(--gray-500)">전부 만들어놨는데 런칭이 딜레이</span></div></li>
+        <li><div class="n">2</div><div>단톡방이 테스트베드가 됐다<br><strong style="color:var(--blue)">냥팀장 캐릭터로 매일 운영 중</strong></div></li>
+        <li><div class="n">3</div><div>눈치 없으면 불쾌, 타이밍 맞으면 폭발적<br><span style="font-size:18px;color:var(--gray-500)">[SKIP] 판단이 생각보다 핵심</span></div></li>
+      </ol>
+    </div>
+    <div class="col" style="display:flex;flex-direction:column;gap:24px">
+      <div class="c c-gl" style="padding:28px">
+        <p style="font-size:15px;color:var(--gray-500);margin-bottom:8px">원래 타겟</p>
+        <h4 style="font-size:22px">소상공인 → 고객 응대 자동화</h4>
+        <span class="badge" style="background:rgba(255,109,0,0.12);color:var(--orange);margin-top:12px">런칭 딜레이 중</span>
+      </div>
+      <div class="c c-gl" style="padding:28px">
+        <p style="font-size:15px;color:var(--gray-500);margin-bottom:8px">실제 사용</p>
+        <h4 style="font-size:22px">내 단톡방 → 냥팀장 AI 비서</h4>
+        <span class="badge" style="background:rgba(0,200,83,0.12);color:var(--green);margin-top:12px">매일 운영 중</span>
+      </div>
+      <div class="c" style="padding:28px;background:rgba(0,100,255,0.04);border:1px solid rgba(0,100,255,0.1)">
+        <p style="font-size:15px;color:var(--gray-500);margin-bottom:8px">아이러니</p>
+        <h4 style="font-size:22px;color:var(--blue)">QA 자동화에 오픈클로를<br>다시 쓰고 있다</h4>
+        <p style="margin-top:8px;font-size:16px;color:var(--gray-500)">cron으로 테스트 돌리고, 텔레그램으로 보고</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="pn" style="color:rgba(0,0,0,0.12)">09 / 11</div>
+</section>
+
+<!-- 10. 현재 구현 상태 -->
+<section class="s bg-d" id="s10">
+<div class="s-in">
+  <p class="label">Architecture</p>
+  <h2 style="margin-bottom:32px">지금 어디까지 왔나</h2>
+  <div style="display:flex;gap:40px;align-items:flex-start">
+    <div style="flex:1">
+<div class="code" style="font-size:17px;line-height:2;color:rgba(255,255,255,0.65)">고객 (카카오톡)
+&nbsp;&nbsp;↕ 메시지
+사장님 카카오톡 (서브폰)
+&nbsp;&nbsp;↕ 알림 캡처
+<strong style="color:#4D9AFF">Android SoulEngine</strong>
+&nbsp;&nbsp;├─ 의도 분류 + 프롬프트 조립
+&nbsp;&nbsp;├─ OpenRouter API (Gemini Flash)
+&nbsp;&nbsp;├─ 도구 실행 (예약, 입금확인, 전화)
+&nbsp;&nbsp;└─ RemoteInput 자동 답장
+&nbsp;&nbsp;↕ HTTPS
+<strong style="color:var(--orange)">Cloudflare Worker + D1</strong>
+&nbsp;&nbsp;├─ 상태 저장 + 결제/파트너 API
+&nbsp;&nbsp;└─ 관리자 대시보드 API
+&nbsp;&nbsp;↕
+<strong style="color:var(--green)">Web Admin (tokdaeri.com)</strong></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:16px">
+      <div class="c c-dk" style="padding:20px 24px"><h4 style="font-size:17px;margin-bottom:4px">AI 자동응답</h4><p style="font-size:15px">1:1 + 그룹채팅, 방별 페르소나</p></div>
+      <div class="c c-dk" style="padding:20px 24px"><h4 style="font-size:17px;margin-bottom:4px">비즈니스 도구</h4><p style="font-size:15px">예약 관리, 은행 입금 감지, 전화 걸기</p></div>
+      <div class="c c-dk" style="padding:20px 24px"><h4 style="font-size:17px;margin-bottom:4px">결제 시스템</h4><p style="font-size:15px">Bootpay 정기결제 + 리셀러/앰버서더</p></div>
+      <div class="c c-dk" style="padding:20px 24px"><h4 style="font-size:17px;margin-bottom:4px">관리자 대시보드</h4><p style="font-size:15px">웹 SPA — 설정, 모니터링, 통계</p></div>
+      <div class="c c-dk" style="padding:20px 24px;border-color:rgba(0,100,255,0.2)"><h4 style="font-size:17px;margin-bottom:4px;color:#4D9AFF">자동 테스트</h4><p style="font-size:15px">24 도메인 × 130 시나리오</p></div>
+    </div>
+  </div>
+</div>
+<div class="pn">10 / 11</div>
+</section>
+
+<!-- 11. 가져갈 것 + clauders.ai 4기 -->
+<section class="s bg-b" id="s11">
+<div class="s-in" style="align-items:center;text-align:center">
+  <p class="label">Takeaway</p>
+  <h2 style="margin-bottom:48px">가져갈 것</h2>
+  <div class="g3" style="max-width:1000px;width:100%;text-align:left">
+    <div class="c" style="padding:32px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12)">
+      <h4 style="font-size:20px;margin-bottom:12px;color:rgba(255,255,255,0.9)">오픈클로는 학습 재료</h4>
+      <p style="font-size:17px;line-height:1.7;color:rgba(255,255,255,0.6)">직접 써보고, 뜯어보고,<br>내 유스케이스에 맞게 재조합<br>컨셉 차용 → 의존성 제거</p>
+    </div>
+    <div class="c" style="padding:32px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12)">
+      <h4 style="font-size:20px;margin-bottom:12px;color:rgba(255,255,255,0.9)">QA가 진짜 일이다</h4>
+      <p style="font-size:17px;line-height:1.7;color:rgba(255,255,255,0.6)">바이브 코딩은 빠르다<br>하지만 품질은 QA에 달려있다<br><strong style="color:var(--white)">테스트 설계 = 핵심 스킬</strong></p>
+    </div>
+    <div class="c" style="padding:32px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12)">
+      <h4 style="font-size:20px;margin-bottom:12px;color:rgba(255,255,255,0.9)">데모 ≠ 제품</h4>
+      <p style="font-size:17px;line-height:1.7;color:rgba(255,255,255,0.6)">에러 처리, 멀티테넌시,<br>결제, 배포, 모니터링<br>— 이게 진짜 일</p>
+    </div>
+  </div>
+  <div style="margin-top:56px;padding:36px 48px;background:rgba(255,255,255,0.12);border-radius:20px;border:1px solid rgba(255,255,255,0.15)">
+    <h3 style="color:var(--white);margin-bottom:12px">clauders.ai 4기</h3>
+    <p style="font-size:22px;color:rgba(255,255,255,0.7);line-height:1.7">아이디어 → 프로토타입 → 제품화 → QA → 운영<br>이 전체 과정을 같이 하는 곳</p>
+  </div>
+</div>
+<div class="pn">11 / 11</div>
+</section>
+
+<script>
+// Nav dots
+const sections = document.querySelectorAll('.s');
+const dotsNav = document.getElementById('dots');
+sections.forEach((s, i) => {
+  const a = document.createElement('a');
+  a.href = '#s' + (i + 1);
+  dotsNav.appendChild(a);
+});
+
+const dots = dotsNav.querySelectorAll('a');
+const ob = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = [...sections].indexOf(e.target);
+      dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+      // adapt dot color
+      const bg = e.target.classList.contains('bg-w') || e.target.classList.contains('bg-g');
+      dotsNav.style.setProperty('--dot-inactive', bg ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.2)');
+    }
+  });
+}, { threshold: 0.5 });
+sections.forEach(s => ob.observe(s));
+
+// Keyboard navigation (left/right arrow keys)
+let currentSlide = 0;
+function goToSlide(idx) {
+  idx = Math.max(0, Math.min(idx, sections.length - 1));
+  currentSlide = idx;
+  sections[idx].scrollIntoView({ behavior: 'smooth' });
+}
+// Track current slide from scroll
+const obKey = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) currentSlide = [...sections].indexOf(e.target);
+  });
+}, { threshold: 0.5 });
+sections.forEach(s => obKey.observe(s));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); goToSlide(currentSlide + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); goToSlide(currentSlide - 1); }
+});
+</script>
+
+</body>
+</html>
