@@ -13,7 +13,6 @@
   },
   "scan": {
     "exclude": [
-      "index.md",
       "toc.md",
       "cohort-plan.md",
       "evaluation-rubric.md",

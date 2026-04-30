@@ -5,6 +5,7 @@ nav: 홈
 description: '클로더즈 4주 커리큘럼의 대상, 흐름, 완주 기준을 한 번에 설명하는 코스 소개 문서다.'
 hook: '4주 동안 뭘 배우고 뭘 남기게 되는지, 이 페이지 하나로 먼저 잡아보자.'
 status: 출시
+access: public
 tags: [클로더즈, 기수제, 바이브코딩, Claude Code]
 ---
 

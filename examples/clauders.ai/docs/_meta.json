@@ -27,25 +27,19 @@
       "icon": "🛠️",
       "order": 3,
       "badge": "3주차"
-    },
-    {
-      "key": "vibe-coding",
-      "label": "본격 바이브 코딩",
-      "icon": "💻",
-      "order": 4
-    },
+    }, 
     {
       "key": "demo-night",
       "label": "데모나잇",
       "icon": "🎤",
-      "order": 5,
+      "order": 4,
       "badge": "4주차"
     },
     {
       "key": "appendix",
       "label": "부록",
       "icon": "📎",
-      "order": 6
+      "order": 5
     }
   ]
 }
