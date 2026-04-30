@@ -2,17 +2,12 @@
   "content": "docs",
   "workspace": "clauders",
   "title": "클로더즈 입문",
-  "type": "course",
-  "classPreset": "cohort-online",
-  "contentWidth": "article",
+  "type": "blog",
   "sort": "menu",
   "slugPolicy": "ascii-kebab-error",
   "joinPolicy": "invite_only",
   "defaultAccessLevel": "team",
   "freePreviewDocs": 4,
-  "navigation": {
-    "mode": "two-panel"
-  },
   "scan": {
     "exclude": [
       "toc.md",
