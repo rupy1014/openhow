@@ -51,9 +51,9 @@ bootpay 채널처럼 `openhow serve`/`publish`로 블로그 워크스페이스�
 - core/packages/viewer/src/pages/DocPage.css — `.doc-page.blog-detail .markdown-content pre { margin: 2rem 0 }` 이 우선순위로 이기고 있어서 `.doc-page.blog-detail .markdown-content .md-code-group__panel > pre { margin: 0 }` override 추가 (2026-04-21)
 - core/packages/viewer/src/utils/markdown.ts — Shiki lang loader 확장(c/cpp/csharp/dart/diff/dockerfile/go/graphql/java/jsx/kotlin/php/ruby/rust/swift/toml/tsx/xml 추가), 언어 alias 맵 추가(cs/kt/rb/py/dotnet 등), `resolveLanguage`가 alias 경유해 로드된 lang을 찾도록 수정 (2026-04-21)
 - core/packages/cli/src/ssg/renderMarkdown.ts — 동일 lang 리스트로 `createHighlighter` 확장 + `SHIKI_LANGUAGE_ALIASES` 추가, `resolveLanguage` alias 지원 (2026-04-21)
-- core/packages/viewer/src/layouts/DocumentPreset.css — doc-mode(`:not(.no-toc):not(.book-mode)`) grid에 `height: calc(100vh - var(--publication-header-height))` 잠금. mobile(<=959px)에선 height:auto로 복원 (2026-04-21)
+- core/packages/viewer/src/layouts/DocumentPreset.css — doc-mode(`:not(.no-toc)`) grid에 `height: calc(100vh - var(--publication-header-height))` 잠금. mobile(<=959px)에선 height:auto로 복원 (2026-04-21)
 - core/packages/viewer/src/layouts/AppShell.tsx — `FooterContent`, `DefaultFooter` 함수에 `export` 추가 (UnifiedLayout 재사용 목적) (2026-04-21)
-- core/packages/viewer/src/layouts/UnifiedLayout.tsx — `footerNode` useMemo (BizFooter/FooterContent/DefaultFooter 단일 경로) + `useInMainFooter` 플래그. doc 라우트(`!isSimplePage && !isBookMode && resolvedPreset !== 'publication'`)에서만 shell footer 끄고 DocumentPreset `footer` prop으로 주입 (2026-04-21)
+- core/packages/viewer/src/layouts/UnifiedLayout.tsx — `footerNode` useMemo (BizFooter/FooterContent/DefaultFooter 단일 경로) + `useInMainFooter` 플래그. doc 라우트(`!isSimplePage && resolvedPreset !== 'publication'`)에서만 shell footer 끄고 DocumentPreset `footer` prop으로 주입 (2026-04-21)
 - core/packages/viewer/src/layouts/PublicationPreset.tsx — `footer?: ReactNode` prop 추가, `<main>` 내부에서 `<footer class="pub-preset-footer">`로 렌더. sticky 컬럼의 grid row가 footer 높이까지 연장되도록 (2026-04-21)
 - core/packages/viewer/src/layouts/PublicationPreset.css — `.pub-preset-footer` 규칙 추가 (width 100%, max-width = --preset-content-max, border-top 1px, margin-top 2.5rem, padding-top 1.25rem) (2026-04-21)
 - core/packages/viewer/src/layouts/UnifiedLayout.tsx — `useInMainFooter` 조건에서 `resolvedPreset !== 'publication'` 제거. 3개 PublicationPreset 분기 모두에 `footer={useInMainFooter ? footerNode : undefined}` 주입 (2026-04-21)
@@ -99,7 +99,7 @@ bootpay 채널처럼 `openhow serve`/`publish`로 블로그 워크스페이스�
 - **검증**: Playwright로 scrollY=0 → 5600(max)까지 full scroll. main-nav-panel/sub-sidebar 모두 `top:60 bottom:900`에 고정 유지. footer는 main 내부 y≈624에 노출. 시각적으로 GitBook/Notion 스타일 UX.
 - **배운 것**:
   - **sticky는 grid cell을 벗어난 영역엔 고정되지 않는다**. 페이지에 footer 같은 grid-외부 요소가 있으면 sticky 컬럼의 범위는 자연스럽게 main 높이로 제한됨. 해결은 "footer를 같은 grid row 안으로 끌어오기"가 가장 깔끔.
-  - UnifiedLayout 분기는 `resolvedPreset === 'publication'` 우선 → PublicationPreset 3종(three-rail/two-panel/default)이 기본. DocumentPreset은 `resolvedPreset !== 'publication' || isBookMode`에서만 탐. docs 워크스페이스는 대부분 PublicationPreset이라 preset 구분 없이 동일 패턴을 양쪽에 적용해야 사용자에게 일관된 동작.
+  - UnifiedLayout 분기는 `resolvedPreset === 'publication'` 우선 → PublicationPreset 3종(three-rail/two-panel/default)이 기본. DocumentPreset은 `resolvedPreset !== 'publication'`에서만 탐. docs 워크스페이스는 대부분 PublicationPreset이라 preset 구분 없이 동일 패턴을 양쪽에 적용해야 사용자에게 일관된 동작.
   - 레이아웃 이슈는 URL → preset → DOM 클래스 매핑을 먼저 찍어야 함. Playwright `querySelectorAll(".pub-preset-*|.doc-preset-*")` count 한 줄이 Explore agent의 CSS-only 분석보다 확실함.
   - SSG/SPA 이중 관리: footer 위치 같은 구조적 결정은 반드시 양쪽에 동시 반영. SSG는 static HTML이라 publish 전엔 눈에 안 띄어 regression 발견이 늦음.
 

@@ -88,7 +88,7 @@ iter1–2 에서 scroll-sync + fade + tabs 완성. iter3 는 **명시적 트리�
 - 좌측 nav 구조 변경 (`nav-*` / `three-rail-nav` 의 영역)
 - 본문 뷰포트 중앙정렬 깨뜨리는 변경 (유저 메모리 하드 제약: 본문은 뷰포트 정중앙 고정)
 - 이미지 저장소/업로드 파이프라인 신설 (저자가 이미 갖고 있는 URL·상대경로만 소비)
-- BookLayout / AdminLayout 적용 (blog/docs type 위주 — 필요 시 별도 intent)
+- AdminLayout 적용 (blog/docs type 위주 — 필요 시 별도 intent)
 - 에디터(Plate.js) 측 이미지 UX 변경 (저자 입력은 마크다운 그대로)
 - 탭 **자동 순환 / carousel** — iter2 는 수동 클릭만 (autoplay 은 읽기 방해)
 - 탭 내부 이미지 프리로드/CDN 최적화 (browser lazy 로드에 맡김)
@@ -266,7 +266,6 @@ iter1–2 에서 scroll-sync + fade + tabs 완성. iter3 는 **명시적 트리�
 
 ## Backlog
 
-- BookLayout / course type 적용 (본 intent 완료 후 별도 검토)
 - 비디오 sidecar (image 검증 후 확장 후보)
 - 이미지 확대 뷰 / 라이트박스
 - ~~`:::` 블록 nesting 지원~~ — **superseded by `core/markdown-directive-nesting.md` (done 2026-04-29)**. 모든 directive 가 가변 fence 로 전환됨

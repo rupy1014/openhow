@@ -16,13 +16,14 @@ iteration: 1
 - **기존 코드**:
   - `LessonPlayer.tsx` (273줄) — 레슨 재생 존재
   - `CourseLanding.tsx` (387줄) — 강좌 랜딩
-  - `BookLayout` — 챕터/섹션 네비게이션
+  - 코스 사이드바 (UnifiedLayout 좌측 nav) — 챕터/섹션 네비게이션
 - **데이터 모델 (확인 필요)**:
   - `userLessonProgress (userId, lessonId, completed, watchedSec, updatedAt)` 테이블 존재 여부 불명 → 스키마 감사 먼저
   - 없으면 신규 추가, 있으면 필드 확장
 - **자매 의도**:
   - `course-ratings-reviews.md` (seed) — 완주 시 리뷰 작성 유도 트리거 제공자/소비자
   - `instructor-profile-page.md` (seed) — 강사 프로필에 "완주자 N명" 표기 가능성 (Backlog)
+  - `creator-platform-discovery.md` (exploring, 2026-04-30) — v1 MVP "인강 + 기수제 인강" 의 완주율 인프라. 인강은 evergreen self-paced 완주율, 기수제는 cohort 완주율 — 두 모드 분기 metric 필요 (현재 의도는 단일 모델, v2 검토).
 - **완주 트리거 정의 (초안)**:
   - 레슨 단위: 시청 시간 80%+ 또는 스크롤 끝 도달 → 자동 완료
   - 강좌 단위: 모든 레슨 완료 → 수료 상태
@@ -36,7 +37,7 @@ iteration: 1
 - [hypothesis] **Phase 0 UX** — 강좌 페이지 상단 진도 바(30%) + 레슨 목록 체크마크 + 완주 시 수료 배지 와이어 → **metric: 와이어 1장 + 사용자 OK**
 - [hypothesis] **DB 스키마 감사/확장** — `userLessonProgress` 확인, 없으면 마이그레이션. 인덱스: (userId, lessonId) 유니크 → **metric: 스키마 감사 리포트 + 필요 시 마이그레이션 통과**
 - [hypothesis] **LessonPlayer 완료 트리거 확장** — 시청 80% 자동 완료 + "완료 표시" 수동 버튼 → **metric: 재생 완료 시 progress 레코드 생성/업데이트**
-- [hypothesis] **레슨 목록 체크마크** — BookLayout 사이드바에 완료 레슨 ✓ 표시 → **metric: 로그인 유저는 본인 진도 반영, 비로그인 빈 상태**
+- [hypothesis] **레슨 목록 체크마크** — 코스 사이드바에 완료 레슨 ✓ 표시 → **metric: 로그인 유저는 본인 진도 반영, 비로그인 빈 상태**
 - [hypothesis] **강좌 카드 내 진도 뱃지** — 시리즈 카탈로그/내 강좌 카드에 "내 진도: 3/10" 또는 "진행률 30%" 표기 → **metric: 로그인 유저 카드에 뱃지, 비로그인 미표기**
 - [hypothesis] **완주 수료 UI** — 모든 레슨 완료 시 모달/페이지에 배지 + 공유 이미지 다운로드 → **metric: 완주 시 수료 배지 자동 부여, 중복 방지**
 - [hypothesis] **내 수강 대시보드** — `/me/learning` 페이지 (진행 중 / 완주 / 미시작 섹션) → **metric: 로그인 유저가 본인 수강 이력 한 화면에서 파악**

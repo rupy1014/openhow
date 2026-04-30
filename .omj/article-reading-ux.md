@@ -21,7 +21,7 @@ iteration: 2
 |-----------|----------|
 | 스크롤 프로그레스 바 | ✅ `ReadingProgressBar.tsx` 이미 구현됨 |
 | 관련 글 추천 | → `article-closing-blocks.md` (building, iter 2) 로 이관 — 저자 기입 경로 |
-| 시리즈 네비게이션 | → `series-catalog.md` (seed) 및 BookLayout 기본 동작과 중첩 — 별도 실행 불필요 |
+| 시리즈 네비게이션 | → `series-catalog.md` (seed) 와 중첩 — 별도 실행 불필요 |
 | 아티클 TOC 사이드바 | 🔍 감사 필요 — MainLayout에 있으나 BlogLayout 적용 여부 확인 |
 | 피드백 위젯 | ❌ 미구현 — 잔여 스코프 |
 | 공유 버튼 | ❌ 미구현 — 잔여 스코프 |
@@ -29,7 +29,7 @@ iteration: 2
 ### 인프라
 
 - 아티클 뷰어: DocPage.tsx → Plate.js 기반 렌더링
-- 레이아웃: BlogLayout(블로그), BookLayout(북/코스) — 읽기 맥락이 다름
+- 레이아웃: BlogLayout(블로그) — 읽기 맥락 별도 처리
 - 댓글: CommentsSection 컴포넌트 이미 구현 완료
 - sequential 워크스페이스: 이전/다음 네비게이션이 자연스러운 구조
 
@@ -43,9 +43,8 @@ iteration: 2
 
 - 에디터(Plate.js) 기능 변경 (읽기 전용 뷰만 개선)
 - 댓글 시스템 재구현 (기존 CommentsSection 활용)
-- BookLayout 변경 (코스/북 레이아웃은 별도)
 - 관련 글 추천 (→ `article-closing-blocks.md` 가 담당)
-- 시리즈 네비게이션 (→ `series-catalog.md` 및 기존 BookLayout)
+- 시리즈 네비게이션 (→ `series-catalog.md`)
 - 스크롤 프로그레스 바 (이미 구현됨)
 
 ## Footprint

@@ -20,14 +20,13 @@ SPA에서 A 페이지 하단에서 B 페이지로 이동하면 스크롤이 top 
 ## Context
 - React 19 SPA, `react-router` v7의 `BrowserRouter` 사용 (`core/packages/viewer/src/main.tsx`)
 - 현재 `ScrollRestoration` 컴포넌트나 scroll-to-top 훅이 전혀 없음
-- 레이아웃: `MainLayout`, `AdminLayout`, `BookLayout`, `BlogLayout` — 모두 `<Outlet>` 사용
+- 레이아웃: `MainLayout`, `AdminLayout`, `BlogLayout` — 모두 `<Outlet>` 사용
 - 스크롤 컨테이너가 `window`인지 특정 div인지 확인 필요 (레이아웃별 다를 수 있음)
 
 ## Footprint
 - core/packages/viewer/src/hooks/useScrollToTop.ts — 신규 훅 (2026-04-13)
 - core/packages/viewer/src/layouts/MainLayout.tsx — mainContentRef + useScrollToTop 적용 (2026-04-13)
 - core/packages/viewer/src/layouts/AdminLayout.tsx — adminContentRef + useScrollToTop 적용 (2026-04-13)
-- core/packages/viewer/src/layouts/BookLayout.tsx — bookContentRef + useScrollToTop 적용 (2026-04-13)
 - core/packages/viewer/src/layouts/BlogLayout.tsx — blogMainRef + useScrollToTop 적용 (2026-04-13)
 
 ## Backlog
@@ -39,5 +38,5 @@ SPA에서 A 페이지 하단에서 B 페이지로 이동하면 스크롤이 top 
 - **시도**: useScrollToTop 훅 생성 → 4개 레이아웃 스크롤 컨테이너에 ref 연결
 - **결과**: Vite 빌드 성공. window.scrollTo가 아닌 레이아웃별 overflow-y:auto 컨테이너에 scrollTo 적용
 - **배운 것**:
-  - 이 프로젝트의 스크롤 컨테이너는 window가 아니라 레이아웃별 main/div 요소 (.main-content, .admin-content, .book-content-area, .blog-main)
+  - 이 프로젝트의 스크롤 컨테이너는 window가 아니라 레이아웃별 main/div 요소 (.main-content, .admin-content, .blog-main)
   - react-router v7의 useNavigationType()으로 POP(뒤로가기/앞으로가기) 감지 → 스크롤 복원 유지
