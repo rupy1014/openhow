@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-30
 updated: 2026-04-30
-iteration: 8
+iteration: 9
 parent: null
 loop:
   until: judge
@@ -44,12 +44,14 @@ loop:
 - `core/packages/cli/src/ssg/template.ts` — `tocSection` 분기에 `!isBlog` 조건 추가. blog workspace 면 TOC HTML 을 출력하지 않음 (SPA `pub-preset-right-aside { display: none }` 매칭). iter 6: `BlogHeaderInfo.hook` 필드 추가, `blogHeaderHtml` 에서 meta 를 hero 위로 이동 + hook 우선 → description fallback (`.doc-hook` p / `.doc-description.blog-detail-summary` p), `.blog-detail-meta-top` 클래스로 상단 meta 식별.
 - `core/packages/cli/src/ssg/buildHtml.ts` — iter 6: `blogHeader` 에 `hook: page.frontmatter.hook` 추가 (string 검증 후).
 - `core/packages/cli/src/ssg/ssgStyles.ts` — iter 7: `.blog-detail-meta-top` 에 `display: flex; align-items: center; min-height: 32px` (SPA `.doc-title-actions` row height 매칭).
+- `core/packages/cli/src/ssg/buildNavigation.ts` — iter 8: SubSidebar heading 에 `<svg class="ssg-toggle-icon ssg-toggle-icon--expanded" .../>` 데코레이션 chevron 추가 (SPA `.toggle-icon.expanded` 와 동일 markup, SSG 는 정적이라 토글 동작 없이 expanded 상태 고정).
+- `core/packages/cli/src/ssg/ssgStyles.ts` — iter 8: `.ssg-toggle-icon` (`color: var(--gray-400)`, `flex-shrink: 0`) + `.ssg-toggle-icon--expanded { transform: rotate(90deg) }` 추가 (SPA `.toggle-icon` 색/회전 1:1 매칭).
 - `core/packages/cli/src/ssg/ssgStyles.ts` — `.ssg-main-nav-badge` (SPA `.main-nav-badge` 와 px 일치), `.ssg-main-nav.ssg-main-nav--flat` selector specificity 우선 + `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal`, 아이콘 폭 `1.2em`. iter 3: `.ssg-sub-sidebar-heading` 11px/700/uppercase/letter-spacing 0.08em (SPA `.nav-group-label` 시각 매칭), `.ssg-sub-sidebar > .ssg-sidebar-inner { padding: 14px 10px }`, `.ssg-sub-sidebar > .ssg-sidebar-inner > .ssg-sidebar-nav { padding: 0 }`. iter 4: `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` (SPA 와 동일 좌측 정렬), `body[data-workspace-type="blog"] .blog-detail { padding: 0 }` (24px 좌우 패딩 제거). iter 5: `.ssg-sub-sidebar .ssg-sidebar-link.active` 한정 color `var(--gray-700)` + background transparent + `::before { content: none }` override (primary sidebar active 는 보존).
 
 ## Backlog
 
-- [ ] iter 8: docs/wiki 워크스페이스의 TOC 렌더 검증 — iter 4 는 blog 만 끄도록 처리. docs/wiki 는 TOC 노출이 정상이므로 grid layout 도 SPA 와 일치하는지 별도 probe.
 - [ ] iter 9: action 버튼 (share/version/copy-md) — 정적 사이트에서 share 만 client JS 로 가능, version/copy-md 는 인증/API 의존이므로 시각 placeholder 만.
+- [ ] iter 10: docs/wiki 워크스페이스의 TOC 렌더 검증 — iter 4 는 blog 만 끄도록 처리. docs/wiki 는 TOC 노출이 정상이므로 grid layout 도 SPA 와 일치하는지 별도 probe (현재 clauders.ai 에는 published docs workspace 없음 → blocked).
 - [ ] iter N: mobile (< 1024px) breakpoint.
 
 ## Learnings
@@ -99,3 +101,9 @@ loop:
 
 - **action 버튼이 없는 정적 사이트의 row height 보존**: SPA `.doc-title-actions` 는 share/version/copy-md/slide 4개 SVG 버튼 (각 32×32px) 이 들어가는 flex row 라서 자연 높이 32px. SSG 는 같은 위치에 date 텍스트만 있는 `.blog-detail-meta-top` 으로 대체 — 텍스트 line-height 때문에 자연 높이 20px 만 됨. 결과: 후속 hero/title 모두 12px 위로 당겨짐. 해결: `min-height: 32px` 명시 + flex centering. 정적 사이트가 동적 사이트의 시각 격을 맞추려면 빈 자리도 같은 공간을 차지해야 — 컨텐츠 부재가 layout 위치까지 흔들지 않게 row 높이를 명시적으로 lock.
 - **단일 CSS 라인으로 12px 닫음**: 누적 cascade 가 아닌 단일 컴포넌트 height 규칙 한 줄이면 충분한 micro-diff 였음. probe 가 row height (h=20 vs 32) 를 정확히 노출해줘서 한 번에 적중. 12px 미세 격차는 padding/margin/transform 누적으로 추적이 어려운 경우가 많지만, 시각 단위 컴포넌트 (row/buttons) 의 자연 높이 차이가 원인이면 단일 min-height 으로 닫힘.
+
+### 2026-04-30: iter 8 build done [done]
+
+- **SubSidebar heading chevron 데코레이션**: SPA `.nav-group-title` 에 `<svg class="toggle-icon expanded">` chevron 이 12×12 / `var(--gray-400)` (rgb 176,184,193) 으로 항상 노출. expanded 상태에서 90deg 회전 (`>` → `v`). SSG 는 sub-sidebar heading 에 chevron 자체가 없어서 우측 빈 공간이 시각 격차로 남아 있었음. 해결: `buildNavigation.ts` heading template 에 동일 SVG markup + `.ssg-toggle-icon{--expanded}` CSS 클래스 추가. 정적 사이트라 토글 동작은 없지만 expanded 고정 상태로 시각만 1:1 매칭.
+- **정적 site 의 데코레이션 vs 인터랙션 분리 패턴**: SPA chevron 은 토글 버튼 역할 + 시각 indicator 역할 두 가지를 동시 수행. SSG 는 토글 동작이 없으므로 시각 indicator 만 빌려옴. 동작-시각 결합된 SPA 컴포넌트를 SSG 에 옮길 때는 동작은 떼고 시각 측면만 가져와도 px-perfect 가능. 비기능 데코레이션을 추가한다는 거부감 < 시각 격차 0 이라는 목표 — px-perfect 컨텍스트에서는 후자가 우선.
+- **server-side publish 차단**: iter 8 변경을 publish 하려 했으나 `openhow.io` API `/api/workspaces` 가 HTTP 500 (Internal Server Error) 를 반환. CLI 변경은 무관 — 직접 `curl /api/workspaces` 도 500. 로컬 빌드 / template 변경은 검증 완료, live class.clauders.ai 반영은 server 복구 후 재 publish 필요. iter 8 코드 변경은 commit + footprint 등록까지 완료, probe 검증만 deferred. 교훈: ralph loop 의 publish→probe 단계가 외부 dependency (live API) 에 묶여 있으면 변경 자체와 검증이 분리될 수 있다 — 변경 commit 은 진행하고 검증 deferred 로 표시.
