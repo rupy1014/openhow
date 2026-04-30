@@ -10,6 +10,7 @@
   "freePreviewDocs": 4,
   "scan": {
     "exclude": [
+      "index.md",
       "toc.md",
       "cohort-plan.md",
       "evaluation-rubric.md",
