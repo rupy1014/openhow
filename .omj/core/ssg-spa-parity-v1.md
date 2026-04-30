@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-30
 updated: 2026-04-30
-iteration: 6
+iteration: 7
 parent: null
 loop:
   until: judge
@@ -21,7 +21,8 @@ loop:
 - [done] **iter 3**: SubSidebar heading 가시성 + 위치 px-perfect 정합. SPA 가 heading 을 hide 한다고 오판한 v1 (display:none) → v2 (heading 노출 + 헤더 배지) → v3 (parent padding 재배치) 로 수렴. SPA `nav.navigation` (padding 14px 10px) 가 heading + link nav 모두 감싸는 단일 컨테이너 패턴을 SSG 도 같은 구조로: `.ssg-sub-sidebar > .ssg-sidebar-inner` 에 `padding: 14px 10px` 주고, `.ssg-sub-sidebar-heading` margin 제거, 안쪽 `.ssg-sidebar-nav` padding 0 으로 override. → heading rect (x=222, y=114, w=180, h=35), 모든 link Y (153/195/237/279/321) px-perfect 일치.
 - [done] **iter 4**: blog-detail 본문 width SPA 와 동일하게 (840px). 사용자 신고 *"toc 가 있으면 본문 width 가 줄어든다"*. 원인 3 단: (1) SSG 가 blog 에서도 `aside.ssg-toc-wrap` 렌더 → SPA 는 `pub-preset-right-aside { display: none }` (blog detail 은 TOC 미노출). (2) `.ssg-main` `padding-left: 48px` (SPA 0). (3) `.blog-detail` `padding: 0 1.5rem 0` (SPA 0). 해결: `template.ts` 에서 `isBlog && tocHtml` 조건 추가해 blog 는 TOC HTML 자체를 출력하지 않음. `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` 추가. `.blog-detail` `padding: 0`. → article rect (x=428, w=840) px-perfect 매치.
 - [done] **iter 5**: sub-sidebar active link 색상 정합. SPA 는 `.nav-link.active` 자체가 없고 모든 nav-link 가 `rgb(78,89,104)` 동일 색상 — sub-sidebar 에서는 active 링크를 시각적으로 구분 안 함. SSG 는 `.ssg-sidebar-link.active` 가 `rgb(25,31,40)` (더 진함) + 2px×16px `::before` 마커로 강조. 해결: `.ssg-sub-sidebar` 자손 한정 override 규칙 추가 (`.ssg-sub-sidebar .ssg-sidebar-link.active { color: var(--gray-700); background: transparent }` + `::before { content: none }`). primary sidebar 의 active 동작은 그대로 유지. → SSG active 링크 color `rgb(78,89,104)` + content:none, SPA 와 동일.
-- [planned] **iter 6+**: figure-sidecar 분기 (figure 있는 페이지), docs/wiki 워크스페이스 TOC 렌더 검증 (iter 4 만 blog 차단), sub-sidebar item 카운트 격차 (SSG 5 vs SPA 10), mobile breakpoint.
+- [done] **iter 6**: blog-detail 헤더 3 격차 — (1) 날짜 위치 (SPA 상단 / SSG 하단), (2) subtitle 필드 (SPA `hook` / SSG `description`), (3) subtitle 스타일 (SPA `.doc-hook` 파란 tint card / SSG `.doc-description` 회색 박스). 해결: `template.ts` `blogHeaderHtml` 에서 meta 를 hero 위로 이동 + `hook` 우선 → fallback `description`, `BlogHeaderInfo` 에 `hook` 필드 추가, `buildHtml.ts` 가 `page.frontmatter.hook` 전달, `ssgStyles.ts` 에 `.doc-hook` (clamp(1.2rem,2vw,1.45rem) / fw 600 / primary 7% tint bg) + `.blog-detail-meta-top` 추가. → 헤더 시각 구조 SPA 와 일치 (image y=141 vs SPA 153, 12px micro-diff 만 잔여).
+- [planned] **iter 7+**: 12px 헤더 잔여 격차, docs/wiki 워크스페이스 TOC 렌더 검증, mobile breakpoint, action 버튼 (share/version/copy-md) 구현 여부.
 
 ## Not
 
@@ -39,14 +40,15 @@ loop:
 ## Footprint
 
 - `core/packages/cli/src/ssg/buildNavigation.ts` — `renderMainNavBadge()` helper 추가, `buildTwoPanelSidebarHtml` 에서 (a) MainNav 버튼 안에 단계 배지 렌더, (b) SubSidebar heading 을 항상 렌더 (active item label + 동일 배지). heading 은 `<div class="ssg-sub-sidebar-heading"><span class="ssg-sub-sidebar-heading-label">label badge</span></div>` 구조.
-- `core/packages/cli/src/ssg/template.ts` — `tocSection` 분기에 `!isBlog` 조건 추가. blog workspace 면 TOC HTML 을 출력하지 않음 (SPA `pub-preset-right-aside { display: none }` 매칭).
+- `core/packages/cli/src/ssg/template.ts` — `tocSection` 분기에 `!isBlog` 조건 추가. blog workspace 면 TOC HTML 을 출력하지 않음 (SPA `pub-preset-right-aside { display: none }` 매칭). iter 6: `BlogHeaderInfo.hook` 필드 추가, `blogHeaderHtml` 에서 meta 를 hero 위로 이동 + hook 우선 → description fallback (`.doc-hook` p / `.doc-description.blog-detail-summary` p), `.blog-detail-meta-top` 클래스로 상단 meta 식별.
+- `core/packages/cli/src/ssg/buildHtml.ts` — iter 6: `blogHeader` 에 `hook: page.frontmatter.hook` 추가 (string 검증 후).
 - `core/packages/cli/src/ssg/ssgStyles.ts` — `.ssg-main-nav-badge` (SPA `.main-nav-badge` 와 px 일치), `.ssg-main-nav.ssg-main-nav--flat` selector specificity 우선 + `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal`, 아이콘 폭 `1.2em`. iter 3: `.ssg-sub-sidebar-heading` 11px/700/uppercase/letter-spacing 0.08em (SPA `.nav-group-label` 시각 매칭), `.ssg-sub-sidebar > .ssg-sidebar-inner { padding: 14px 10px }`, `.ssg-sub-sidebar > .ssg-sidebar-inner > .ssg-sidebar-nav { padding: 0 }`. iter 4: `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` (SPA 와 동일 좌측 정렬), `body[data-workspace-type="blog"] .blog-detail { padding: 0 }` (24px 좌우 패딩 제거). iter 5: `.ssg-sub-sidebar .ssg-sidebar-link.active` 한정 color `var(--gray-700)` + background transparent + `::before { content: none }` override (primary sidebar active 는 보존).
 
 ## Backlog
 
-- [ ] iter 6: figure-sidecar 분기 — figure 있는 페이지에서 SSG/SPA 비교.
 - [ ] iter 7: docs/wiki 워크스페이스의 TOC 렌더 검증 — iter 4 는 blog 만 끄도록 처리. docs/wiki 는 TOC 노출이 정상이므로 grid layout 도 SPA 와 일치하는지 별도 probe.
-- [ ] iter 8: sub-sidebar item 카운트 격차 — SSG 5개 vs SPA 10개. `_meta.json` group flatten 또는 SPA 측 추가 group 노출 차이로 추정. config 매핑 차이 추적.
+- [ ] iter 8: blog-detail 헤더 잔여 12px 격차 (SSG 141 vs SPA 153) — 상단 meta padding 또는 section padding 마이크로 조정.
+- [ ] iter 9: action 버튼 (share/version/copy-md) — 정적 사이트에서 share 만 client JS 로 가능, version/copy-md 는 인증/API 의존이므로 시각 placeholder 만.
 - [ ] iter N: mobile (< 1024px) breakpoint.
 
 ## Learnings
@@ -84,3 +86,10 @@ loop:
 - **잘못된 SSG URL 패턴으로 첫 probe 가 SPA 잡음**: ScheduleWakeup 프롬프트에는 `/blog/clauders/getting-started/00-welcome` (SPA URL) 만 적혔고 SSG URL 도 같은 패턴이라 가정. 실제 SSG 는 `https://class.clauders.ai/getting-started/00-welcome` (workspace prefix 없음, `/blog/` segment 없음). 잘못된 URL 로 probe 하면 SPA 의 React 라우터가 catch-all 로 잡아 비어 있는 (404 API 호출만 하는) SPA HTML 을 반환 → "DOM 비었음" 오류. 교훈: SSG URL 은 항상 `class.<custom-domain>/<page-slug>` 형태이며 workspace 이름은 host 에 흡수되어 있다.
 - **active 시각 신호 = 색상 vs 위치 분리 패턴**: SPA 가 active link 를 hover/focus 외에 아예 시각 구분을 안 하는 (전부 동일 색) 패턴은 처음 봤을 때 "버그 아닌가?" 싶지만, 실제 sub-sidebar 는 좌측 main-nav 의 group selection 으로 위치 신호가 이미 들어가 있어 그 안에서 또 강조하면 시각 노이즈가 누적. SSG 도 같은 철학을 따라야 함. 정적 시각 신호의 누적 방지 패턴.
 - **자손 selector 로 scope 격리**: `.ssg-sidebar-link.active` 가 primary + sub 양쪽 모두에 적용되는 generic 규칙. iter 5 에서는 sub 만 중립화하고 primary 는 그대로 둬야 했음. 해결: `.ssg-sub-sidebar .ssg-sidebar-link.active` (specificity=20 > 10) 으로 자손 한정 override. 부모 wrapper class 로 scope 가르는 패턴은 single-rule 광역 변경보다 안전 — 의도치 않은 site-wide 영향 없음.
+
+### 2026-04-30: iter 6 build done [done]
+
+- **DOM 카운트 격차는 SPA 의 다중 nav variant 때문 (false positive)**: iter 5 마지막 probe 가 SPA `nav.navigation` 10개 / SSG 5개 라고 보고했으나, 실제로 SPA 는 mobile/drawer/floating 등 4 variant 의 nav 를 모두 DOM 에 두고 visibility 만 다르게 처리. visible link 는 양쪽 5개 동일. 교훈: querySelectorAll 카운트만 보지 말고 visible rect (x,y > 0) 로 필터링하거나 단일 wrapper (`.ssg-sub-sidebar` / `nav.navigation:first`) 만 비교.
+- **frontmatter `hook` vs `description` 필드 분리**: SPA `DocPage.tsx` 가 `currentFrontmatter.hook` 우선 → `currentDocument.description` fallback 으로 처리하면서 `description` 은 OG/SEO meta 전용으로 분리한 패턴. SSG 가 `description` 만 읽고 hook 은 무시했었음. 해결: `BlogHeaderInfo.hook` 추가, `buildHtml.ts` 에서 `page.frontmatter.hook` 직접 전달. SPA 와 SSG 가 같은 frontmatter 를 처리해야 한다면 frontmatter 의 모든 필드 매핑을 명시적으로 따라가야 한다 — 한 쪽이 추가 필드를 쓰면 다른 쪽도 즉시 따라가야 격차 안 생김.
+- **헤더 요소 순서 (date 위치)**: SPA 는 `.doc-title-actions` row 안에 date 를 share/version/copy 버튼과 같이 두고 그 row 가 hero 위에 위치. SSG 는 정적 사이트라 action 버튼이 없지만 date 는 같은 위치 (hero 위) 로 옮겨야 시각 일치. 결과: blog-detail-meta 를 두 변형으로 (`.blog-detail-meta` body 내, `.blog-detail-meta-top` hero 위) 갖되 date 는 -top 쪽으로 이동. action 버튼은 별도 wedge (iter 9) 로 분리 — 데이터 fetch / API 의존성이 있는 기능은 정적 사이트 시각 placeholder 만 만들거나 deferred.
+- **CSS card token 차이**: `.doc-hook` (SPA) 은 `var(--publication-card-radius-lg, 18px)` + `color-mix(... primary 7%, bg)`, `.doc-description` (SSG) 은 `border-radius: 16px` + `var(--gray-100)`. 같은 텍스트가 어느 클래스로 가는지에 따라 시각 톤이 완전히 달라지는 패턴 — SSG 가 텍스트를 .doc-description 으로 wrap 하고 있던 게 핵심 격차였다. 클래스 선택만 바꾸면 시각 톤이 한 번에 정렬됨.
