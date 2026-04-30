@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-30
 updated: 2026-04-30
-iteration: 3
+iteration: 4
 parent: null
 loop:
   until: judge
@@ -18,7 +18,8 @@ loop:
 
 - [done] **iter 1**: two-panel sidebar (`buildTwoPanelSidebarHtml` + `.ssg-layout--two-panel`) + 헤더 logo (workspace title) + sign-in pill. fe4c44a. → mainNav x=0/w=200, sub x=212/w=200, main x=424/w=1016 — SPA rect 와 px 일치.
 - [done] **iter 2**: MainNav 단계 배지 ("1주차"~"4주차") 렌더 + 버튼 레이아웃 px-perfect 정합. `buildTwoPanelSidebarHtml` 에서 `params.sidebar['/{key}/']` 첫 그룹의 `badge` 를 읽어 `<span class="ssg-main-nav-badge">` 로 렌더. CSS: `.ssg-main-nav.ssg-main-nav--flat` (specificity 우선) `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal; padding: 7px 12px; min-height: 36px`, 아이콘 폭 `1.2em`. → 배지 X 0-1px, Y 0px, 버튼 height 36/36, 버튼 top Y/X 모두 일치.
-- [planned] **iter 3+**: SubSidebar heading 가시성 (SPA 는 hide), TOC/figure-sidecar 분기, mobile menu 동작 등 잔여 격차.
+- [done] **iter 3**: SubSidebar heading 가시성 + 위치 px-perfect 정합. SPA 가 heading 을 hide 한다고 오판한 v1 (display:none) → v2 (heading 노출 + 헤더 배지) → v3 (parent padding 재배치) 로 수렴. SPA `nav.navigation` (padding 14px 10px) 가 heading + link nav 모두 감싸는 단일 컨테이너 패턴을 SSG 도 같은 구조로: `.ssg-sub-sidebar > .ssg-sidebar-inner` 에 `padding: 14px 10px` 주고, `.ssg-sub-sidebar-heading` margin 제거, 안쪽 `.ssg-sidebar-nav` padding 0 으로 override. → heading rect (x=222, y=114, w=180, h=35), 모든 link Y (153/195/237/279/321) px-perfect 일치.
+- [planned] **iter 4+**: 활성 link 색상 불일치 (SPA active rgb(78,89,104) = inactive 와 동일, SSG active rgb(25,31,40) 더 진함), TOC/figure-sidecar 분기, mobile menu 동작 등 잔여 격차.
 
 ## Not
 
@@ -35,13 +36,14 @@ loop:
 
 ## Footprint
 
-- `core/packages/cli/src/ssg/buildNavigation.ts` — `renderMainNavBadge()` helper 추가, `buildTwoPanelSidebarHtml` 에서 `params.sidebar['/{key}/']` 첫 그룹 `badge` 를 읽어 버튼 안에 렌더.
-- `core/packages/cli/src/ssg/ssgStyles.ts` — `.ssg-main-nav-badge` 클래스 (SPA `.main-nav-badge` 와 px 일치), `.ssg-main-nav.ssg-main-nav--flat` selector specificity 우선 + `gap: 6px; padding: 14px 2px` (sidebar-inner 8px 와 합쳐 SPA 10px 매칭), `.ssg-main-nav-button` `line-height: normal` (SSG body 1.75 inherit 차단), 아이콘 폭 `1.2em`.
+- `core/packages/cli/src/ssg/buildNavigation.ts` — `renderMainNavBadge()` helper 추가, `buildTwoPanelSidebarHtml` 에서 (a) MainNav 버튼 안에 단계 배지 렌더, (b) SubSidebar heading 을 항상 렌더 (active item label + 동일 배지). heading 은 `<div class="ssg-sub-sidebar-heading"><span class="ssg-sub-sidebar-heading-label">label badge</span></div>` 구조.
+- `core/packages/cli/src/ssg/ssgStyles.ts` — `.ssg-main-nav-badge` (SPA `.main-nav-badge` 와 px 일치), `.ssg-main-nav.ssg-main-nav--flat` selector specificity 우선 + `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal`, 아이콘 폭 `1.2em`. iter 3 추가: `.ssg-sub-sidebar-heading` 11px/700/uppercase/letter-spacing 0.08em (SPA `.nav-group-label` 시각 매칭), `.ssg-sub-sidebar > .ssg-sidebar-inner { padding: 14px 10px }` (SPA `nav.navigation` 컨테이너 매칭), `.ssg-sub-sidebar > .ssg-sidebar-inner > .ssg-sidebar-nav { padding: 0 }` (자식 nav 의 base padding override).
 
 ## Backlog
 
-- [ ] iter 3: SubSidebar heading 가시성 — SPA 는 active section heading 을 hide. SSG `.ssg-sub-sidebar-heading` 도 hide 하거나 SPA 와 같은 스타일로.
-- [ ] iter 4: figure-sidecar 분기 — figure 있는 페이지에서 SSG 는 TOC 옆에 figure-sidecar panel 도 보이는데 동작/위치 SPA 와 비교.
+- [ ] iter 4: 활성 link 색상 정합 — SPA `.nav-link.active` 는 inactive 와 같은 rgb(78,89,104) 인데 SSG `.ssg-sidebar-link.active` 는 rgb(25,31,40) 으로 더 진함. background highlight 만 다르게 처리 (border-left 가 아닌 별도 시각 신호 사용 중).
+- [ ] iter 5: figure-sidecar 분기 — figure 있는 페이지에서 SSG 는 TOC 옆에 figure-sidecar panel 도 보이는데 동작/위치 SPA 와 비교.
+- [ ] iter 6: 우상단 영역 — SPA 는 dark mode toggle 노출, SSG 는 빈 영역. 정적 placeholder (회색 원반) 또는 noscript 처리.
 - [ ] iter N: mobile (< 1024px) breakpoint 처리.
 
 ## Learnings
@@ -59,3 +61,10 @@ loop:
 - **CSS specificity 함정 #2**: `.ssg-main-nav { gap: 4px }` (line 660) 가 `.ssg-main-nav--flat { gap: 6px }` (line 287) 를 cascade 순서로 이김 (둘 다 specificity=10). flat 변형이 base 를 override 하려면 `.ssg-main-nav.ssg-main-nav--flat` (specificity=20) 으로 올려야 함. 변형 클래스를 base 보다 위에 두는 패턴은 cascade 순서에 종속 — 변형은 항상 specificity 를 한 단계 더 높이는 게 안전.
 - **SSG body line-height 1.75 가 nav 까지 inherit**: 같은 `padding: 7px 12px; min-height: 36px` 인데 SSG 버튼 height=38, SPA=36. 원인: SSG body line-height ≈ 1.75 (13.5×1.75=23.625) 가 button 까지 상속, SPA 는 `line-height: normal`. nav 버튼처럼 single-line UI 컴포넌트는 명시적으로 `line-height: normal` 또는 `1` 로 끊어야 본문 typography 와 격리됨.
 - **이중 wrapper padding 누적**: `.ssg-main-nav-panel > .ssg-sidebar-inner > .ssg-main-nav--flat` 3 단 wrapper 중 `.ssg-sidebar-inner` 가 이미 `padding: 0 8px` 를 갖고 있어, flat nav 에 SPA `.main-nav` 의 `padding: 14px 10px` 를 그대로 옮기면 좌우 padding 이 8+10=18px 로 두 배가 됨. SPA 와 동일한 10px 좌우를 만들려면 flat nav 에 `padding: 14px 2px` 를 줘서 8+2=10px 로 보정. 새 wrapper 추가 시 항상 부모 padding 부터 확인.
+
+### 2026-04-30: iter 3 build done [done]
+
+- **첫 진단의 함정 — 셀렉터 불일치로 잘못된 가정 채택**: ScheduleWakeup 프롬프트에 *"SPA 는 active section heading 을 hide"* 라고 적혀 있어 그 가정으로 시작. probe 가 `.sub-sidebar-heading` 셀렉터로만 SPA 를 검색해서 결과 없음 → "역시 hide" 결론 → SSG `.ssg-sub-sidebar-heading { display: none }` 적용. publish 후 SSG link Y 가 SPA 보다 **39px 위로** 떨어져 격차 더 벌어짐. 진짜 셀렉터는 `.nav-group-title` 였고 SPA 는 heading 을 정상 노출 중. 교훈: probe 가 빈 결과 반환하면 "없다" 결론 전에 인접 클래스 (예: `.nav-group-*`, `.sub-*-title`) 를 다시 훑어 본 뒤 가설 갱신.
+- **SPA 의 다층 typography 패턴**: `.nav-group-title` (container, 13.5/400, padding+toggle) 안에 `.nav-group-label` (inner span, 11/700/uppercase) 를 넣고 외부 컨테이너는 chevron SVG 와 함께 layout 만 담당. SSG 는 정적이라 toggle 이 없어 두 단계를 한 단계로 평탄화 (`.ssg-sub-sidebar-heading` 자체에 11/700/uppercase 부여) 했지만 시각적 결과 동일. 정적 사이트에서는 SPA 의 인터랙션-driven 다층 markup 을 1 단으로 합쳐도 px-perfect 가능.
+- **부모 컨테이너 padding 재배치 패턴**: SPA `nav.navigation` (padding 14px 10px) 가 heading + link nav 모두 감싸는데, SSG 는 두 자식이 `.ssg-sidebar-inner` 의 직계 자식이고 `.ssg-sub-sidebar-nav` 가 따로 padding 14px 10px 를 가져 link Y 만 매칭됨. 해결: `.ssg-sub-sidebar > .ssg-sidebar-inner` 에 `padding: 14px 10px` 를 주고 `.ssg-sidebar-nav` padding 을 0 으로 override (자손 selector specificity 30 > 10). heading + link 모두 단일 컨테이너 padding 의 영향권으로 묶이면서 자연스럽게 정렬. 패턴 일반화: 두 형제 요소가 공통 padding/border 를 공유해야 하면 형제마다 padding 을 복사하지 말고 부모로 끌어올린다.
+- **iteration 종료 판단**: heading rect, link rect 모두 px-perfect 일치 후, 차이 잔여 (활성 link 색상, 우상단 toggle 부재) 는 별도 wedge 로 분리. 한 wedge 안에서 발견한 사이드 격차는 backlog 에 적고 그 wedge 종료를 미루지 않는다 — 사이드 격차까지 다 묶으면 PR/검증 단위가 비대해지고 중도 롤백 비용 ↑.
