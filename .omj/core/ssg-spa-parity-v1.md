@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-30
 updated: 2026-04-30
-iteration: 5
+iteration: 6
 parent: null
 loop:
   until: judge
@@ -20,7 +20,8 @@ loop:
 - [done] **iter 2**: MainNav 단계 배지 ("1주차"~"4주차") 렌더 + 버튼 레이아웃 px-perfect 정합. `buildTwoPanelSidebarHtml` 에서 `params.sidebar['/{key}/']` 첫 그룹의 `badge` 를 읽어 `<span class="ssg-main-nav-badge">` 로 렌더. CSS: `.ssg-main-nav.ssg-main-nav--flat` (specificity 우선) `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal; padding: 7px 12px; min-height: 36px`, 아이콘 폭 `1.2em`. → 배지 X 0-1px, Y 0px, 버튼 height 36/36, 버튼 top Y/X 모두 일치.
 - [done] **iter 3**: SubSidebar heading 가시성 + 위치 px-perfect 정합. SPA 가 heading 을 hide 한다고 오판한 v1 (display:none) → v2 (heading 노출 + 헤더 배지) → v3 (parent padding 재배치) 로 수렴. SPA `nav.navigation` (padding 14px 10px) 가 heading + link nav 모두 감싸는 단일 컨테이너 패턴을 SSG 도 같은 구조로: `.ssg-sub-sidebar > .ssg-sidebar-inner` 에 `padding: 14px 10px` 주고, `.ssg-sub-sidebar-heading` margin 제거, 안쪽 `.ssg-sidebar-nav` padding 0 으로 override. → heading rect (x=222, y=114, w=180, h=35), 모든 link Y (153/195/237/279/321) px-perfect 일치.
 - [done] **iter 4**: blog-detail 본문 width SPA 와 동일하게 (840px). 사용자 신고 *"toc 가 있으면 본문 width 가 줄어든다"*. 원인 3 단: (1) SSG 가 blog 에서도 `aside.ssg-toc-wrap` 렌더 → SPA 는 `pub-preset-right-aside { display: none }` (blog detail 은 TOC 미노출). (2) `.ssg-main` `padding-left: 48px` (SPA 0). (3) `.blog-detail` `padding: 0 1.5rem 0` (SPA 0). 해결: `template.ts` 에서 `isBlog && tocHtml` 조건 추가해 blog 는 TOC HTML 자체를 출력하지 않음. `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` 추가. `.blog-detail` `padding: 0`. → article rect (x=428, w=840) px-perfect 매치.
-- [planned] **iter 5+**: 활성 link 색상 불일치 (SPA active rgb(78,89,104) = inactive 와 동일, SSG active rgb(25,31,40) 더 진함), figure-sidecar 분기, mobile menu 동작 등 잔여 격차.
+- [done] **iter 5**: sub-sidebar active link 색상 정합. SPA 는 `.nav-link.active` 자체가 없고 모든 nav-link 가 `rgb(78,89,104)` 동일 색상 — sub-sidebar 에서는 active 링크를 시각적으로 구분 안 함. SSG 는 `.ssg-sidebar-link.active` 가 `rgb(25,31,40)` (더 진함) + 2px×16px `::before` 마커로 강조. 해결: `.ssg-sub-sidebar` 자손 한정 override 규칙 추가 (`.ssg-sub-sidebar .ssg-sidebar-link.active { color: var(--gray-700); background: transparent }` + `::before { content: none }`). primary sidebar 의 active 동작은 그대로 유지. → SSG active 링크 color `rgb(78,89,104)` + content:none, SPA 와 동일.
+- [planned] **iter 6+**: figure-sidecar 분기 (figure 있는 페이지), docs/wiki 워크스페이스 TOC 렌더 검증 (iter 4 만 blog 차단), sub-sidebar item 카운트 격차 (SSG 5 vs SPA 10), mobile breakpoint.
 
 ## Not
 
@@ -39,13 +40,13 @@ loop:
 
 - `core/packages/cli/src/ssg/buildNavigation.ts` — `renderMainNavBadge()` helper 추가, `buildTwoPanelSidebarHtml` 에서 (a) MainNav 버튼 안에 단계 배지 렌더, (b) SubSidebar heading 을 항상 렌더 (active item label + 동일 배지). heading 은 `<div class="ssg-sub-sidebar-heading"><span class="ssg-sub-sidebar-heading-label">label badge</span></div>` 구조.
 - `core/packages/cli/src/ssg/template.ts` — `tocSection` 분기에 `!isBlog` 조건 추가. blog workspace 면 TOC HTML 을 출력하지 않음 (SPA `pub-preset-right-aside { display: none }` 매칭).
-- `core/packages/cli/src/ssg/ssgStyles.ts` — `.ssg-main-nav-badge` (SPA `.main-nav-badge` 와 px 일치), `.ssg-main-nav.ssg-main-nav--flat` selector specificity 우선 + `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal`, 아이콘 폭 `1.2em`. iter 3: `.ssg-sub-sidebar-heading` 11px/700/uppercase/letter-spacing 0.08em (SPA `.nav-group-label` 시각 매칭), `.ssg-sub-sidebar > .ssg-sidebar-inner { padding: 14px 10px }`, `.ssg-sub-sidebar > .ssg-sidebar-inner > .ssg-sidebar-nav { padding: 0 }`. iter 4: `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` (SPA 와 동일 좌측 정렬), `body[data-workspace-type="blog"] .blog-detail { padding: 0 }` (24px 좌우 패딩 제거).
+- `core/packages/cli/src/ssg/ssgStyles.ts` — `.ssg-main-nav-badge` (SPA `.main-nav-badge` 와 px 일치), `.ssg-main-nav.ssg-main-nav--flat` selector specificity 우선 + `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal`, 아이콘 폭 `1.2em`. iter 3: `.ssg-sub-sidebar-heading` 11px/700/uppercase/letter-spacing 0.08em (SPA `.nav-group-label` 시각 매칭), `.ssg-sub-sidebar > .ssg-sidebar-inner { padding: 14px 10px }`, `.ssg-sub-sidebar > .ssg-sidebar-inner > .ssg-sidebar-nav { padding: 0 }`. iter 4: `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` (SPA 와 동일 좌측 정렬), `body[data-workspace-type="blog"] .blog-detail { padding: 0 }` (24px 좌우 패딩 제거). iter 5: `.ssg-sub-sidebar .ssg-sidebar-link.active` 한정 color `var(--gray-700)` + background transparent + `::before { content: none }` override (primary sidebar active 는 보존).
 
 ## Backlog
 
-- [ ] iter 5: 활성 link 색상 정합 — SPA `.nav-link.active` 는 inactive 와 같은 rgb(78,89,104) 인데 SSG `.ssg-sidebar-link.active` 는 rgb(25,31,40) 으로 더 진함. background highlight 만 다르게 처리.
 - [ ] iter 6: figure-sidecar 분기 — figure 있는 페이지에서 SSG/SPA 비교.
 - [ ] iter 7: docs/wiki 워크스페이스의 TOC 렌더 검증 — iter 4 는 blog 만 끄도록 처리. docs/wiki 는 TOC 노출이 정상이므로 grid layout 도 SPA 와 일치하는지 별도 probe.
+- [ ] iter 8: sub-sidebar item 카운트 격차 — SSG 5개 vs SPA 10개. `_meta.json` group flatten 또는 SPA 측 추가 group 노출 차이로 추정. config 매핑 차이 추적.
 - [ ] iter N: mobile (< 1024px) breakpoint.
 
 ## Learnings
@@ -77,3 +78,9 @@ loop:
 - **3 단 격차 누적**: 본문 width SPA 840 vs SSG 474 (366px 차이) 의 원인이 단일 CSS 가 아닌 3 layer 누적이었음. (1) blog 워크스페이스에서 TOC 노출 자체 (SPA 는 hide), (2) `.ssg-main` `padding-left: 48px`, (3) `.blog-detail` `padding: 0 24px`. 한 번에 한 layer 만 고치고 probe 로 측정하면서 진행 — 첫 fix (TOC 제거) 후 752, 두 번째 (main 좌측 padding) 후 792, 세 번째 (blog-detail 좌우 padding) 후 840 px-perfect. 누적 격차는 layered debugging 이 잡기 쉬움.
 - **`pub-preset-right-aside { display: none }` 신호**: SPA blog detail 페이지에서 TOC 컨테이너가 DOM 엔 있되 hide 되어 있음. body class `pub-preset-body--has-right-aside` modifier 까지 붙어 있음에도 hide. 이건 SPA 가 layout 모드는 right-aside 를 켜놨지만 컨텐츠가 없거나 blog 타입이라 가려놓은 것. SSG 는 같은 효과를 데이터 미생성 (HTML 자체에 aside 안 넣기) 으로 달성. CSS hide vs HTML omit 두 접근이 px-perfect 면에서는 동등.
 - **probe-driven 사용자 신고**: 사용자가 정성적으로 *"본문 width 줄어든다"* 라고 한 신고를 probe 로 정량화 (SPA 840 vs SSG 752 → 88px 부족) 한 뒤 layer 별 원인을 잘라가며 잡았다. 정성 신고 → 정량 측정 → layered fix 가 ralph loop 의 표준 step.
+
+### 2026-04-30: iter 5 build done [done]
+
+- **잘못된 SSG URL 패턴으로 첫 probe 가 SPA 잡음**: ScheduleWakeup 프롬프트에는 `/blog/clauders/getting-started/00-welcome` (SPA URL) 만 적혔고 SSG URL 도 같은 패턴이라 가정. 실제 SSG 는 `https://class.clauders.ai/getting-started/00-welcome` (workspace prefix 없음, `/blog/` segment 없음). 잘못된 URL 로 probe 하면 SPA 의 React 라우터가 catch-all 로 잡아 비어 있는 (404 API 호출만 하는) SPA HTML 을 반환 → "DOM 비었음" 오류. 교훈: SSG URL 은 항상 `class.<custom-domain>/<page-slug>` 형태이며 workspace 이름은 host 에 흡수되어 있다.
+- **active 시각 신호 = 색상 vs 위치 분리 패턴**: SPA 가 active link 를 hover/focus 외에 아예 시각 구분을 안 하는 (전부 동일 색) 패턴은 처음 봤을 때 "버그 아닌가?" 싶지만, 실제 sub-sidebar 는 좌측 main-nav 의 group selection 으로 위치 신호가 이미 들어가 있어 그 안에서 또 강조하면 시각 노이즈가 누적. SSG 도 같은 철학을 따라야 함. 정적 시각 신호의 누적 방지 패턴.
+- **자손 selector 로 scope 격리**: `.ssg-sidebar-link.active` 가 primary + sub 양쪽 모두에 적용되는 generic 규칙. iter 5 에서는 sub 만 중립화하고 primary 는 그대로 둬야 했음. 해결: `.ssg-sub-sidebar .ssg-sidebar-link.active` (specificity=20 > 10) 으로 자손 한정 override. 부모 wrapper class 로 scope 가르는 패턴은 single-rule 광역 변경보다 안전 — 의도치 않은 site-wide 영향 없음.
