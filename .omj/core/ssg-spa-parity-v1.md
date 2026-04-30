@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-30
 updated: 2026-04-30
-iteration: 7
+iteration: 8
 parent: null
 loop:
   until: judge
@@ -22,7 +22,8 @@ loop:
 - [done] **iter 4**: blog-detail 본문 width SPA 와 동일하게 (840px). 사용자 신고 *"toc 가 있으면 본문 width 가 줄어든다"*. 원인 3 단: (1) SSG 가 blog 에서도 `aside.ssg-toc-wrap` 렌더 → SPA 는 `pub-preset-right-aside { display: none }` (blog detail 은 TOC 미노출). (2) `.ssg-main` `padding-left: 48px` (SPA 0). (3) `.blog-detail` `padding: 0 1.5rem 0` (SPA 0). 해결: `template.ts` 에서 `isBlog && tocHtml` 조건 추가해 blog 는 TOC HTML 자체를 출력하지 않음. `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` 추가. `.blog-detail` `padding: 0`. → article rect (x=428, w=840) px-perfect 매치.
 - [done] **iter 5**: sub-sidebar active link 색상 정합. SPA 는 `.nav-link.active` 자체가 없고 모든 nav-link 가 `rgb(78,89,104)` 동일 색상 — sub-sidebar 에서는 active 링크를 시각적으로 구분 안 함. SSG 는 `.ssg-sidebar-link.active` 가 `rgb(25,31,40)` (더 진함) + 2px×16px `::before` 마커로 강조. 해결: `.ssg-sub-sidebar` 자손 한정 override 규칙 추가 (`.ssg-sub-sidebar .ssg-sidebar-link.active { color: var(--gray-700); background: transparent }` + `::before { content: none }`). primary sidebar 의 active 동작은 그대로 유지. → SSG active 링크 color `rgb(78,89,104)` + content:none, SPA 와 동일.
 - [done] **iter 6**: blog-detail 헤더 3 격차 — (1) 날짜 위치 (SPA 상단 / SSG 하단), (2) subtitle 필드 (SPA `hook` / SSG `description`), (3) subtitle 스타일 (SPA `.doc-hook` 파란 tint card / SSG `.doc-description` 회색 박스). 해결: `template.ts` `blogHeaderHtml` 에서 meta 를 hero 위로 이동 + `hook` 우선 → fallback `description`, `BlogHeaderInfo` 에 `hook` 필드 추가, `buildHtml.ts` 가 `page.frontmatter.hook` 전달, `ssgStyles.ts` 에 `.doc-hook` (clamp(1.2rem,2vw,1.45rem) / fw 600 / primary 7% tint bg) + `.blog-detail-meta-top` 추가. → 헤더 시각 구조 SPA 와 일치 (image y=141 vs SPA 153, 12px micro-diff 만 잔여).
-- [planned] **iter 7+**: 12px 헤더 잔여 격차, docs/wiki 워크스페이스 TOC 렌더 검증, mobile breakpoint, action 버튼 (share/version/copy-md) 구현 여부.
+- [done] **iter 7**: blog-detail 헤더 잔여 12px micro-diff. probe 결과 SPA `.doc-title-actions` h=32px (action 버튼 4개 row), SSG `.blog-detail-meta-top` h=20px (text-only). hero y 차이는 row height 차이 12px 가 전부. 해결: `.blog-detail-meta-top` 에 `display: flex; align-items: center; min-height: 32px` 추가 — action 버튼 없어도 같은 row 높이 유지. → SSG hero y=152 = SPA y=152 px-perfect.
+- [planned] **iter 8+**: docs/wiki 워크스페이스 TOC 렌더 검증, mobile breakpoint, action 버튼 (share/version/copy-md) 구현 여부.
 
 ## Not
 
@@ -42,12 +43,12 @@ loop:
 - `core/packages/cli/src/ssg/buildNavigation.ts` — `renderMainNavBadge()` helper 추가, `buildTwoPanelSidebarHtml` 에서 (a) MainNav 버튼 안에 단계 배지 렌더, (b) SubSidebar heading 을 항상 렌더 (active item label + 동일 배지). heading 은 `<div class="ssg-sub-sidebar-heading"><span class="ssg-sub-sidebar-heading-label">label badge</span></div>` 구조.
 - `core/packages/cli/src/ssg/template.ts` — `tocSection` 분기에 `!isBlog` 조건 추가. blog workspace 면 TOC HTML 을 출력하지 않음 (SPA `pub-preset-right-aside { display: none }` 매칭). iter 6: `BlogHeaderInfo.hook` 필드 추가, `blogHeaderHtml` 에서 meta 를 hero 위로 이동 + hook 우선 → description fallback (`.doc-hook` p / `.doc-description.blog-detail-summary` p), `.blog-detail-meta-top` 클래스로 상단 meta 식별.
 - `core/packages/cli/src/ssg/buildHtml.ts` — iter 6: `blogHeader` 에 `hook: page.frontmatter.hook` 추가 (string 검증 후).
+- `core/packages/cli/src/ssg/ssgStyles.ts` — iter 7: `.blog-detail-meta-top` 에 `display: flex; align-items: center; min-height: 32px` (SPA `.doc-title-actions` row height 매칭).
 - `core/packages/cli/src/ssg/ssgStyles.ts` — `.ssg-main-nav-badge` (SPA `.main-nav-badge` 와 px 일치), `.ssg-main-nav.ssg-main-nav--flat` selector specificity 우선 + `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal`, 아이콘 폭 `1.2em`. iter 3: `.ssg-sub-sidebar-heading` 11px/700/uppercase/letter-spacing 0.08em (SPA `.nav-group-label` 시각 매칭), `.ssg-sub-sidebar > .ssg-sidebar-inner { padding: 14px 10px }`, `.ssg-sub-sidebar > .ssg-sidebar-inner > .ssg-sidebar-nav { padding: 0 }`. iter 4: `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` (SPA 와 동일 좌측 정렬), `body[data-workspace-type="blog"] .blog-detail { padding: 0 }` (24px 좌우 패딩 제거). iter 5: `.ssg-sub-sidebar .ssg-sidebar-link.active` 한정 color `var(--gray-700)` + background transparent + `::before { content: none }` override (primary sidebar active 는 보존).
 
 ## Backlog
 
-- [ ] iter 7: docs/wiki 워크스페이스의 TOC 렌더 검증 — iter 4 는 blog 만 끄도록 처리. docs/wiki 는 TOC 노출이 정상이므로 grid layout 도 SPA 와 일치하는지 별도 probe.
-- [ ] iter 8: blog-detail 헤더 잔여 12px 격차 (SSG 141 vs SPA 153) — 상단 meta padding 또는 section padding 마이크로 조정.
+- [ ] iter 8: docs/wiki 워크스페이스의 TOC 렌더 검증 — iter 4 는 blog 만 끄도록 처리. docs/wiki 는 TOC 노출이 정상이므로 grid layout 도 SPA 와 일치하는지 별도 probe.
 - [ ] iter 9: action 버튼 (share/version/copy-md) — 정적 사이트에서 share 만 client JS 로 가능, version/copy-md 는 인증/API 의존이므로 시각 placeholder 만.
 - [ ] iter N: mobile (< 1024px) breakpoint.
 
@@ -93,3 +94,8 @@ loop:
 - **frontmatter `hook` vs `description` 필드 분리**: SPA `DocPage.tsx` 가 `currentFrontmatter.hook` 우선 → `currentDocument.description` fallback 으로 처리하면서 `description` 은 OG/SEO meta 전용으로 분리한 패턴. SSG 가 `description` 만 읽고 hook 은 무시했었음. 해결: `BlogHeaderInfo.hook` 추가, `buildHtml.ts` 에서 `page.frontmatter.hook` 직접 전달. SPA 와 SSG 가 같은 frontmatter 를 처리해야 한다면 frontmatter 의 모든 필드 매핑을 명시적으로 따라가야 한다 — 한 쪽이 추가 필드를 쓰면 다른 쪽도 즉시 따라가야 격차 안 생김.
 - **헤더 요소 순서 (date 위치)**: SPA 는 `.doc-title-actions` row 안에 date 를 share/version/copy 버튼과 같이 두고 그 row 가 hero 위에 위치. SSG 는 정적 사이트라 action 버튼이 없지만 date 는 같은 위치 (hero 위) 로 옮겨야 시각 일치. 결과: blog-detail-meta 를 두 변형으로 (`.blog-detail-meta` body 내, `.blog-detail-meta-top` hero 위) 갖되 date 는 -top 쪽으로 이동. action 버튼은 별도 wedge (iter 9) 로 분리 — 데이터 fetch / API 의존성이 있는 기능은 정적 사이트 시각 placeholder 만 만들거나 deferred.
 - **CSS card token 차이**: `.doc-hook` (SPA) 은 `var(--publication-card-radius-lg, 18px)` + `color-mix(... primary 7%, bg)`, `.doc-description` (SSG) 은 `border-radius: 16px` + `var(--gray-100)`. 같은 텍스트가 어느 클래스로 가는지에 따라 시각 톤이 완전히 달라지는 패턴 — SSG 가 텍스트를 .doc-description 으로 wrap 하고 있던 게 핵심 격차였다. 클래스 선택만 바꾸면 시각 톤이 한 번에 정렬됨.
+
+### 2026-04-30: iter 7 build done [done]
+
+- **action 버튼이 없는 정적 사이트의 row height 보존**: SPA `.doc-title-actions` 는 share/version/copy-md/slide 4개 SVG 버튼 (각 32×32px) 이 들어가는 flex row 라서 자연 높이 32px. SSG 는 같은 위치에 date 텍스트만 있는 `.blog-detail-meta-top` 으로 대체 — 텍스트 line-height 때문에 자연 높이 20px 만 됨. 결과: 후속 hero/title 모두 12px 위로 당겨짐. 해결: `min-height: 32px` 명시 + flex centering. 정적 사이트가 동적 사이트의 시각 격을 맞추려면 빈 자리도 같은 공간을 차지해야 — 컨텐츠 부재가 layout 위치까지 흔들지 않게 row 높이를 명시적으로 lock.
+- **단일 CSS 라인으로 12px 닫음**: 누적 cascade 가 아닌 단일 컴포넌트 height 규칙 한 줄이면 충분한 micro-diff 였음. probe 가 row height (h=20 vs 32) 를 정확히 노출해줘서 한 번에 적중. 12px 미세 격차는 padding/margin/transform 누적으로 추적이 어려운 경우가 많지만, 시각 단위 컴포넌트 (row/buttons) 의 자연 높이 차이가 원인이면 단일 min-height 으로 닫힘.
