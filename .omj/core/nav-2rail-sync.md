@@ -1,8 +1,9 @@
 ---
-status: done
+status: superseded
 created: 2026-04-20
 updated: 2026-04-20
 iteration: 2
+supersededBy: core/nav-mode-collapse.md
 ---
 
 # nav-2rail-sync — 2-rail 홈/섹션 전환 시 sub nav 상태 동기화

@@ -2,8 +2,5 @@
   "content": "docs",
   "workspace": "auto-intro",
   "title": "바로바로 자동화 입문 with 챗GPT + Codex + OpenClaw",
-  "type": "docs",
-  "nav": {
-    "mode": "two-panel"
-  }
+  "type": "docs"
 }
