@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-30
 updated: 2026-04-30
-iteration: 10
+iteration: 11
 parent: null
 loop:
   until: judge
@@ -23,7 +23,10 @@ loop:
 - [done] **iter 5**: sub-sidebar active link 색상 정합. SPA 는 `.nav-link.active` 자체가 없고 모든 nav-link 가 `rgb(78,89,104)` 동일 색상 — sub-sidebar 에서는 active 링크를 시각적으로 구분 안 함. SSG 는 `.ssg-sidebar-link.active` 가 `rgb(25,31,40)` (더 진함) + 2px×16px `::before` 마커로 강조. 해결: `.ssg-sub-sidebar` 자손 한정 override 규칙 추가 (`.ssg-sub-sidebar .ssg-sidebar-link.active { color: var(--gray-700); background: transparent }` + `::before { content: none }`). primary sidebar 의 active 동작은 그대로 유지. → SSG active 링크 color `rgb(78,89,104)` + content:none, SPA 와 동일.
 - [done] **iter 6**: blog-detail 헤더 3 격차 — (1) 날짜 위치 (SPA 상단 / SSG 하단), (2) subtitle 필드 (SPA `hook` / SSG `description`), (3) subtitle 스타일 (SPA `.doc-hook` 파란 tint card / SSG `.doc-description` 회색 박스). 해결: `template.ts` `blogHeaderHtml` 에서 meta 를 hero 위로 이동 + `hook` 우선 → fallback `description`, `BlogHeaderInfo` 에 `hook` 필드 추가, `buildHtml.ts` 가 `page.frontmatter.hook` 전달, `ssgStyles.ts` 에 `.doc-hook` (clamp(1.2rem,2vw,1.45rem) / fw 600 / primary 7% tint bg) + `.blog-detail-meta-top` 추가. → 헤더 시각 구조 SPA 와 일치 (image y=141 vs SPA 153, 12px micro-diff 만 잔여).
 - [done] **iter 7**: blog-detail 헤더 잔여 12px micro-diff. probe 결과 SPA `.doc-title-actions` h=32px (action 버튼 4개 row), SSG `.blog-detail-meta-top` h=20px (text-only). hero y 차이는 row height 차이 12px 가 전부. 해결: `.blog-detail-meta-top` 에 `display: flex; align-items: center; min-height: 32px` 추가 — action 버튼 없어도 같은 row 높이 유지. → SSG hero y=152 = SPA y=152 px-perfect.
-- [planned] **iter 8+**: docs/wiki 워크스페이스 TOC 렌더 검증, mobile breakpoint, action 버튼 (share/version/copy-md) 구현 여부.
+- [done] **iter 8**: SubSidebar heading chevron 데코레이션 (`.ssg-toggle-icon--expanded` SVG 90deg). publish 후 시각 1:1.
+- [done] **iter 9**: blog-detail header `.doc-title-actions` row — Present/Copy/Version/Share 4 SVG 버튼 + date 좌/버튼 우 정렬 (`justify-content: flex-end + margin-right: auto`). Share 만 active (navigator.share + clipboard fallback), 나머지 disabled.
+- [done] **iter 11**: mobile (< 1280px) breakpoint — SPA `PublicationPreset.css @media (max-width: 1279px)` 매칭. `.ssg-layout--two-panel { grid-template-columns: minmax(0,1fr); column-gap: 0; padding-left: 0 }` + `> .ssg-main-nav-panel, > .ssg-sub-sidebar { display: none }` + main padding 1.5rem 좌우 / 767px 에서 1rem. iPad 768 probe: mainNav/sub display:none, main x=0 w=768, article x=24 w=720 — SPA 와 동일.
+- [planned] **iter 12+**: docs/wiki 워크스페이스 TOC 렌더 검증 (현재 published docs workspace 없음 → blocked), 추가 wedge 발견 시 진행.
 
 ## Not
 
@@ -49,12 +52,14 @@ loop:
 - `core/packages/cli/src/ssg/template.ts` — iter 9: `blogHeaderHtml` 의 `.blog-detail-meta-top` 를 `.doc-title-actions` 로 교체. 내부 구조: `<div class="blog-detail-meta">date</div>` + 4 SVG button (Present / Copy markdown source / Version history / Share). Present/Copy/Version 은 `disabled` (인증/API 의존), Share 는 active (client JS 로 navigator.share/clipboard fallback).
 - `core/packages/cli/src/ssg/ssgStyles.ts` — iter 9: `.blog-detail-meta-top` 규칙 제거, `.doc-title-actions` (display:flex + justify-content:flex-end + gap:6px + min-height:32px) 와 `.doc-title-actions .blog-detail-meta { margin-right: auto }` (date 좌, 버튼 우) 추가. `.ssg-doc-action-btn` 32×32 / border-radius 8px / border 1px solid `var(--border-color, rgb(229,232,235))` / color `rgb(107,118,132)` (SPA 1:1) + hover/disabled/.doc-share-btn(width:auto+padding) variant + dark mode 규칙.
 - `core/packages/cli/src/ssg/hydrateScript.ts` — iter 9: `initDocShareButton()` 추가, `init()` 에 등록. `.doc-share-btn` 클릭 시 `navigator.share` 우선, fallback 으로 `copyText(window.location.href)` + 1.5s "Link copied" tooltip. 정적 사이트 share 동작 활성화.
+- `core/packages/cli/src/ssg/ssgStyles.ts` — iter 11: 기존 `@media (max-width: 1279px)` 블록을 확장 — `.ssg-layout--two-panel` grid 1열 reset (`grid-template-columns: minmax(0,1fr); column-gap:0; padding-left:0`) + 자손 `> .ssg-main-nav-panel, > .ssg-sub-sidebar { display: none }` + main 좌우 padding 1.5rem. 추가로 `@media (max-width: 767px)` 블록에서 main padding 1rem 으로 축소. SPA `PublicationPreset.css` line 461-484 와 1:1.
 - `core/packages/cli/src/ssg/ssgStyles.ts` — `.ssg-main-nav-badge` (SPA `.main-nav-badge` 와 px 일치), `.ssg-main-nav.ssg-main-nav--flat` selector specificity 우선 + `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal`, 아이콘 폭 `1.2em`. iter 3: `.ssg-sub-sidebar-heading` 11px/700/uppercase/letter-spacing 0.08em (SPA `.nav-group-label` 시각 매칭), `.ssg-sub-sidebar > .ssg-sidebar-inner { padding: 14px 10px }`, `.ssg-sub-sidebar > .ssg-sidebar-inner > .ssg-sidebar-nav { padding: 0 }`. iter 4: `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` (SPA 와 동일 좌측 정렬), `body[data-workspace-type="blog"] .blog-detail { padding: 0 }` (24px 좌우 패딩 제거). iter 5: `.ssg-sub-sidebar .ssg-sidebar-link.active` 한정 color `var(--gray-700)` + background transparent + `::before { content: none }` override (primary sidebar active 는 보존).
 
 ## Backlog
 
-- [ ] iter 10: docs/wiki 워크스페이스의 TOC 렌더 검증 — iter 4 는 blog 만 끄도록 처리. docs/wiki 는 TOC 노출이 정상이므로 grid layout 도 SPA 와 일치하는지 별도 probe (현재 clauders.ai 에는 published docs workspace 없음 → blocked).
-- [ ] iter 11: mobile (< 1024px) breakpoint.
+- [ ] iter 12: docs/wiki 워크스페이스의 TOC 렌더 검증 — iter 4 는 blog 만 끄도록 처리. docs/wiki 는 TOC 노출이 정상이므로 grid layout 도 SPA 와 일치하는지 별도 probe (현재 clauders.ai 에는 published docs workspace 없음 → blocked, published docs 등장하면 unblock).
+- [ ] iter 13: dark mode 정합 — SSG `.dark` 모드 스위칭이 SPA 와 동일하게 동작하는지 (현재 light 모드만 px-perfect 검증). theme toggle 자체는 정적 사이트라 deferred 가능하지만 OS dark 모드 사용자 경험 일치는 필요.
+- [ ] iter 14: mobile drawer/hamburger — < 1280px 에서 panels 를 hide 하는 것까지 iter 11 가 완료. SPA 는 hamburger 버튼 + drawer overlay 로 sidebar 호출 가능. 정적 사이트도 동등한 UX 필요한지 평가.
 
 ## Learnings
 
@@ -116,3 +121,10 @@ loop:
 - **flex 양 끝 정렬에 `margin-right: auto` 패턴**: `.doc-title-actions { justify-content: flex-end; gap: 6px }` 인 상태에서 첫 번째 자식 `.blog-detail-meta` 에 `margin-right: auto` 를 주면 SPA 와 동일하게 date 가 좌측, 버튼들이 우측으로 끝까지 밀림. SPA 도 같은 패턴 (date 첫 자식, 나머지 우측). flex 양 끝 정렬은 `space-between` 보다 `justify-content + margin-auto` 조합이 자식 수에 robust — 자식 추가/제거 시 layout 안 깨짐.
 - **클래스 rename: `blog-detail-meta-top` → `doc-title-actions`**: iter 6/7 에서 임시로 만든 `.blog-detail-meta-top` 클래스를 SPA 의 정식 클래스명 `.doc-title-actions` 로 일치시킴. CSS 클래스명은 임시 이름으로 시작하지 말고 처음부터 SPA 매칭 이름으로 두는 게 옳음 — 임시명은 매번 마이그레이션 부담을 만든다 (iter 7 에서 이미 한 번 만든 규칙을 iter 9 에서 다시 옮김).
 - **Share 버튼 client JS 활성화 패턴**: `navigator.share` 가 secure context + capable browser 에서 native share sheet 호출, 없으면 `copyText` 로 URL 클립보드 복사 + tooltip 1.5s "Link copied". `hydrateScript.ts` `init()` 에 등록. share 는 정적 사이트도 충분히 핵심 가치 (URL 공유) 가 있으므로 활성. version/copy-md 는 인증/실제 markdown 소스 fetch 가 필요하므로 disabled.
+
+### 2026-04-30: iter 11 build done [done]
+
+- **mobile breakpoint 가 SPA 는 1279px (1024 아님)**: 흔한 1023/1024 가정 대신 SPA `PublicationPreset.css` 가 `@media (max-width: 1279px)` 에서 two-panel sidebar 를 hide. 대형 태블릿 (iPad Pro 1024) 까지 panels 보이고 일반 iPad (768) 부터 hide. SSG 도 같은 brakepoint 로 맞춤. 가정 ("모바일은 1024 미만") 보다 SPA 코드 직접 확인 후 그 값을 그대로 가져오는 게 안전.
+- **기존 `@media` 블록 확장 vs 새 블록 추가**: iter 4 가 이미 `@media (max-width: 1279px)` 블록을 만들어 `.ssg-toc-wrap { display: none }` 만 넣어둔 상태였음. iter 11 은 새 블록 추가 대신 기존 블록을 확장 — selector 가 같은 viewport 조건을 공유하면 단일 블록으로 모으면 cascade 충돌 추적이 쉽다 (DevTools 에서 한 번에 보인다). 새 블록 분산은 동일 viewport 의 규칙이 여러 블록에 흩어지면서 디버그 곤란.
+- **publish "0 assets uploaded" 가 헷갈림 — CSS 는 항상 새로 푸시됨**: iter 11 publish 후 "30 unchanged, 0 assets uploaded" 출력에 "CSS 가 안 올라갔나?" 의심. 실제로 `_ssg/ssg.css` 는 `uploadSsgAsset` 으로 매 publish 마다 새로 푸시되며 (line 1230 of publish.ts), "0 assets uploaded" 는 markdown 첨부 (이미지 등) 를 의미. 검증: `curl <css-url> | grep "ssg-layout--two-panel > .ssg-main-nav-panel"` → 1 hit. CLI 출력 메시지 신뢰보다 직접 fetch 검증이 더 빠르다 (iter 1 learning 의 후속 — 거기는 HTML 검증, 여기는 CSS 검증).
+- **server 복구 — iter 8/9 publish 도 같이 반영**: 직전 wakeup 들에서 server 500 으로 publish 보류했던 iter 8 (chevron) + iter 9 (action buttons) 까지 iter 11 publish 로 한꺼번에 deployed. 즉 코드는 commit 단계에서 종료해도 publish 만 보류하면 다음 변경이 일괄 반영됨 — iter 별 publish 분리는 strict 하게 1:1 일 필요 없음. 단 visual regression 추적은 layered probe 필요.
