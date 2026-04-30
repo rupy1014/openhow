@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-30
 updated: 2026-04-30
-iteration: 9
+iteration: 10
 parent: null
 loop:
   until: judge
@@ -46,13 +46,15 @@ loop:
 - `core/packages/cli/src/ssg/ssgStyles.ts` — iter 7: `.blog-detail-meta-top` 에 `display: flex; align-items: center; min-height: 32px` (SPA `.doc-title-actions` row height 매칭).
 - `core/packages/cli/src/ssg/buildNavigation.ts` — iter 8: SubSidebar heading 에 `<svg class="ssg-toggle-icon ssg-toggle-icon--expanded" .../>` 데코레이션 chevron 추가 (SPA `.toggle-icon.expanded` 와 동일 markup, SSG 는 정적이라 토글 동작 없이 expanded 상태 고정).
 - `core/packages/cli/src/ssg/ssgStyles.ts` — iter 8: `.ssg-toggle-icon` (`color: var(--gray-400)`, `flex-shrink: 0`) + `.ssg-toggle-icon--expanded { transform: rotate(90deg) }` 추가 (SPA `.toggle-icon` 색/회전 1:1 매칭).
+- `core/packages/cli/src/ssg/template.ts` — iter 9: `blogHeaderHtml` 의 `.blog-detail-meta-top` 를 `.doc-title-actions` 로 교체. 내부 구조: `<div class="blog-detail-meta">date</div>` + 4 SVG button (Present / Copy markdown source / Version history / Share). Present/Copy/Version 은 `disabled` (인증/API 의존), Share 는 active (client JS 로 navigator.share/clipboard fallback).
+- `core/packages/cli/src/ssg/ssgStyles.ts` — iter 9: `.blog-detail-meta-top` 규칙 제거, `.doc-title-actions` (display:flex + justify-content:flex-end + gap:6px + min-height:32px) 와 `.doc-title-actions .blog-detail-meta { margin-right: auto }` (date 좌, 버튼 우) 추가. `.ssg-doc-action-btn` 32×32 / border-radius 8px / border 1px solid `var(--border-color, rgb(229,232,235))` / color `rgb(107,118,132)` (SPA 1:1) + hover/disabled/.doc-share-btn(width:auto+padding) variant + dark mode 규칙.
+- `core/packages/cli/src/ssg/hydrateScript.ts` — iter 9: `initDocShareButton()` 추가, `init()` 에 등록. `.doc-share-btn` 클릭 시 `navigator.share` 우선, fallback 으로 `copyText(window.location.href)` + 1.5s "Link copied" tooltip. 정적 사이트 share 동작 활성화.
 - `core/packages/cli/src/ssg/ssgStyles.ts` — `.ssg-main-nav-badge` (SPA `.main-nav-badge` 와 px 일치), `.ssg-main-nav.ssg-main-nav--flat` selector specificity 우선 + `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal`, 아이콘 폭 `1.2em`. iter 3: `.ssg-sub-sidebar-heading` 11px/700/uppercase/letter-spacing 0.08em (SPA `.nav-group-label` 시각 매칭), `.ssg-sub-sidebar > .ssg-sidebar-inner { padding: 14px 10px }`, `.ssg-sub-sidebar > .ssg-sidebar-inner > .ssg-sidebar-nav { padding: 0 }`. iter 4: `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` (SPA 와 동일 좌측 정렬), `body[data-workspace-type="blog"] .blog-detail { padding: 0 }` (24px 좌우 패딩 제거). iter 5: `.ssg-sub-sidebar .ssg-sidebar-link.active` 한정 color `var(--gray-700)` + background transparent + `::before { content: none }` override (primary sidebar active 는 보존).
 
 ## Backlog
 
-- [ ] iter 9: action 버튼 (share/version/copy-md) — 정적 사이트에서 share 만 client JS 로 가능, version/copy-md 는 인증/API 의존이므로 시각 placeholder 만.
 - [ ] iter 10: docs/wiki 워크스페이스의 TOC 렌더 검증 — iter 4 는 blog 만 끄도록 처리. docs/wiki 는 TOC 노출이 정상이므로 grid layout 도 SPA 와 일치하는지 별도 probe (현재 clauders.ai 에는 published docs workspace 없음 → blocked).
-- [ ] iter N: mobile (< 1024px) breakpoint.
+- [ ] iter 11: mobile (< 1024px) breakpoint.
 
 ## Learnings
 
@@ -107,3 +109,10 @@ loop:
 - **SubSidebar heading chevron 데코레이션**: SPA `.nav-group-title` 에 `<svg class="toggle-icon expanded">` chevron 이 12×12 / `var(--gray-400)` (rgb 176,184,193) 으로 항상 노출. expanded 상태에서 90deg 회전 (`>` → `v`). SSG 는 sub-sidebar heading 에 chevron 자체가 없어서 우측 빈 공간이 시각 격차로 남아 있었음. 해결: `buildNavigation.ts` heading template 에 동일 SVG markup + `.ssg-toggle-icon{--expanded}` CSS 클래스 추가. 정적 사이트라 토글 동작은 없지만 expanded 고정 상태로 시각만 1:1 매칭.
 - **정적 site 의 데코레이션 vs 인터랙션 분리 패턴**: SPA chevron 은 토글 버튼 역할 + 시각 indicator 역할 두 가지를 동시 수행. SSG 는 토글 동작이 없으므로 시각 indicator 만 빌려옴. 동작-시각 결합된 SPA 컴포넌트를 SSG 에 옮길 때는 동작은 떼고 시각 측면만 가져와도 px-perfect 가능. 비기능 데코레이션을 추가한다는 거부감 < 시각 격차 0 이라는 목표 — px-perfect 컨텍스트에서는 후자가 우선.
 - **server-side publish 차단**: iter 8 변경을 publish 하려 했으나 `openhow.io` API `/api/workspaces` 가 HTTP 500 (Internal Server Error) 를 반환. CLI 변경은 무관 — 직접 `curl /api/workspaces` 도 500. 로컬 빌드 / template 변경은 검증 완료, live class.clauders.ai 반영은 server 복구 후 재 publish 필요. iter 8 코드 변경은 commit + footprint 등록까지 완료, probe 검증만 deferred. 교훈: ralph loop 의 publish→probe 단계가 외부 dependency (live API) 에 묶여 있으면 변경 자체와 검증이 분리될 수 있다 — 변경 commit 은 진행하고 검증 deferred 로 표시.
+
+### 2026-04-30: iter 9 build done [done]
+
+- **action 버튼 row 의 시각 placeholder 패턴**: SPA `.doc-title-actions` 가 (a) date 좌측 (`<div class="blog-detail-meta">`) + (b) 4 SVG 버튼 우측 (Present/Copy/Version/Share, 각 32×32 / border-radius 8 / border 1px) 의 단일 flex row. SSG 는 정적이라 Present/Copy/Version 은 `disabled` 로 비활성, Share 만 navigator.share + clipboard fallback 으로 활성. 결과: 시각 격차는 0, 동작 격차는 Present/Copy/Version 3개 → 추후 인증/API 통합 시 활성화 가능. "동작 부재 ≠ 시각 부재" — 정적 사이트가 SPA 의 인터랙션 row 를 따라가려면 disabled 시각 + 활성 가능한 일부만 actually wire 한다.
+- **flex 양 끝 정렬에 `margin-right: auto` 패턴**: `.doc-title-actions { justify-content: flex-end; gap: 6px }` 인 상태에서 첫 번째 자식 `.blog-detail-meta` 에 `margin-right: auto` 를 주면 SPA 와 동일하게 date 가 좌측, 버튼들이 우측으로 끝까지 밀림. SPA 도 같은 패턴 (date 첫 자식, 나머지 우측). flex 양 끝 정렬은 `space-between` 보다 `justify-content + margin-auto` 조합이 자식 수에 robust — 자식 추가/제거 시 layout 안 깨짐.
+- **클래스 rename: `blog-detail-meta-top` → `doc-title-actions`**: iter 6/7 에서 임시로 만든 `.blog-detail-meta-top` 클래스를 SPA 의 정식 클래스명 `.doc-title-actions` 로 일치시킴. CSS 클래스명은 임시 이름으로 시작하지 말고 처음부터 SPA 매칭 이름으로 두는 게 옳음 — 임시명은 매번 마이그레이션 부담을 만든다 (iter 7 에서 이미 한 번 만든 규칙을 iter 9 에서 다시 옮김).
+- **Share 버튼 client JS 활성화 패턴**: `navigator.share` 가 secure context + capable browser 에서 native share sheet 호출, 없으면 `copyText` 로 URL 클립보드 복사 + tooltip 1.5s "Link copied". `hydrateScript.ts` `init()` 에 등록. share 는 정적 사이트도 충분히 핵심 가치 (URL 공유) 가 있으므로 활성. version/copy-md 는 인증/실제 markdown 소스 fetch 가 필요하므로 disabled.
