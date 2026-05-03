@@ -1,8 +1,8 @@
 ---
 status: building
 created: 2026-04-30
-updated: 2026-04-30
-iteration: 13
+updated: 2026-05-03
+iteration: 15
 parent: null
 loop:
   until: judge
@@ -28,7 +28,8 @@ loop:
 - [done] **iter 11**: mobile (< 1280px) breakpoint — SPA `PublicationPreset.css @media (max-width: 1279px)` 매칭. `.ssg-layout--two-panel { grid-template-columns: minmax(0,1fr); column-gap: 0; padding-left: 0 }` + `> .ssg-main-nav-panel, > .ssg-sub-sidebar { display: none }` + main padding 1.5rem 좌우 / 767px 에서 1rem. iPad 768 probe: mainNav/sub display:none, main x=0 w=768, article x=24 w=720 — SPA 와 동일.
 - [done] **iter 13**: dark mode 정합 — `.dark .ssg-doc-action-btn` border-color 가 `rgba(255,255,255,0.12)` (semi-transparent white) 였으나 SPA 는 `rgb(44,44,49)` (= `var(--border-color)` dark). hardcoded → `var(--border-color)` 로 교체. 다른 dark 요소 (header bg/border, body bg/text, mainNav bg, docHook, blogTitle) 는 양쪽 동일 — 이 한 줄로 dark mode parity 닫힘.
 - [done] **iter 14**: mobile drawer + hamburger toggle. iter 11 까지는 < 1280px 에서 panels 만 hide 하고 nav 자체 접근 불가 상태였음. 해결: SSG `template.ts` two-panel 분기에 `<button.ssg-mobile-sidebar-backdrop>` + `<nav.ssg-mobile-sidebar>` (subSidebar 콘텐츠 || mainNav fallback) 추가, `ssgStyles.ts` 에 desktop default `display:none` + `@media (max-width:1279px)` 안 fixed 레이어 (backdrop z-64 / drawer z-65 + transform translateX(-108%)→0), `hydrateScript.ts` 에 `initMobileBlogDrawer()` (햄버거 toggle, backdrop 클릭, ESC, 링크 클릭 시 자동 close, 1280px 초과 resize 시 close, body scroll lock). iPad 768 probe: 햄버거 display:flex, 클릭 후 drawer x=0 w=320 backdrop opacity=1 + body overflow:hidden, backdrop 클릭 시 close — SPA `pub-preset-sidebar`/`pub-preset-sidebar-backdrop` 패턴과 동일 동작.
-- [planned] **iter 15+**: docs/wiki 워크스페이스 TOC 렌더 검증 (published docs workspace 없음 → blocked), 추가 wedge 발견 시 진행.
+- [done] **iter 15**: cross-viewport probe sweep + blog-detail typography parity 3-fix 번들. 4 viewport (desktop light/dark, tablet, mobile) × 양쪽 site 자동 비교. 발견된 일관 격차 3건: (1) `.doc-hook` borderRadius 18 vs 16 → SSG `:root` 에 `--publication-card-radius-lg: 16px` 누락 (SPA `main.css` 정의), (2) `.doc-title` color rgb(25,31,40) vs rgb(51,61,75) → SSG 가 `var(--heading-color)` 로 더 진하게 표시 — SPA 는 inherited `var(--text-color)`, (3) blog-detail 모든 본문 요소 +17~20px y-shift → `.blog-detail-meta` 의 `margin-bottom: 1.75rem` 가 `.doc-title-actions` 안에서 reset 안 됨 (SPA `DocPage.css` 는 `.doc-title-actions .blog-detail-meta { margin-bottom: 0 }` 으로 reset). 해결: 한 번의 publish 로 3건 일괄 수정 (`:root` 추가, `.doc-title` color 토큰 교체, meta margin-bottom: 0). 검증: probe 재실행 → docHook/docTitle non-rect 격차 0, desktop y-shift 0, mobile/tablet 잔여 ~10px (이는 별도 wedge — container padding 차이).
+- [planned] **iter 16+**: 잔여 격차 — searchWrapper border-radius (999px vs 9999px, mobile/tablet width 차이), footer (background + padding + width inheritance), mobile/tablet container 좌우 padding (mobile 16 vs 32, tablet 80 vs 92).
 
 ## Not
 
@@ -59,13 +60,18 @@ loop:
 - `core/packages/cli/src/ssg/template.ts` — iter 14: two-panel sidebarBlock 에 `<button class="ssg-mobile-sidebar-backdrop">` 와 `<nav class="ssg-mobile-sidebar"><div class="ssg-sidebar-inner">${subSidebarHtml || mainNavPanelHtml}</div></nav>` 추가. desktop 에선 CSS 가 `display:none` 으로 숨겨, mobile 에서만 활성.
 - `core/packages/cli/src/ssg/ssgStyles.ts` — iter 14: 기본 `.ssg-mobile-sidebar, .ssg-mobile-sidebar-backdrop { display:none }` 룰 추가, `@media (max-width:1279px)` 블록에 backdrop (`position:fixed; inset:0; z-index:64; bg rgba(15,23,42,0.32); opacity 0/pointer-events none → .is-visible 시 1/auto`) + drawer (`position:fixed; top/left:0; z-index:65; width min(86vw,320px); height:100vh; transform translateX(-108%); transition transform 0.25s; padding-top calc(header+0.75rem); border-right + box-shadow → .is-open 시 translateX(0)`) 룰 추가. SPA `PublicationPreset.css` 400-434 와 1:1.
 - `core/packages/cli/src/ssg/hydrateScript.ts` — iter 14: `initMobileBlogDrawer()` 함수 추가, `init()` 에서 `initMobileSidebar()` 직후 호출. 하는 일: `.ssg-mobile-menu-btn` 클릭 → drawer.is-open + backdrop.is-visible 토글 + body overflow:hidden, backdrop 클릭 / ESC 키 / drawer 안 `<a>` 클릭 / matchMedia(>1279px) 전이 시 모두 close. 기존 `initMobileSidebar()` (`.ssg-sidebar` 단일 패널 docs 용) 와 별개로 동작 (selector 다름 — `.ssg-mobile-sidebar`).
+- `core/packages/cli/src/ssg/ssgStyles.ts` — iter 15: `:root` 에 `--publication-card-radius-lg: 16px` 추가 (SPA `viewer/src/styles/main.css` line 62 와 일치). `body[data-workspace-type="blog"] .blog-detail .doc-title` color `var(--heading-color)` → `var(--text-color)` 교체. `.doc-title-actions .blog-detail-meta` 에 `margin-bottom: 0` 추가 (SPA `viewer/src/pages/DocPage.css` line 773 의 reset 미러).
+- `temp/pw/iter15-sweep.cjs` — 4 viewport × 양쪽 site 자동 probe 스크립트. 10개 요소 (body/header/searchWrapper/docTitle/docHook/heroImg/firstPara/codeBlock/prevNext/footer) 의 rect + 핵심 computed style 비교. dark mode 는 `colorScheme:'dark'` + `localStorage.openhow-theme.{isDark:true,mode:'dark',theme:'dark'}` + 명시적 `documentElement.classList.add('dark')` 3중 강제 적용. sub-4px rect 노이즈 + transparent 등가 자동 필터.
 - `core/packages/cli/src/ssg/ssgStyles.ts` — `.ssg-main-nav-badge` (SPA `.main-nav-badge` 와 px 일치), `.ssg-main-nav.ssg-main-nav--flat` selector specificity 우선 + `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal`, 아이콘 폭 `1.2em`. iter 3: `.ssg-sub-sidebar-heading` 11px/700/uppercase/letter-spacing 0.08em (SPA `.nav-group-label` 시각 매칭), `.ssg-sub-sidebar > .ssg-sidebar-inner { padding: 14px 10px }`, `.ssg-sub-sidebar > .ssg-sidebar-inner > .ssg-sidebar-nav { padding: 0 }`. iter 4: `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` (SPA 와 동일 좌측 정렬), `body[data-workspace-type="blog"] .blog-detail { padding: 0 }` (24px 좌우 패딩 제거). iter 5: `.ssg-sub-sidebar .ssg-sidebar-link.active` 한정 color `var(--gray-700)` + background transparent + `::before { content: none }` override (primary sidebar active 는 보존).
 
 ## Backlog
 
 - [ ] iter 12: docs/wiki 워크스페이스의 TOC 렌더 검증 — iter 4 는 blog 만 끄도록 처리. docs/wiki 는 TOC 노출이 정상이므로 grid layout 도 SPA 와 일치하는지 별도 probe (현재 clauders.ai 에는 published docs workspace 없음 → blocked, published docs 등장하면 unblock).
 - [ ] iter 13: dark mode 정합 — SSG `.dark` 모드 스위칭이 SPA 와 동일하게 동작하는지 (현재 light 모드만 px-perfect 검증). theme toggle 자체는 정적 사이트라 deferred 가능하지만 OS dark 모드 사용자 경험 일치는 필요.
-- [ ] iter 15+: 추가 wedge 발견 시 진행 (현재 SSG/SPA px-perfect 격차 미발견 — light/dark/desktop/tablet/mobile 전부 확인). 새 footer 변경, 추가 워크스페이스 타입 (docs/wiki) publish 시 재진입.
+- [ ] iter 15+: 추가 wedge 발견 시 진행 (iter 15 cross-viewport probe 로 잔여 wedge 식별 — 아래 iter 16+ 로 분할).
+- [ ] iter 16: searchWrapper 격차 — border-radius 999px(SPA) vs 9999px(SSG), width SPA 420 vs SSG 296~356 (tablet/desktop), height 36 vs 40, mobile 에서 SSG 가 100% width 로 펼쳐짐 (SPA 는 inline 80px). SPA 의 SearchBar 컴포넌트 컴포넌트 스타일 매칭 필요.
+- [ ] iter 17: footer 격차 — bg color SPA transparent vs SSG white/dark, padding SPA `20px 0px 0px` vs SSG `0px`, width SPA 840 (column 안) vs SSG 1016 (full). SSG footer 가 main column 안으로 들어가야 함.
+- [ ] iter 18: tablet/mobile container 좌우 padding — mobile docTitle.x SPA 16 vs SSG 32, tablet SPA 80 vs SSG 92. 12~16px 일정한 격차로 SSG 가 더 안쪽. blog-detail 또는 main padding 차이 추정.
 
 ## Learnings
 
@@ -149,3 +155,10 @@ loop:
 - **drawer 안 링크 클릭 시 자동 close**: SPA 는 React Router 가 page transition + state reset 으로 자연스럽게 close 되지만, SSG 는 풀 페이지 reload — 새 페이지에선 init() 가 다시 돌아 closed 상태로 시작하므로 명시적 close 불필요할 수도 있음. 하지만 같은 페이지 anchor 링크 (`#section-id`) 는 reload 안 되므로 drawer 가 열린 채 남는 함정. 따라서 drawer 내부 `<a>` 클릭 delegate → closeDrawer() 추가.
 - **media query 전이 시 자동 close**: viewport 가 1280px 초과로 resize 되면 drawer/backdrop CSS rule 자체가 사라지지만 `.is-open` class 는 남음. 다음 mobile resize 시 잔여 class 가 의도치 않게 열린 상태로 보일 수 있음. matchMedia change 리스너에서 `if (!event.matches) closeDrawer()` 로 cleanup.
 - **probe 자동화 가치**: 햄버거 클릭 → drawer rect 측정 → backdrop 클릭 → close 확인까지 15줄 Playwright 스크립트로 시각 회귀 방지. 향후 다른 mobile 인터랙션 (drawer width 변경, animation duration 등) 도 동일 패턴으로 회귀 검증 가능.
+
+### 2026-05-03: iter 15 build done [done]
+
+- **cross-viewport sweep 이 점진적 wedge 발굴보다 효율**: iter 1~14 는 단일 viewport (desktop light) 격차 1개씩 잡았는데, iter 15 는 4 viewport × 양쪽 site 자동 probe 로 *전체 잔여 wedge 의 지도* 를 한 번에 그렸다. 결과: 일관된 3건 (모든 viewport 공통) + viewport-specific 다수 (mobile 컨테이너 padding, footer 등) 식별. 단일 wedge 모드보다 "어디부터 잡을지" 우선순위 결정이 빠르다 — 일관 3건 먼저 묶어서 1 publish 처리, viewport-specific 은 별도 iter 로 분리.
+- **CSS 변수 미정의 = silent fallback**: SPA 가 `var(--publication-card-radius-lg)` 를 쓰는데 SSG `:root` 에 정의 없으면 fallback 값으로 silently degrade. CSS 자체는 valid 라 빌드/lint 가 안 잡고, 시각 회귀로만 발견. 정책: `var(--name, fallback)` 형태로 `.doc-hook` 처럼 fallback 명시한 곳은 차이가 18px (SSG fallback) vs 16px (SPA root) 로 드러남. 토큰 추가 시 SPA `main.css` :root 와 SSG `:root` 를 항상 양쪽 점검.
+- **`var(--heading-color)` vs `var(--text-color)` 의 의도 차이**: SSG 가 "제목이니까 heading-color" 로 바꿨는데 SPA 는 의도적으로 inherit (= text-color) 로 두고 있었음. 디자인 의도: SPA 의 doc-title 은 본문 흐름의 일부 (대형 본문) 이지 별개 heading 이 아님. 그래서 별도 토큰 안 쓰고 base color 상속. SSG 는 "title" 이름에 끌려 heading 토큰을 적용 → light(rgb 51,61,75 vs 25,31,40) 에서 더 진하게 보임. 교훈: SPA 의 토큰 *부재* 도 의도 (= base 상속), SSG 가 임의로 채우면 안 됨.
+- **`.blog-detail-meta` margin-bottom 누수**: base rule (`.blog-detail-meta { margin-bottom: 1.75rem }`) 가 `.doc-title-actions` 안 인스턴스에까지 28px 밀어내려, 컨테이너 height 가 32→49.6px 로 부풀고 모든 후속 sibling 이 17.6px y-shift. 진짜 원인 찾을 때까지 `height: 32px`/`alignItems: start`/`min-height: 0` 등 5가지 우회 시도했으나 어느 것도 안 먹음 — 자식 div 의 margin-bottom 자체를 reset 해야만 컨테이너 height 가 회복. 자식 margin 누수 → 부모 height 영향 → sibling 위치 cascade 의 전형적 함정. 단일 라인 reset (`margin-bottom: 0`) 로 모든 viewport y-shift 한 번에 해결.
