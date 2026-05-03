@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-30
 updated: 2026-05-03
-iteration: 24
+iteration: 25
 parent: null
 loop:
   until: judge
@@ -38,7 +38,8 @@ loop:
 - [done] **iter 22**: mobile header theme-toggle 위치 + brand gap 격차 닫음. probe (`iter22-rightkids.cjs`) 결과 SSG 의 `.ssg-header-right` 에 `[ssg-theme-toggle (w=36), ssg-signin-link (w=69)]` 이 들어있어 right column 폭이 113px (SPA 71) — `hydrateScript.ts ensureThemeToggle()` 가 toggle 을 right 첫 자식으로 inject 하고 있었기 때문. SPA 는 `AppShell.tsx` 에서 toggle 을 brand 끝 (logo 다음, `.app-shell-theme-toggle--brand`) 에 둠. 해결: (1) `hydrateScript.ts` 의 toggle 주입 타깃을 `.ssg-header-right` → `.ssg-header-brand` 로 변경, `appendChild` (logo 다음). (2) brand 가 `theme-toggle` 까지 흡수하면서 폭 +9px overshoot (186 vs SPA 177) — SSG `body[data-workspace-type="blog"] .ssg-header-brand { gap: 0.75rem }` 였는데 SPA AppShell.css 는 `.app-shell-header-brand { gap: 0.4rem }`. brand gap 0.75rem → 0.4rem 로 정합 (두 gap × 5.6px = 11.2px 보정). 재배포 후 probe: mobile delta count 6 → 5, searchWrapper.x SSG=SPA 일치. 최종 폭 brand 175 (SPA 177), center 84 (SPA 80), right 69 (SPA 71). 잔여 4px 는 searchWrapper width sub-pixel (auto-sized fr distribution).
 - [done] **iter 23**: SSG 의 `<nav class="ssg-prev-next">` 제거 — SPA 는 viewer/src 어디에도 prev-next 컴포넌트가 없음 (grep 결과 0건). SSG `template.ts:283-296` 에서 blog/non-blog 두 분기 모두 nav 블록 제거 (buildPrevNextHtml 함수와 BuildPageHtmlParams.prevNext 는 test 호환을 위해 유지, 렌더만 안 함). 결과: deltaCount 3→2 (desktop/tablet), 5→4 (mobile). prevNext delta 객체 자체가 사라짐. 부수효과: footer.y 가 SSG 기준 desktop -105px, mobile -51px (=SSG 가 SPA 보다 위에 있음) 으로 노출 — prev-next 가 우연히 ~101px (desktop) 차지하면서 *그 다음 wedge (blog-article-footer 누락)* 를 가리고 있었음을 드러냄.
 - [done] **iter 24**: SSG 에 `.blog-article-footer > .blog-article-nav` 추가. iter 23 가 `.ssg-prev-next` 를 *SPA 에 등가물 없음* 가정으로 제거했으나 실제 SPA 는 `DocPage.tsx:1877` 의 `<div class="blog-article-footer">` 안에 `.blog-article-nav` (newer/older 링크) 를 blog 라우트에서만 렌더 — grep 셀렉터가 `prev-next` 패턴으로만 잡혀서 놓친 케이스. 해결: (1) `template.ts` 에 `buildBlogArticleFooterHtml(prevNext)` 함수 신설, blog 분기 articleBlock 에 `</article>` 다음 push. SSG `params.prevNext.prev → newer (최신 글)`, `params.prevNext.next → older (이전 글)` 매핑. (2) `ssgStyles.ts` 에 `.blog-article-footer`, `.blog-article-nav`, `.blog-article-nav-link*`, `.blog-article-nav-eyebrow` 룰 + dark variant 추가 (SPA DocPage.css line 1151~1627 미러). (3) **specificity 함정**: `@media (max-width: 640px)` 안 mobile stack rule 을 base rule 보다 *앞에* 두면 base 가 source-order 로 이김 — base rule 다음에 별도 `@media 640` 블록을 추가해서 cascade 정상화. probe 결과: SSG-desktop blogArticleFooter h=169 (SPA h=204), SSG-mobile blogArticleFooter h=297 (SPA h=332) — 양쪽 -35px 남는데, SPA 가 tags/author 추가 콘텐츠를 같이 렌더하기 때문 (clauders.ai 페이지 메타에 author/tags 존재). nav 자체는 px-perfect (h=112, 양쪽). 잔여: tags/author 데이터 plumbing (별도 wedge), 모바일 article body +276px (별도 wedge).
-- [planned] **iter 25+**: blog-article-footer 의 tags + author profile 렌더 (BuildPageHtmlParams 에 tags/author 필드 추가 후 마크업 출력) OR mobile article body height +276 격차 (markdown content rendering parity).
+- [done] **iter 25**: blog-article-footer 의 tags + author profile 렌더. iter 24 가 nav 만 렌더해서 SPA 대비 -35px 잔여 (desktop/mobile 양쪽). 해결: (1) `BuildPageHtmlParams.articleFooter?: { tags?, author?, authorAvatar?, authorBio? }` 추가, (2) `buildHtml.ts` 에서 page.frontmatter 로부터 4 필드 주입 (tags 는 Array.isArray 가드, 나머지는 typeof string 가드), (3) `template.ts buildBlogArticleFooterHtml` 확장 — tags 있으면 `<div class="blog-article-tags-section">` + `<span class="blog-article-tag">` × N, author 있으면 `<div class="blog-author-profile">` + avatar (img 또는 첫글자 fallback) + name + (bio 있으면) bio. 조건 = `tags.length || author || hasNav` (SPA 와 동일). (4) `ssgStyles.ts` 에 `.blog-article-tags-section`, `.blog-article-tag`, `.blog-author-profile`, `.blog-author-avatar`, `.blog-author-info`, `.blog-author-name`, `.blog-author-bio` 룰 추가 (SPA DocPage.css line 1157-1175, 1563-1572, 1629-1667 미러). probe 결과: SSG-desktop blogArticleFooter h=203 (SPA 204), SSG-mobile h=331 (SPA 332) — **양쪽 1px sub-pixel match**. clauders welcome 페이지 frontmatter 에는 tags 만 있고 author 없으므로 실제 렌더는 tags+nav 조합. 잔여 footer.y delta (desktop +118, mobile +299) 는 거의 전부 article body height diff (+87 desktop, +276 mobile) — 별도 wedge.
+- [planned] **iter 26+**: 모바일/데스크탑 article body height +87 / +276 격차 (markdown content rendering parity).
 
 ## Not
 
@@ -87,7 +88,7 @@ loop:
 - [ ] iter 13: dark mode 정합 — SSG `.dark` 모드 스위칭이 SPA 와 동일하게 동작하는지 (현재 light 모드만 px-perfect 검증). theme toggle 자체는 정적 사이트라 deferred 가능하지만 OS dark 모드 사용자 경험 일치는 필요.
 - [ ] iter 15+: 추가 wedge 발견 시 진행 (iter 15 cross-viewport probe 로 잔여 wedge 식별 — 아래 iter 16+ 로 분할).
 - [ ] iter 21: mobile title→hook 간격 (-44px, SSG hook 이 SPA 보다 위). docTitle.marginBottom 또는 docHook.marginTop 차이 추정. 또는 mobile 한정 docHook (.doc-description) 의 padding/margin 차이.
-- [ ] iter 25: blog-article-footer 의 tags + author profile 렌더. BuildPageHtmlParams 에 tags/author/authorAvatar/authorBio 필드 추가, buildHtml.ts 에서 frontmatter 주입, template.ts 에 마크업 push, ssgStyles.ts 에 .blog-article-tags-section/.blog-author-profile/.blog-author-* 룰 추가.
+- [ ] iter 27+: pub-footer 위 spacing 작은 격차 (desktop ~32px, mobile ~23px) — `.ssg-pub-footer` margin-top 또는 `.blog-detail` 하단 padding 정합 필요. iter 26 이후 노출.
 - [ ] iter 26: 모바일 article body height +276 격차 (markdown content rendering parity) — markdown-content 자체 line-height/font-size/p-margin 의 mobile @media 룰 비교.
 
 ## Learnings
