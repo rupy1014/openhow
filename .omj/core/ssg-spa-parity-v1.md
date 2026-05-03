@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-30
 updated: 2026-05-03
-iteration: 21
+iteration: 22
 parent: null
 loop:
   until: judge
@@ -35,7 +35,8 @@ loop:
 - [done] **iter 19**: tablet/mobile 본문 container 좌우 padding 정합. SPA 의 `.pub-preset-body--two-panel > .pub-preset-main { padding-left: 0 }` (specificity 20 with child combinator) 가 @media 1279/767 의 `.pub-preset-main { padding: ... 1rem }` (specificity 10) 을 이겨서 SPA 는 *비대칭* padding (좌 0, 우 24) 으로 동작. SSG 는 대칭 padding (좌우 동일 16/24) 이라 docTitle.x 가 12px (tablet) ~ 16px (mobile) 더 안쪽. 격차 root cause 는 *3 개 layer 의 cascade*: (1) `@media 1279px` 의 `.ssg-layout--two-panel .ssg-main { padding-left: 1.5rem }` (line 3821-3823), (2) `@media 1279px` 의 *blog 한정* `body[data-workspace-type="blog"] .ssg-main { padding-left: 1.5rem }` (line 4588-4590, specificity 21 → blog 에선 layer 1 보다 우선), (3) `@media 767px` 의 `body[data-workspace-type="blog"] .ssg-main { padding: 1.5rem 1rem 3rem }` (line 4631-4633) + `.ssg-layout--two-panel .ssg-main { padding: 1.5rem 1rem 3rem }` (line 3874-3878). 해결: 4 layer 모두 padL=0, padR=1.5rem 비대칭으로 통일 — (1) `padding-left: 0; padding-right: 1.5rem`, (2) `padding-left: 0; padding-right: 1.5rem` (blog 전용도 동일), (3) `padding: 1.5rem 1.5rem 3rem 0` (4-value shorthand 로 logical asymmetric). probe sweep 재실행: tablet docTitle/docHook/heroImg/firstPara.x SSG 80 = SPA 80 (격차 0), mobile docTitle.x SSG 16 = SPA 16 (격차 0). 잔여 mobile y-shift (52px) + footer.y 4px sub-pixel 은 별개 wedge (hero/header height + probe noise).
 - [done] **iter 20**: mobile y-shift +52px 닫음. probe 결과 SPA mobile 의 `.doc-title-actions` 가 `rect: 0×0` (display:none) 임을 확인 — SPA `DocPage.css:865-869` 의 `@media (max-width: 960px) { .doc-title-actions { display: none } }` 가 mobile 에서 row 자체를 hide. SSG 는 같은 row 가 `min-height: 32px` + `margin-bottom: 1.25rem` 으로 *32px row + 20px gap = 52px* 만큼 hero 위 공간을 차지하고 있었음. 해결: `ssgStyles.ts` `@media (max-width: 959px)` 블록에 `body[data-workspace-type="blog"] .blog-detail .doc-title-actions { display: none }` 추가 (SPA selector 와 동일 specificity). probe 재실행: mobile docTitle.y SSG 350=SPA 350 (-52), heroImg.y SSG 84=SPA 84 (-52), kicker.y SSG 310=SPA 310 매치. 잔여 mobile 격차는 docHook/firstPara y -44px (title→hook 간격 차이 — 새 wedge), searchWrapper 4px width, footer 4px sub-pixel.
 - [done] **iter 21**: mobile title→hook 간격 (-44px) 닫음. probe 결과 SPA mobile 은 doc-title 바로 다음에 `<div class="blog-detail-meta blog-detail-meta-mobile">` (h=21px) 를 *추가* 렌더 (SPA `DocPage.tsx:1672` `renderBlogDetailMeta('blog-detail-meta-mobile')`) — desktop 에서는 `display: none`, `@media 960` 에서 `display: flex` 로 노출. iter 20 에서 `.doc-title-actions` 를 mobile 에서 hide 한 뒤 meta 정보가 사라진 상태 (= SPA 의도) 였으나, SPA 는 같은 정보를 mobile-meta 위치에서 다시 보여줌 — title 과 hook 사이에 21px row + 24px margin = 45px 공간 추가. SSG 는 row 자체가 없어 hook 이 -44px 위로 당겨짐. 해결: (1) `template.ts` `blogHeaderHtml` 에 `metaPartsForMobile` 재구성 후 doc-title 직후 `<div class="blog-detail-meta blog-detail-meta-mobile">` push, (2) `ssgStyles.ts` 에 default `display: none` + `@media (max-width: 959px)` 안 `display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; font-size: 0.875rem; ...` (SPA 의 *@media 960 mobile 값* 사용 — desktop base 0.9rem/1.75rem 는 mobile-only 룰엔 부적합). probe 재실행: mobile docHook.y SSG 443 = SPA 442 (1px sub-pixel 잔여), siblings 에 `blog-detail-meta blog-detail-meta-mobile` (y=397, h=21) 양쪽 매치. 잔여 mobile 격차 = searchWrapper 4px (iter 17 sub-pixel), prevNext null in SPA + footer.y downstream.
-- [planned] **iter 22+**: searchWrapper width 4px sub-pixel (mobile) — header brand/right 컴포넌트 자체 사이즈 차이.
+- [done] **iter 22**: mobile header theme-toggle 위치 + brand gap 격차 닫음. probe (`iter22-rightkids.cjs`) 결과 SSG 의 `.ssg-header-right` 에 `[ssg-theme-toggle (w=36), ssg-signin-link (w=69)]` 이 들어있어 right column 폭이 113px (SPA 71) — `hydrateScript.ts ensureThemeToggle()` 가 toggle 을 right 첫 자식으로 inject 하고 있었기 때문. SPA 는 `AppShell.tsx` 에서 toggle 을 brand 끝 (logo 다음, `.app-shell-theme-toggle--brand`) 에 둠. 해결: (1) `hydrateScript.ts` 의 toggle 주입 타깃을 `.ssg-header-right` → `.ssg-header-brand` 로 변경, `appendChild` (logo 다음). (2) brand 가 `theme-toggle` 까지 흡수하면서 폭 +9px overshoot (186 vs SPA 177) — SSG `body[data-workspace-type="blog"] .ssg-header-brand { gap: 0.75rem }` 였는데 SPA AppShell.css 는 `.app-shell-header-brand { gap: 0.4rem }`. brand gap 0.75rem → 0.4rem 로 정합 (두 gap × 5.6px = 11.2px 보정). 재배포 후 probe: mobile delta count 6 → 5, searchWrapper.x SSG=SPA 일치. 최종 폭 brand 175 (SPA 177), center 84 (SPA 80), right 69 (SPA 71). 잔여 4px 는 searchWrapper width sub-pixel (auto-sized fr distribution).
+- [planned] **iter 23+**: prevNext mobile 렌더 (SSG 320×201, SPA null) 또는 잔여 sub-pixel 정리.
 
 ## Not
 
@@ -84,7 +85,7 @@ loop:
 - [ ] iter 13: dark mode 정합 — SSG `.dark` 모드 스위칭이 SPA 와 동일하게 동작하는지 (현재 light 모드만 px-perfect 검증). theme toggle 자체는 정적 사이트라 deferred 가능하지만 OS dark 모드 사용자 경험 일치는 필요.
 - [ ] iter 15+: 추가 wedge 발견 시 진행 (iter 15 cross-viewport probe 로 잔여 wedge 식별 — 아래 iter 16+ 로 분할).
 - [ ] iter 21: mobile title→hook 간격 (-44px, SSG hook 이 SPA 보다 위). docTitle.marginBottom 또는 docHook.marginTop 차이 추정. 또는 mobile 한정 docHook (.doc-description) 의 padding/margin 차이.
-- [ ] iter 22: 모바일 searchWrapper 4px sub-pixel 잔여 (76 vs 80) — brand 영역 (logo + mobile-menu-btn) 또는 right 영역 (Sign in link) 의 width 차이로 인한 grid distribution. 정밀 측정 후 button/logo padding 정합.
+- [ ] iter 23: prevNext mobile 렌더 정합 — SSG 는 320×201 element, SPA 는 null. SPA `DocPage.tsx` 에서 prevNext 를 mobile 에서 hide 하는지, SSG 에선 항상 렌더되는지 확인. searchWrapper 4px width 잔여는 sub-pixel polish.
 
 ## Learnings
 
