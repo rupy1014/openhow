@@ -98,3 +98,8 @@ loop:
 - **Verify**: Playwright `/` 캡처 — Hero "나의 지식이 비즈니스가 되는 곳" + Showcase + KPI(1,200+/38만+/1.2억) + 4-grid(VOD/라이브/코칭/디지털) + Testimonials + 하단 CTA 띠 모두 렌더. PublicBlogHome 의 article feed 사라짐.
 - **Note**: 자동 probe 의 `[class*="creator-saas"]` 셀렉터는 false 였음 — CreatorSaasHome 의 실제 클래스명이 다른 prefix. 향후 probe 는 h1 텍스트 매칭으로 검증 권장.
 - **PublicBlogHome 보존 확인**: `/feed` 라우트 (App.tsx) 가 별도 import 유지 — 삭제하지 않음.
+
+### 2026-05-04: [done] iter 1 F2 — Dashboard ?create=workspace → /onboarding redirect
+- **Change**: `core/packages/viewer/src/pages/admin/Dashboard.tsx` import 1줄 (`useNavigate, useSearchParams`) + body 7줄 (hook 2 + useEffect 5). +9/-1 lines. core 44d3688.
+- **Decision**: WorkspaceHub 다이얼로그 복제 대신 /onboarding redirect — 웹 에디터 primary 정책 일관성 + 4-step wizard 가 type/name/slug/profile 모두 잡음 + 코드 중복 회피. `<Link to="/dashboard?create=workspace">` URL 자체는 유지 (외부 깊은링크 호환).
+- **Verify**: TypeScript clean (tsc --noEmit exit 0). 시각 verify 는 auth 필요 — runtime 검증은 사용자 로그인 후 첫 클릭으로 확인 권장. 자동 probe 는 /dashboard 가 auth-gate 라 anonymous 로 미커버.
