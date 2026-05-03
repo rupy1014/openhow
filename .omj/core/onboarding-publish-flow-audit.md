@@ -1,10 +1,19 @@
 ---
-status: exploring
+status: building
 created: 2026-05-04
 updated: 2026-05-04
 iteration: 1
 parent: creator-saas-storyboard
+loop:
+  until: judge
 ---
+
+## Decision (2026-05-04 user lock-in)
+
+**콘텐츠 입력 경로는 web editor 우선** (`admin/EditorPage.tsx`). CLI publish 는 power-user 옵션으로 후순위. 따라서:
+- **F4** (빈 상태 통합) — CLI 가이드 큰 글씨 폐기, web editor "글 쓰기" CTA 가 primary, CLI 는 작은 hint 한 줄.
+- **F7** (post-create 가이드) — Onboarding step 4 의 next-step 카드가 web editor 링크를 primary, CLI 는 대안.
+- **F8** (CLI vs Web 가이드) — type-별 분기 안 함. 모두 web editor 가 default, CLI 는 docs 링크 1줄.
 
 # onboarding-publish-flow-audit — 메인 랜딩 → 워크스페이스 생성 → 설정 → 콘텐츠 배포 end-to-end UX 점검
 
@@ -83,3 +92,9 @@ parent: creator-saas-storyboard
 - **Surprise**: `public-home-creator-saas-pivot` 가 done 인데 실제 swap 안 됨. 의도 done = 코드 done 이 아닐 수 있음 — 의도 닫을 때 실제 entry 파일에서 swap 검증 필요.
 - **Surprise**: 워크스페이스 생성 entry 가 3개나 있고 endpoint 도 2개 — 누적 추가의 결과로 보임. 단일 사용자 시각으로 한 번도 통합 점검된 적 없는 흔적.
 - **Method note**: 다음 audit 의도는 첫 단계에서 *"기존에 done 된 핵심 의도 spot-check"* 를 plan 에 명시. done 라벨만으로 회귀 가능성 못 잡음.
+
+### 2026-05-04: [done] iter 1 F1 — Home.tsx CreatorSaasHome swap
+- **Change**: `core/packages/viewer/src/pages/Home.tsx:6,31` lazy import + JSX 양쪽 `PublicBlogHome` → `CreatorSaasHome`. 2 lines, 1 file. core 243abd7.
+- **Verify**: Playwright `/` 캡처 — Hero "나의 지식이 비즈니스가 되는 곳" + Showcase + KPI(1,200+/38만+/1.2억) + 4-grid(VOD/라이브/코칭/디지털) + Testimonials + 하단 CTA 띠 모두 렌더. PublicBlogHome 의 article feed 사라짐.
+- **Note**: 자동 probe 의 `[class*="creator-saas"]` 셀렉터는 false 였음 — CreatorSaasHome 의 실제 클래스명이 다른 prefix. 향후 probe 는 h1 텍스트 매칭으로 검증 권장.
+- **PublicBlogHome 보존 확인**: `/feed` 라우트 (App.tsx) 가 별도 import 유지 — 삭제하지 않음.
