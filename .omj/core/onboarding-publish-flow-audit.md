@@ -1,5 +1,5 @@
 ---
-status: building
+status: done
 created: 2026-05-04
 updated: 2026-05-04
 iteration: 1
@@ -114,3 +114,14 @@ loop:
 - **Change**: `core/packages/viewer/src/components/WorkspaceHub.tsx` 빈 상태 JSX 에서 `.empty-guide` 두 코드 블록 → 한 줄 `.empty-cli-hint` 로 교체. 버튼에 `btn-create-primary` 클래스 추가. `WorkspaceHub.css` 에서 `.empty-guide`/`.guide-code`/`.code-prompt` 4개 룰 삭제, `.btn-create-primary`/`.empty-cli-hint`/`.empty-cli-hint code` 3개 룰 추가. 2 files, 32+/38- lines. core d34ac42.
 - **Decision (web editor primary)**: 빈 상태 시각 hierarchy 가 "워크스페이스 만들기" 버튼 primary → CLI 작은 회색 hint. Onboarding step 4 의 `.onboarding-cli-hint` 와 톤 통일. Dashboard 빈 상태 (F2 fix됨) 와 패턴 일치.
 - **Verify**: TypeScript clean.
+
+### 2026-05-04: [done] iter 1 F5 + F6 — Onboarding 마이크로 카피 fix
+- **F5 change**: `core/packages/viewer/src/pages/Onboarding.tsx:251` 슬러그 프리뷰 `openhow.kr/s/{username}` → `openhow.io/s/{username}` (실제 production 도메인). `/s/:username` 라우트는 `router.tsx:189` 에서 `AuthorProfile` 매치 확인.
+- **F6 change**: 같은 파일 line 322-330 — 한글 이름 입력 시 `slugPreview = ''` 인 경우 `⚠️ 영문 주소가 자동 생성되지 않아요. 워크스페이스 이름을 영문으로 입력해 주세요.` 경고 노출. `Onboarding.css` 에 `.onboarding-slug-warn { color: #b91c1c; font-weight: 500 }` 추가. 2 files, +15/-2 lines. core f79bdfc.
+- **Decision**: `toSlug()` 함수 자체는 건드리지 않음 — 한글 transliteration 같은 변경은 별도 의도. 본 wedge 는 *안내만* 추가. 사용자가 영문으로 다시 입력하도록 유도.
+- **Verify**: TypeScript clean.
+
+### 2026-05-04: [done] iter 1 — onboarding-publish-flow-audit F1~F8 5개 wedge 완료
+- **Closed wedges**: F1 (CreatorSaasHome swap, P0), F2 (Dashboard ?create=workspace 핸들러, P0), F4 (WorkspaceHub 빈 상태 통합, P1), F5+F6 (마이크로 카피, P2), F7+F8 (post-create next-step card, P2).
+- **Deferred**: F3 (워크스페이스 생성 경로 3개 + API 2개 통합) — 별도 의도 `workspace-creation-flow-unify-v1` 로 분리. 다음 단계.
+- **Theme**: 모든 surface 가 *웹 에디터 primary, CLI demoted* 로 일관 수렴. Dashboard 빈 상태 → /onboarding, Onboarding step 4 → /dashboard/{slug}/edit primary, WorkspaceHub 빈 상태 → 다이얼로그 primary + small CLI hint. 톤 통일되어 신규 사용자가 어느 surface 에서 들어와도 같은 next-step 을 봄.
