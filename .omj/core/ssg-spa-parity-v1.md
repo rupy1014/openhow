@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-30
 updated: 2026-05-03
-iteration: 23
+iteration: 24
 parent: null
 loop:
   until: judge
@@ -37,7 +37,8 @@ loop:
 - [done] **iter 21**: mobile title→hook 간격 (-44px) 닫음. probe 결과 SPA mobile 은 doc-title 바로 다음에 `<div class="blog-detail-meta blog-detail-meta-mobile">` (h=21px) 를 *추가* 렌더 (SPA `DocPage.tsx:1672` `renderBlogDetailMeta('blog-detail-meta-mobile')`) — desktop 에서는 `display: none`, `@media 960` 에서 `display: flex` 로 노출. iter 20 에서 `.doc-title-actions` 를 mobile 에서 hide 한 뒤 meta 정보가 사라진 상태 (= SPA 의도) 였으나, SPA 는 같은 정보를 mobile-meta 위치에서 다시 보여줌 — title 과 hook 사이에 21px row + 24px margin = 45px 공간 추가. SSG 는 row 자체가 없어 hook 이 -44px 위로 당겨짐. 해결: (1) `template.ts` `blogHeaderHtml` 에 `metaPartsForMobile` 재구성 후 doc-title 직후 `<div class="blog-detail-meta blog-detail-meta-mobile">` push, (2) `ssgStyles.ts` 에 default `display: none` + `@media (max-width: 959px)` 안 `display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; font-size: 0.875rem; ...` (SPA 의 *@media 960 mobile 값* 사용 — desktop base 0.9rem/1.75rem 는 mobile-only 룰엔 부적합). probe 재실행: mobile docHook.y SSG 443 = SPA 442 (1px sub-pixel 잔여), siblings 에 `blog-detail-meta blog-detail-meta-mobile` (y=397, h=21) 양쪽 매치. 잔여 mobile 격차 = searchWrapper 4px (iter 17 sub-pixel), prevNext null in SPA + footer.y downstream.
 - [done] **iter 22**: mobile header theme-toggle 위치 + brand gap 격차 닫음. probe (`iter22-rightkids.cjs`) 결과 SSG 의 `.ssg-header-right` 에 `[ssg-theme-toggle (w=36), ssg-signin-link (w=69)]` 이 들어있어 right column 폭이 113px (SPA 71) — `hydrateScript.ts ensureThemeToggle()` 가 toggle 을 right 첫 자식으로 inject 하고 있었기 때문. SPA 는 `AppShell.tsx` 에서 toggle 을 brand 끝 (logo 다음, `.app-shell-theme-toggle--brand`) 에 둠. 해결: (1) `hydrateScript.ts` 의 toggle 주입 타깃을 `.ssg-header-right` → `.ssg-header-brand` 로 변경, `appendChild` (logo 다음). (2) brand 가 `theme-toggle` 까지 흡수하면서 폭 +9px overshoot (186 vs SPA 177) — SSG `body[data-workspace-type="blog"] .ssg-header-brand { gap: 0.75rem }` 였는데 SPA AppShell.css 는 `.app-shell-header-brand { gap: 0.4rem }`. brand gap 0.75rem → 0.4rem 로 정합 (두 gap × 5.6px = 11.2px 보정). 재배포 후 probe: mobile delta count 6 → 5, searchWrapper.x SSG=SPA 일치. 최종 폭 brand 175 (SPA 177), center 84 (SPA 80), right 69 (SPA 71). 잔여 4px 는 searchWrapper width sub-pixel (auto-sized fr distribution).
 - [done] **iter 23**: SSG 의 `<nav class="ssg-prev-next">` 제거 — SPA 는 viewer/src 어디에도 prev-next 컴포넌트가 없음 (grep 결과 0건). SSG `template.ts:283-296` 에서 blog/non-blog 두 분기 모두 nav 블록 제거 (buildPrevNextHtml 함수와 BuildPageHtmlParams.prevNext 는 test 호환을 위해 유지, 렌더만 안 함). 결과: deltaCount 3→2 (desktop/tablet), 5→4 (mobile). prevNext delta 객체 자체가 사라짐. 부수효과: footer.y 가 SSG 기준 desktop -105px, mobile -51px (=SSG 가 SPA 보다 위에 있음) 으로 노출 — prev-next 가 우연히 ~101px (desktop) 차지하면서 *그 다음 wedge (blog-article-footer 누락)* 를 가리고 있었음을 드러냄.
-- [planned] **iter 24+**: SSG 에 `.blog-article-footer` 추가 (SPA `articleParentChildren` 마지막 자식, h=204px desktop). 내부 컨텐츠 (tags/share/related/author bio 등) 식별 후 SSG 템플릿에 동등 마크업 렌더.
+- [done] **iter 24**: SSG 에 `.blog-article-footer > .blog-article-nav` 추가. iter 23 가 `.ssg-prev-next` 를 *SPA 에 등가물 없음* 가정으로 제거했으나 실제 SPA 는 `DocPage.tsx:1877` 의 `<div class="blog-article-footer">` 안에 `.blog-article-nav` (newer/older 링크) 를 blog 라우트에서만 렌더 — grep 셀렉터가 `prev-next` 패턴으로만 잡혀서 놓친 케이스. 해결: (1) `template.ts` 에 `buildBlogArticleFooterHtml(prevNext)` 함수 신설, blog 분기 articleBlock 에 `</article>` 다음 push. SSG `params.prevNext.prev → newer (최신 글)`, `params.prevNext.next → older (이전 글)` 매핑. (2) `ssgStyles.ts` 에 `.blog-article-footer`, `.blog-article-nav`, `.blog-article-nav-link*`, `.blog-article-nav-eyebrow` 룰 + dark variant 추가 (SPA DocPage.css line 1151~1627 미러). (3) **specificity 함정**: `@media (max-width: 640px)` 안 mobile stack rule 을 base rule 보다 *앞에* 두면 base 가 source-order 로 이김 — base rule 다음에 별도 `@media 640` 블록을 추가해서 cascade 정상화. probe 결과: SSG-desktop blogArticleFooter h=169 (SPA h=204), SSG-mobile blogArticleFooter h=297 (SPA h=332) — 양쪽 -35px 남는데, SPA 가 tags/author 추가 콘텐츠를 같이 렌더하기 때문 (clauders.ai 페이지 메타에 author/tags 존재). nav 자체는 px-perfect (h=112, 양쪽). 잔여: tags/author 데이터 plumbing (별도 wedge), 모바일 article body +276px (별도 wedge).
+- [planned] **iter 25+**: blog-article-footer 의 tags + author profile 렌더 (BuildPageHtmlParams 에 tags/author 필드 추가 후 마크업 출력) OR mobile article body height +276 격차 (markdown content rendering parity).
 
 ## Not
 
@@ -86,7 +87,8 @@ loop:
 - [ ] iter 13: dark mode 정합 — SSG `.dark` 모드 스위칭이 SPA 와 동일하게 동작하는지 (현재 light 모드만 px-perfect 검증). theme toggle 자체는 정적 사이트라 deferred 가능하지만 OS dark 모드 사용자 경험 일치는 필요.
 - [ ] iter 15+: 추가 wedge 발견 시 진행 (iter 15 cross-viewport probe 로 잔여 wedge 식별 — 아래 iter 16+ 로 분할).
 - [ ] iter 21: mobile title→hook 간격 (-44px, SSG hook 이 SPA 보다 위). docTitle.marginBottom 또는 docHook.marginTop 차이 추정. 또는 mobile 한정 docHook (.doc-description) 의 padding/margin 차이.
-- [ ] iter 24: SSG 에 `.blog-article-footer` 컴포넌트 추가. SPA viewer/src 에서 컴포넌트 정의 위치 확인 후 SSG template.ts 에 동등 HTML/CSS 이식. footer.y delta 0 화 + 내부 children (tags/share/related/author) 마크업 정렬.
+- [ ] iter 25: blog-article-footer 의 tags + author profile 렌더. BuildPageHtmlParams 에 tags/author/authorAvatar/authorBio 필드 추가, buildHtml.ts 에서 frontmatter 주입, template.ts 에 마크업 push, ssgStyles.ts 에 .blog-article-tags-section/.blog-author-profile/.blog-author-* 룰 추가.
+- [ ] iter 26: 모바일 article body height +276 격차 (markdown content rendering parity) — markdown-content 자체 line-height/font-size/p-margin 의 mobile @media 룰 비교.
 
 ## Learnings
 
