@@ -103,3 +103,9 @@ loop:
 - **Change**: `core/packages/viewer/src/pages/admin/Dashboard.tsx` import 1줄 (`useNavigate, useSearchParams`) + body 7줄 (hook 2 + useEffect 5). +9/-1 lines. core 44d3688.
 - **Decision**: WorkspaceHub 다이얼로그 복제 대신 /onboarding redirect — 웹 에디터 primary 정책 일관성 + 4-step wizard 가 type/name/slug/profile 모두 잡음 + 코드 중복 회피. `<Link to="/dashboard?create=workspace">` URL 자체는 유지 (외부 깊은링크 호환).
 - **Verify**: TypeScript clean (tsc --noEmit exit 0). 시각 verify 는 auth 필요 — runtime 검증은 사용자 로그인 후 첫 클릭으로 확인 권장. 자동 probe 는 /dashboard 가 auth-gate 라 anonymous 로 미커버.
+
+### 2026-05-04: [done] iter 1 F7 + F8 — Onboarding step 4 post-create next-step card
+- **Change**: `core/packages/viewer/src/pages/Onboarding.tsx` createdSlug state + auto-redirect 제거 + step 4 JSX 두 CTA + CLI hint. `Onboarding.css` 신규 클래스 3개 (`.onboarding-next-card`, `.onboarding-cli-hint`, hint code). +49/-3 lines, 2 files. core c58a2c6.
+- **Decision (web editor primary)**: 1.2초 auto-redirect 폐기 → 사용자가 명시적으로 "✍️ 글 쓰기 (웹 에디터)" / "대시보드 둘러보기" 둘 중 선택. CLI 는 작은 회색 hint 한 줄. type-별 분기 안 함 (모두 동일).
+- **Subtle bug fix**: `checkSession()` 후 `user.onboarded=true` 가 되어 Navigate 가드 (line 82-84) 가 step 4 를 건너뛰고 즉시 /dashboard 로 redirect 시키는 문제 발견 — 가드에 `&& step !== 4` 조건 추가로 step 4 카드가 제대로 렌더되도록 fix.
+- **Verify**: TypeScript clean. 시각 verify 는 신규 사용자 가입+워크스페이스 생성 플로우 끝까지 가야 가능 — 자동 probe 미커버.
