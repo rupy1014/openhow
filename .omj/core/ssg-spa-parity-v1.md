@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-30
 updated: 2026-04-30
-iteration: 11
+iteration: 12
 parent: null
 loop:
   until: judge
@@ -26,6 +26,7 @@ loop:
 - [done] **iter 8**: SubSidebar heading chevron 데코레이션 (`.ssg-toggle-icon--expanded` SVG 90deg). publish 후 시각 1:1.
 - [done] **iter 9**: blog-detail header `.doc-title-actions` row — Present/Copy/Version/Share 4 SVG 버튼 + date 좌/버튼 우 정렬 (`justify-content: flex-end + margin-right: auto`). Share 만 active (navigator.share + clipboard fallback), 나머지 disabled.
 - [done] **iter 11**: mobile (< 1280px) breakpoint — SPA `PublicationPreset.css @media (max-width: 1279px)` 매칭. `.ssg-layout--two-panel { grid-template-columns: minmax(0,1fr); column-gap: 0; padding-left: 0 }` + `> .ssg-main-nav-panel, > .ssg-sub-sidebar { display: none }` + main padding 1.5rem 좌우 / 767px 에서 1rem. iPad 768 probe: mainNav/sub display:none, main x=0 w=768, article x=24 w=720 — SPA 와 동일.
+- [done] **iter 13**: dark mode 정합 — `.dark .ssg-doc-action-btn` border-color 가 `rgba(255,255,255,0.12)` (semi-transparent white) 였으나 SPA 는 `rgb(44,44,49)` (= `var(--border-color)` dark). hardcoded → `var(--border-color)` 로 교체. 다른 dark 요소 (header bg/border, body bg/text, mainNav bg, docHook, blogTitle) 는 양쪽 동일 — 이 한 줄로 dark mode parity 닫힘.
 - [planned] **iter 12+**: docs/wiki 워크스페이스 TOC 렌더 검증 (현재 published docs workspace 없음 → blocked), 추가 wedge 발견 시 진행.
 
 ## Not
@@ -53,6 +54,7 @@ loop:
 - `core/packages/cli/src/ssg/ssgStyles.ts` — iter 9: `.blog-detail-meta-top` 규칙 제거, `.doc-title-actions` (display:flex + justify-content:flex-end + gap:6px + min-height:32px) 와 `.doc-title-actions .blog-detail-meta { margin-right: auto }` (date 좌, 버튼 우) 추가. `.ssg-doc-action-btn` 32×32 / border-radius 8px / border 1px solid `var(--border-color, rgb(229,232,235))` / color `rgb(107,118,132)` (SPA 1:1) + hover/disabled/.doc-share-btn(width:auto+padding) variant + dark mode 규칙.
 - `core/packages/cli/src/ssg/hydrateScript.ts` — iter 9: `initDocShareButton()` 추가, `init()` 에 등록. `.doc-share-btn` 클릭 시 `navigator.share` 우선, fallback 으로 `copyText(window.location.href)` + 1.5s "Link copied" tooltip. 정적 사이트 share 동작 활성화.
 - `core/packages/cli/src/ssg/ssgStyles.ts` — iter 11: 기존 `@media (max-width: 1279px)` 블록을 확장 — `.ssg-layout--two-panel` grid 1열 reset (`grid-template-columns: minmax(0,1fr); column-gap:0; padding-left:0`) + 자손 `> .ssg-main-nav-panel, > .ssg-sub-sidebar { display: none }` + main 좌우 padding 1.5rem. 추가로 `@media (max-width: 767px)` 블록에서 main padding 1rem 으로 축소. SPA `PublicationPreset.css` line 461-484 와 1:1.
+- `core/packages/cli/src/ssg/ssgStyles.ts` — iter 13: `.dark .ssg-doc-action-btn` 의 border-color hardcoded `rgba(255,255,255,0.12)` 를 `var(--border-color)` 로 교체 (dark `--border-color: #2c2c31` = `rgb(44,44,49)`, SPA 와 동일).
 - `core/packages/cli/src/ssg/ssgStyles.ts` — `.ssg-main-nav-badge` (SPA `.main-nav-badge` 와 px 일치), `.ssg-main-nav.ssg-main-nav--flat` selector specificity 우선 + `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal`, 아이콘 폭 `1.2em`. iter 3: `.ssg-sub-sidebar-heading` 11px/700/uppercase/letter-spacing 0.08em (SPA `.nav-group-label` 시각 매칭), `.ssg-sub-sidebar > .ssg-sidebar-inner { padding: 14px 10px }`, `.ssg-sub-sidebar > .ssg-sidebar-inner > .ssg-sidebar-nav { padding: 0 }`. iter 4: `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` (SPA 와 동일 좌측 정렬), `body[data-workspace-type="blog"] .blog-detail { padding: 0 }` (24px 좌우 패딩 제거). iter 5: `.ssg-sub-sidebar .ssg-sidebar-link.active` 한정 color `var(--gray-700)` + background transparent + `::before { content: none }` override (primary sidebar active 는 보존).
 
 ## Backlog
@@ -128,3 +130,10 @@ loop:
 - **기존 `@media` 블록 확장 vs 새 블록 추가**: iter 4 가 이미 `@media (max-width: 1279px)` 블록을 만들어 `.ssg-toc-wrap { display: none }` 만 넣어둔 상태였음. iter 11 은 새 블록 추가 대신 기존 블록을 확장 — selector 가 같은 viewport 조건을 공유하면 단일 블록으로 모으면 cascade 충돌 추적이 쉽다 (DevTools 에서 한 번에 보인다). 새 블록 분산은 동일 viewport 의 규칙이 여러 블록에 흩어지면서 디버그 곤란.
 - **publish "0 assets uploaded" 가 헷갈림 — CSS 는 항상 새로 푸시됨**: iter 11 publish 후 "30 unchanged, 0 assets uploaded" 출력에 "CSS 가 안 올라갔나?" 의심. 실제로 `_ssg/ssg.css` 는 `uploadSsgAsset` 으로 매 publish 마다 새로 푸시되며 (line 1230 of publish.ts), "0 assets uploaded" 는 markdown 첨부 (이미지 등) 를 의미. 검증: `curl <css-url> | grep "ssg-layout--two-panel > .ssg-main-nav-panel"` → 1 hit. CLI 출력 메시지 신뢰보다 직접 fetch 검증이 더 빠르다 (iter 1 learning 의 후속 — 거기는 HTML 검증, 여기는 CSS 검증).
 - **server 복구 — iter 8/9 publish 도 같이 반영**: 직전 wakeup 들에서 server 500 으로 publish 보류했던 iter 8 (chevron) + iter 9 (action buttons) 까지 iter 11 publish 로 한꺼번에 deployed. 즉 코드는 commit 단계에서 종료해도 publish 만 보류하면 다음 변경이 일괄 반영됨 — iter 별 publish 분리는 strict 하게 1:1 일 필요 없음. 단 visual regression 추적은 layered probe 필요.
+
+### 2026-05-03: iter 13 build done [done]
+
+- **dark mode 정합 = 1 라인 ε-fix**: 양쪽 dark 활성화 후 8개 요소 (body, header, mainNav, subSidebar heading/label, sidebarLink, docHook, actionBtn, blogTitle, blogMeta) 비교 → 7개 px-perfect 일치, `.ssg-doc-action-btn` border-color 만 1건 미스매치. SPA 는 `rgb(44,44,49)` (=`var(--border-color)` dark), SSG 는 hardcoded `rgba(255,255,255,0.12)`. SSG 가 dark 기존 토큰을 잘 따랐고 actionBtn 만 토큰 우회한 경우. 교훈: dark mode 격차가 광역으로 벌어진 게 아니라 특정 컴포넌트의 토큰 우회로 파편화 — 광역 개편보다 "어디서 토큰 안 썼나" 검사 한 번이 더 빠름.
+- **probe 에서 SPA dark localStorage 키 함정**: iter 13 첫 시도에서 `colorScheme: 'dark'` + `localStorage.setItem('openhow-theme', JSON.stringify({ mode: 'dark', theme: 'dark' }))` 로 init 했는데 SPA 가 light 로 떠서 비교 불가. SPA `theme.ts` 가 읽는 키는 `saved.isDark` (boolean) — `mode`/`theme` 는 SSG hydrate.js 만 읽음. SSG 와 SPA 의 localStorage 스키마가 서로 다른 키를 쓰고 있다 (양쪽 다 같은 key `openhow-theme` 지만 value 의 필드가 다름). probe 시 양쪽 모두 강제 적용하려면 `{ isDark: true, mode: 'dark', theme: 'dark' }` 로 모든 스키마 채우거나, 마지막 fallback 으로 `document.documentElement.classList.add('dark')` 직접 호출. 후자를 final-resort 로 두면 hydration 타이밍 무관하게 검증 가능.
+- **CSS 토큰 vs hardcoded 색상**: 동일 시각 효과를 hardcoded value 로 박은 케이스가 있으면 다른 컴포넌트의 같은 토큰 변경이 반영 안 돼서 dark 모드 파편화. 정책: SSG dark 색상은 항상 `var(--*-color)` / `var(--text-*)` / `var(--border-*)` 토큰 사용 (root variables 에 dark/light 양쪽 정의). hardcoded rgba 는 효과 (예: `rgba(0,0,0,0.04)` opacity overlay) 가 토큰으로 표현 불가능할 때만 한정 사용.
+- **publish CSS 즉시 검증 패턴 정착**: build → publish → `curl <ssg.css.url> | grep "<new-rule>"` 로 1회 검증 후 probe → diff 측정. 이 3-step 이 server 500 / 캐시 stale 두 함정을 모두 빠르게 캐치. iter 11/13 모두 같은 패턴으로 검증 시간 < 30초.
