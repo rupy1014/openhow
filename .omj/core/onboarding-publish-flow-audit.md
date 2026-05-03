@@ -109,3 +109,8 @@ loop:
 - **Decision (web editor primary)**: 1.2초 auto-redirect 폐기 → 사용자가 명시적으로 "✍️ 글 쓰기 (웹 에디터)" / "대시보드 둘러보기" 둘 중 선택. CLI 는 작은 회색 hint 한 줄. type-별 분기 안 함 (모두 동일).
 - **Subtle bug fix**: `checkSession()` 후 `user.onboarded=true` 가 되어 Navigate 가드 (line 82-84) 가 step 4 를 건너뛰고 즉시 /dashboard 로 redirect 시키는 문제 발견 — 가드에 `&& step !== 4` 조건 추가로 step 4 카드가 제대로 렌더되도록 fix.
 - **Verify**: TypeScript clean. 시각 verify 는 신규 사용자 가입+워크스페이스 생성 플로우 끝까지 가야 가능 — 자동 probe 미커버.
+
+### 2026-05-04: [done] iter 1 F4 — WorkspaceHub 빈 상태 통합
+- **Change**: `core/packages/viewer/src/components/WorkspaceHub.tsx` 빈 상태 JSX 에서 `.empty-guide` 두 코드 블록 → 한 줄 `.empty-cli-hint` 로 교체. 버튼에 `btn-create-primary` 클래스 추가. `WorkspaceHub.css` 에서 `.empty-guide`/`.guide-code`/`.code-prompt` 4개 룰 삭제, `.btn-create-primary`/`.empty-cli-hint`/`.empty-cli-hint code` 3개 룰 추가. 2 files, 32+/38- lines. core d34ac42.
+- **Decision (web editor primary)**: 빈 상태 시각 hierarchy 가 "워크스페이스 만들기" 버튼 primary → CLI 작은 회색 hint. Onboarding step 4 의 `.onboarding-cli-hint` 와 톤 통일. Dashboard 빈 상태 (F2 fix됨) 와 패턴 일치.
+- **Verify**: TypeScript clean.
