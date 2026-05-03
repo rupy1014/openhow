@@ -2,7 +2,7 @@
 status: building
 created: 2026-04-30
 updated: 2026-04-30
-iteration: 12
+iteration: 13
 parent: null
 loop:
   until: judge
@@ -27,7 +27,8 @@ loop:
 - [done] **iter 9**: blog-detail header `.doc-title-actions` row — Present/Copy/Version/Share 4 SVG 버튼 + date 좌/버튼 우 정렬 (`justify-content: flex-end + margin-right: auto`). Share 만 active (navigator.share + clipboard fallback), 나머지 disabled.
 - [done] **iter 11**: mobile (< 1280px) breakpoint — SPA `PublicationPreset.css @media (max-width: 1279px)` 매칭. `.ssg-layout--two-panel { grid-template-columns: minmax(0,1fr); column-gap: 0; padding-left: 0 }` + `> .ssg-main-nav-panel, > .ssg-sub-sidebar { display: none }` + main padding 1.5rem 좌우 / 767px 에서 1rem. iPad 768 probe: mainNav/sub display:none, main x=0 w=768, article x=24 w=720 — SPA 와 동일.
 - [done] **iter 13**: dark mode 정합 — `.dark .ssg-doc-action-btn` border-color 가 `rgba(255,255,255,0.12)` (semi-transparent white) 였으나 SPA 는 `rgb(44,44,49)` (= `var(--border-color)` dark). hardcoded → `var(--border-color)` 로 교체. 다른 dark 요소 (header bg/border, body bg/text, mainNav bg, docHook, blogTitle) 는 양쪽 동일 — 이 한 줄로 dark mode parity 닫힘.
-- [planned] **iter 12+**: docs/wiki 워크스페이스 TOC 렌더 검증 (현재 published docs workspace 없음 → blocked), 추가 wedge 발견 시 진행.
+- [done] **iter 14**: mobile drawer + hamburger toggle. iter 11 까지는 < 1280px 에서 panels 만 hide 하고 nav 자체 접근 불가 상태였음. 해결: SSG `template.ts` two-panel 분기에 `<button.ssg-mobile-sidebar-backdrop>` + `<nav.ssg-mobile-sidebar>` (subSidebar 콘텐츠 || mainNav fallback) 추가, `ssgStyles.ts` 에 desktop default `display:none` + `@media (max-width:1279px)` 안 fixed 레이어 (backdrop z-64 / drawer z-65 + transform translateX(-108%)→0), `hydrateScript.ts` 에 `initMobileBlogDrawer()` (햄버거 toggle, backdrop 클릭, ESC, 링크 클릭 시 자동 close, 1280px 초과 resize 시 close, body scroll lock). iPad 768 probe: 햄버거 display:flex, 클릭 후 drawer x=0 w=320 backdrop opacity=1 + body overflow:hidden, backdrop 클릭 시 close — SPA `pub-preset-sidebar`/`pub-preset-sidebar-backdrop` 패턴과 동일 동작.
+- [planned] **iter 15+**: docs/wiki 워크스페이스 TOC 렌더 검증 (published docs workspace 없음 → blocked), 추가 wedge 발견 시 진행.
 
 ## Not
 
@@ -55,13 +56,16 @@ loop:
 - `core/packages/cli/src/ssg/hydrateScript.ts` — iter 9: `initDocShareButton()` 추가, `init()` 에 등록. `.doc-share-btn` 클릭 시 `navigator.share` 우선, fallback 으로 `copyText(window.location.href)` + 1.5s "Link copied" tooltip. 정적 사이트 share 동작 활성화.
 - `core/packages/cli/src/ssg/ssgStyles.ts` — iter 11: 기존 `@media (max-width: 1279px)` 블록을 확장 — `.ssg-layout--two-panel` grid 1열 reset (`grid-template-columns: minmax(0,1fr); column-gap:0; padding-left:0`) + 자손 `> .ssg-main-nav-panel, > .ssg-sub-sidebar { display: none }` + main 좌우 padding 1.5rem. 추가로 `@media (max-width: 767px)` 블록에서 main padding 1rem 으로 축소. SPA `PublicationPreset.css` line 461-484 와 1:1.
 - `core/packages/cli/src/ssg/ssgStyles.ts` — iter 13: `.dark .ssg-doc-action-btn` 의 border-color hardcoded `rgba(255,255,255,0.12)` 를 `var(--border-color)` 로 교체 (dark `--border-color: #2c2c31` = `rgb(44,44,49)`, SPA 와 동일).
+- `core/packages/cli/src/ssg/template.ts` — iter 14: two-panel sidebarBlock 에 `<button class="ssg-mobile-sidebar-backdrop">` 와 `<nav class="ssg-mobile-sidebar"><div class="ssg-sidebar-inner">${subSidebarHtml || mainNavPanelHtml}</div></nav>` 추가. desktop 에선 CSS 가 `display:none` 으로 숨겨, mobile 에서만 활성.
+- `core/packages/cli/src/ssg/ssgStyles.ts` — iter 14: 기본 `.ssg-mobile-sidebar, .ssg-mobile-sidebar-backdrop { display:none }` 룰 추가, `@media (max-width:1279px)` 블록에 backdrop (`position:fixed; inset:0; z-index:64; bg rgba(15,23,42,0.32); opacity 0/pointer-events none → .is-visible 시 1/auto`) + drawer (`position:fixed; top/left:0; z-index:65; width min(86vw,320px); height:100vh; transform translateX(-108%); transition transform 0.25s; padding-top calc(header+0.75rem); border-right + box-shadow → .is-open 시 translateX(0)`) 룰 추가. SPA `PublicationPreset.css` 400-434 와 1:1.
+- `core/packages/cli/src/ssg/hydrateScript.ts` — iter 14: `initMobileBlogDrawer()` 함수 추가, `init()` 에서 `initMobileSidebar()` 직후 호출. 하는 일: `.ssg-mobile-menu-btn` 클릭 → drawer.is-open + backdrop.is-visible 토글 + body overflow:hidden, backdrop 클릭 / ESC 키 / drawer 안 `<a>` 클릭 / matchMedia(>1279px) 전이 시 모두 close. 기존 `initMobileSidebar()` (`.ssg-sidebar` 단일 패널 docs 용) 와 별개로 동작 (selector 다름 — `.ssg-mobile-sidebar`).
 - `core/packages/cli/src/ssg/ssgStyles.ts` — `.ssg-main-nav-badge` (SPA `.main-nav-badge` 와 px 일치), `.ssg-main-nav.ssg-main-nav--flat` selector specificity 우선 + `gap: 6px; padding: 14px 2px`, `.ssg-main-nav-button` `line-height: normal`, 아이콘 폭 `1.2em`. iter 3: `.ssg-sub-sidebar-heading` 11px/700/uppercase/letter-spacing 0.08em (SPA `.nav-group-label` 시각 매칭), `.ssg-sub-sidebar > .ssg-sidebar-inner { padding: 14px 10px }`, `.ssg-sub-sidebar > .ssg-sidebar-inner > .ssg-sidebar-nav { padding: 0 }`. iter 4: `.ssg-layout--two-panel .ssg-main { padding-left: 0 }` (SPA 와 동일 좌측 정렬), `body[data-workspace-type="blog"] .blog-detail { padding: 0 }` (24px 좌우 패딩 제거). iter 5: `.ssg-sub-sidebar .ssg-sidebar-link.active` 한정 color `var(--gray-700)` + background transparent + `::before { content: none }` override (primary sidebar active 는 보존).
 
 ## Backlog
 
 - [ ] iter 12: docs/wiki 워크스페이스의 TOC 렌더 검증 — iter 4 는 blog 만 끄도록 처리. docs/wiki 는 TOC 노출이 정상이므로 grid layout 도 SPA 와 일치하는지 별도 probe (현재 clauders.ai 에는 published docs workspace 없음 → blocked, published docs 등장하면 unblock).
 - [ ] iter 13: dark mode 정합 — SSG `.dark` 모드 스위칭이 SPA 와 동일하게 동작하는지 (현재 light 모드만 px-perfect 검증). theme toggle 자체는 정적 사이트라 deferred 가능하지만 OS dark 모드 사용자 경험 일치는 필요.
-- [ ] iter 14: mobile drawer/hamburger — < 1280px 에서 panels 를 hide 하는 것까지 iter 11 가 완료. SPA 는 hamburger 버튼 + drawer overlay 로 sidebar 호출 가능. 정적 사이트도 동등한 UX 필요한지 평가.
+- [ ] iter 15+: 추가 wedge 발견 시 진행 (현재 SSG/SPA px-perfect 격차 미발견 — light/dark/desktop/tablet/mobile 전부 확인). 새 footer 변경, 추가 워크스페이스 타입 (docs/wiki) publish 시 재진입.
 
 ## Learnings
 
@@ -137,3 +141,11 @@ loop:
 - **probe 에서 SPA dark localStorage 키 함정**: iter 13 첫 시도에서 `colorScheme: 'dark'` + `localStorage.setItem('openhow-theme', JSON.stringify({ mode: 'dark', theme: 'dark' }))` 로 init 했는데 SPA 가 light 로 떠서 비교 불가. SPA `theme.ts` 가 읽는 키는 `saved.isDark` (boolean) — `mode`/`theme` 는 SSG hydrate.js 만 읽음. SSG 와 SPA 의 localStorage 스키마가 서로 다른 키를 쓰고 있다 (양쪽 다 같은 key `openhow-theme` 지만 value 의 필드가 다름). probe 시 양쪽 모두 강제 적용하려면 `{ isDark: true, mode: 'dark', theme: 'dark' }` 로 모든 스키마 채우거나, 마지막 fallback 으로 `document.documentElement.classList.add('dark')` 직접 호출. 후자를 final-resort 로 두면 hydration 타이밍 무관하게 검증 가능.
 - **CSS 토큰 vs hardcoded 색상**: 동일 시각 효과를 hardcoded value 로 박은 케이스가 있으면 다른 컴포넌트의 같은 토큰 변경이 반영 안 돼서 dark 모드 파편화. 정책: SSG dark 색상은 항상 `var(--*-color)` / `var(--text-*)` / `var(--border-*)` 토큰 사용 (root variables 에 dark/light 양쪽 정의). hardcoded rgba 는 효과 (예: `rgba(0,0,0,0.04)` opacity overlay) 가 토큰으로 표현 불가능할 때만 한정 사용.
 - **publish CSS 즉시 검증 패턴 정착**: build → publish → `curl <ssg.css.url> | grep "<new-rule>"` 로 1회 검증 후 probe → diff 측정. 이 3-step 이 server 500 / 캐시 stale 두 함정을 모두 빠르게 캐치. iter 11/13 모두 같은 패턴으로 검증 시간 < 30초.
+
+### 2026-04-30: iter 14 build done [done]
+
+- **두 종류의 mobile sidebar 가 공존한다**: 기존 `initMobileSidebar()` 는 `.ssg-sidebar` (단일 패널 docs 형) 만 잡고, 두-패널 blog 의 `.ssg-main-nav-panel` + `.ssg-sub-sidebar` 는 selector 자체가 달라 no-op. SPA 의 `pub-preset-sidebar` 는 desktop two-panel 일 때도 *별도 `<nav>` 로 동시에 렌더*되어 mobile 전용 drawer 컨테이너로 쓰임. SSG 도 같은 패턴 — 기존 panel 들은 hide 만 하고 별도 `<nav.ssg-mobile-sidebar>` 를 추가해 sub-sidebar 콘텐츠를 mirror. 두 init 함수가 같은 `.ssg-mobile-menu-btn` 을 공유해도 selector 가 달라 충돌 X (각자 자기 drawer 만 toggle).
+- **drawer 콘텐츠로 sub > main 우선 선택**: subSidebarHtml (active section 의 트리 — 사용자가 지금 보고 있는 페이지의 형제들) 이 mainNavPanelHtml (전체 카테고리 4개) 보다 mobile drawer 에서 더 유용. fallback 으로 mainNav 둠. 양쪽 다 비면 drawer 자체를 안 그림 (filter(Boolean)).
+- **drawer 안 링크 클릭 시 자동 close**: SPA 는 React Router 가 page transition + state reset 으로 자연스럽게 close 되지만, SSG 는 풀 페이지 reload — 새 페이지에선 init() 가 다시 돌아 closed 상태로 시작하므로 명시적 close 불필요할 수도 있음. 하지만 같은 페이지 anchor 링크 (`#section-id`) 는 reload 안 되므로 drawer 가 열린 채 남는 함정. 따라서 drawer 내부 `<a>` 클릭 delegate → closeDrawer() 추가.
+- **media query 전이 시 자동 close**: viewport 가 1280px 초과로 resize 되면 drawer/backdrop CSS rule 자체가 사라지지만 `.is-open` class 는 남음. 다음 mobile resize 시 잔여 class 가 의도치 않게 열린 상태로 보일 수 있음. matchMedia change 리스너에서 `if (!event.matches) closeDrawer()` 로 cleanup.
+- **probe 자동화 가치**: 햄버거 클릭 → drawer rect 측정 → backdrop 클릭 → close 확인까지 15줄 Playwright 스크립트로 시각 회귀 방지. 향후 다른 mobile 인터랙션 (drawer width 변경, animation duration 등) 도 동일 패턴으로 회귀 검증 가능.
