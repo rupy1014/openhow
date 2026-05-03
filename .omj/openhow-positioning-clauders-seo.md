@@ -53,20 +53,60 @@ iteration: 1
 - 다른 도메인 사용자 (gpters 등) 의 의존도 분석 X — 본 의도는 *clauders 단일 사용자 기준*.
 - 결정 전에 활성 LMS 의도 (course/lesson/community-*) 의 새 wedge 시작 X — 결정 후 정리.
 
-## Recommendation — 잠정 권장: **시나리오 C (LMS archive)**
+## Naming proposal (2026-05-04 user)
 
-1. **clauders.ai = 단일 사용자 + SEO/docs 전용**. course/lesson/quiz/admin CRM 페이지 사용 흔적 0 (확인 필요하지만 코드/콘텐츠 구조상 명백). LMS 는 누구도 안 씀.
-2. **유지비 vs 활용도 비대칭**: 활성 LMS 의도 28~30개 + admin 페이지 58개 + worker route 14개 = 코드베이스의 절반 이상. 유지비 큼. 활용 0 → archive 가 정직.
-3. **fork (시나리오 A) 의 함정**: fork 만들면 양쪽 모두 무인 상태. 살릴 power-user 부재. fork 는 *누군가 LMS 를 곧 띄울 의향이 있을 때만* 정직. 그게 아니라면 archive 후 부활 시 별도 repo 로 가져오는 것이 더 가벼움.
-4. **monorepo + feature flag (시나리오 B)** 도 비합리: 사용 안 하는 코드를 feature flag 뒤에 숨겨도 빌드/타입체크/의존성 부담은 그대로. SSG-SPA parity 같은 핵심 작업이 LMS 코드를 거쳐서 영향받음 (실제로 `creator-admin-console-v1` 류가 nav/layout 의도와 얽힘).
+사용자 발화: *"그럼 이 프로젝트를 clauders core 로 두고 lms 를 openhow 로 네이밍 하는건 어떨까? 이 프로젝트는 clauders core 라기 보다는 opendocs 에 더 가까운 느낌이긴 하네."*
 
-대안 (시나리오 A) 가 정당한 케이스: 사용자 본인 또는 누군가가 6개월 안에 liveklass-style LMS SaaS 를 띄울 *구체* 의향이 있을 때. 막연한 "나중에 쓸 수도" 는 archive 가 정답.
+| 후보 신규 이름 | 적용 대상 | 이유 |
+|--------------|---------|------|
+| **opendocs** | 이 repo (SSG/SEO/markdown/blog/docs/wiki + paywall) | SSG 가 핵심 자산이고 *docs/blog/wiki* 가 1급 workspace type. CLI 도 `openhow publish ./docs` — `docs` 가 입력 단위. clauders.ai 외 다른 사용자에게도 generic 하게 적용 가능한 "open documentation publishing platform" 정체성. 사용자가 직접 *"opendocs 에 더 가까운 느낌"* 이라고 표현. |
+| **openhow** | fork (LMS — course/lesson/quiz/cohort/cert/admin CRM/community/membership) | "open how" = "여는 학습법" / learning-how. LMS/온라인 강의 서비스로서 의미상 fit. 기존 브랜드 자산을 LMS 쪽이 가져감. liveklass.com 모델의 alternative. |
+
+**clauders core 안 (사용자 1차 제안) vs opendocs 안 (사용자 자체 수정)**:
+- clauders 는 *사용자 (consumer)* 이름이지 *제품* 이름이 아님 — 다른 docs 사용자가 들어오면 의미 깨짐.
+- opendocs 는 *제품* 이름 — clauders 가 첫 사용자일 뿐, 추가 docs 사용자 (gpters 등) 에게 그대로 적용.
+- 사용자가 "opendocs 에 더 가까운 느낌" 으로 자체 수정한 라인을 그대로 채택 권장.
+
+## Recommendation — 권장: **시나리오 A' (fork + rename)**
+
+네이밍 안이 추가되면서 시나리오 C (archive) 보다 시나리오 A (fork) 가 더 정직해짐:
+
+1. **fork 의 함정 (잠정 분석에서 지적했던) 이 네이밍으로 해결됨**: 단순 fork 만 하면 양쪽 모두 무인 상태였지만, *opendocs / openhow* 로 정체성을 분리하면 각 repo 가 명확한 single-purpose. opendocs = clauders 가 active user (single-user 라도 살아있는 사용자), openhow = inactive 지만 의도 자산 (creator-saas-storyboard, creator-admin-console-v1, lesson-player-* 5, course-* 4, community-* 13, liveklass-admin-benchmark) 보존.
+2. **clauders.ai 가 active user 인 opendocs**: SSG-SPA parity (iter 26 done), markdown directives, link-card, members-only-ssg-gate, paywalled-seo, onboarding-publish-flow-audit (iter 1 done) 등이 단일 정체성으로 수렴. 다음 wedge 들 (workspace-seo-v1, gpters-seo-flywheel) 도 같은 축.
+3. **openhow 는 inactive 자산 보관소가 아니라 의도 자산 + 코드 자산을 한 묶음으로 보내는 정직한 분리**: 향후 LMS 수요가 생기면 그 repo 에서 부활. 의도가 30개 가깝게 누적된 자산을 단순 archive 하면 의도 흐름이 끊기는데, fork 면 흐름 보존됨.
+4. **시나리오 C (archive) 는 의도 28~30개를 `_killed/` 으로 보내는 것 — 폐기 의미가 강함**. 사용자는 LMS 를 "폐기" 하는게 아니라 "분리" 를 원함 (발화: *"다른 프로젝트로 fork"*).
+
+## Rename cost (시나리오 A' 채택 시)
+
+분리 작업의 실제 비용 — 결정 전 인지 필요:
+
+- **repo**: 현재 `mdshare` (Gitea: `gitea.max5.ai/ehowlsla/mdshare.git`, GitHub mirror: `rupy1014/mdshare`) → opendocs/openhow 두 repo 로 split. Gitea/GitHub 양쪽에 신규 repo 생성.
+- **npm scope**: `@openhow/cli`, `@openhow/types` 가 이미 npm 에 published. opendocs 가 SSG/CLI 보유 → `@opendocs/cli`, `@opendocs/types` 로 publish (기존 `@openhow/*` 는 deprecate notice). openhow scope 는 LMS fork 쪽으로 이전 (또는 보존하되 사용 안 함).
+- **CLI 명령어**: `openhow publish` → `opendocs publish`. 사용자 PATH 의 기존 `openhow` 바이너리 deprecate.
+- **production worker URL**: `openhow.io` → `opendocs.io` (또는 `clauders.ai` 가 직접 가리킴). clauders.ai 의 deploy 설정 (CNAME / wrangler routes) 변경.
+- **리포 내부 import 경로**: `@openhow/types` → `@opendocs/types` 일괄 sed (수십 파일).
+- **CLAUDE.md / 문서**: openhow → opendocs 일괄 갱신.
+- **wrangler 바인딩 이름** (`mdshare-db`, `mdshare-docs`): D1/R2 자체는 유지 가능 (이름은 이미 mdshare). 새 환경 분리 원하면 D1/R2 도 새로 만들어야 — 데이터 마이그레이션 필요.
+
+비용 큼. 단계화 가능 (1단계: 의도/`.omj/` 분리, 2단계: code split, 3단계: npm/repo/도메인 rename). 1단계만으로도 시각적 정체성 정리 효과 큼.
+
+## What — 본 iter 검토 (업데이트)
+
+- [ ] 사용자 결정: 시나리오 A' (fork + rename to opendocs/openhow) vs 시나리오 C (LMS archive) 중 채택.
+- [ ] A' 채택 시 단계화: stage 1 (의도 분리 — `.omj/openhow/*` 신규 폴더로 LMS 의도 28~30개 이동) → stage 2 (코드 split, 신규 repo 생성) → stage 3 (npm scope/CLI/도메인 rename).
+- [ ] memory 노트 갱신: `project_openhow_positioning.md` 의 *"liveklass-aligned 순수 크리에이터 SaaS"* → *"opendocs = clauders 를 위한 SSG/SEO 콘텐츠 서비스, openhow 는 별도 repo (LMS)"*.
+- [ ] 결정 후 별도 build 의도로 stage 1 분리 작업 이관.
 
 ## Learnings
 
 ### 2026-05-04: iter 1 — 코드베이스 split 인벤토리 완료
 - **Method**: `.omj/` 의 활성 의도 70+ 개를 LMS 축 / SEO 축 / 공통으로 분류. `core/packages/viewer/src/pages/`, `core/packages/worker/src/routes/`, `core/packages/cli/src/ssg/` 디렉토리 cross-read.
 - **Surprise**: admin/ 페이지가 58개. 대부분 LMS CRM (Cohorts/Assessments/Certificates/Memberships/Announcements/Comments) 으로 SEO 축에 무관. SEO 축 admin 은 AdminDocs, AdminSite, AdminSettings 정도.
-- **Surprise**: community-* iter 의도가 13개 (community-board-polish/list/cards/cta/edit/empty-state/filter-bar/result-count/search-input/sort-selector/list-card-meta/list-cards/list-eyebrow). LMS class 내부의 학생 게시판 — clauders 가 안 씀.
-- **Surprise**: `clauders-ai-course-migration/` 폴더가 이미 `_killed/` 에 있음 — clauders 에 course 를 도입하려다 폐기된 흔적. *과거 user 도 이미 같은 결론에 한 번 도달*. 본 의도는 그 결정을 정체성 레벨로 끌어올리는 작업.
-- **Footprint candidate (decision pending)**: 시나리오 C 가 채택되면 archive 대상 — `course/`, `LessonPlayer.tsx`, `QuizPlayer.tsx`, admin/ 의 LMS 류 ~40 페이지, community/* 컴포넌트, worker routes 14개, 해당 의도 28~30개.
+- **Surprise**: community-* iter 의도가 13개. LMS class 내부의 학생 게시판 — clauders 가 안 씀.
+- **Surprise**: `clauders-ai-course-migration/` 폴더가 이미 `_killed/` 에 있음 — 과거 user 도 이미 같은 결론에 한 번 도달. 본 의도는 그 결정을 정체성 레벨로 끌어올리는 작업.
+
+### 2026-05-04: iter 1 — 사용자 네이밍 제안 → 시나리오 A' (fork + rename) 로 권장 변경
+- **Signal**: 사용자가 *"이 프로젝트를 clauders core 로 두고 lms 를 openhow 로 네이밍 / 이 프로젝트는 opendocs 에 더 가까운 느낌"* 발화. 단순 fork 는 양쪽 무인 상태가 함정이었는데, 정체성 분리 (opendocs / openhow) 가 추가되면 fork 가 정직해짐.
+- **Decision pivot**: 잠정 권장 시나리오 C (archive) → 시나리오 A' (fork + rename to opendocs/openhow). 사용자 발화에서 "분리" 와 "폐기" 의 차이가 분명 — fork 가 사용자 의도에 더 정렬.
+- **Naming choice**: clauders-core (1차 제안) → opendocs (사용자 자체 수정) 채택 권장. 이유: clauders 는 *사용자* 이름이지 *제품* 이름이 아니어서 다른 docs 사용자 들어오면 의미 깨짐. opendocs 는 generic.
+- **Cost surface**: rename 비용 큼 — repo 2개 split, npm scope `@openhow` → `@opendocs`, CLI 명령어, production 도메인 (`openhow.io` → `opendocs.io` 또는 `clauders.ai` 직접). 단계화 가능 (의도 분리 → 코드 split → rename).
