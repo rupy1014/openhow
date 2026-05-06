@@ -13,6 +13,8 @@ iteration: 1
 
 openhow는 `creator-platform`(정체성·구독), `gpters-seo-flywheel`(contentType 4종·CTA), `public-blog-home`(큐레이션)까지 **인프라는 깔아놨다.** 다만 `contentType: tutorial`은 라벨일 뿐, **"AI 신기능을 어떻게 쪼개서 따라할 수 있게 만드는가"의 편집 규격이 비어 있다.**
 
+> **2026-04-30 정합성 신호**: 부모 인프라 의도 (`creator-platform` / `gpters-seo-flywheel` / `public-blog-home`) 위에서 정체성-레벨 결정 2건이 동시에 exploring 중 — `creator-platform-discovery` (지식플랫폼 = 클래스 + 학생-as-author) 와 `editorial-traffic-engine` (에디터 큐레이션 트래픽 엔진). 본 의도는 "사람이 쓰는 follow-along 편집 규격" 으로 **두 정체성 어느 쪽이 채택되어도 재사용 가능** (강사 자율 발행 글의 규격 OR 에디터 큐레이션 글의 규격). dogfood 단계에선 후속 결정 영향 없음, 정식 스키마화 시점엔 두 의도 결과 반영 필요.
+
 이번 의도는 그 공백을 **편집 가이드 + 템플릿 문서 1개**로 먼저 채운다. 스키마·UI·파이프라인 같은 인프라는 건드리지 않고, 본인 워크스페이스에서 2~3편 dogfood해서 규격이 쓸 만한지 먼저 검증한다. 검증되면 후속 의도로 정식 스키마화·자동화로 승격.
 
 ## What

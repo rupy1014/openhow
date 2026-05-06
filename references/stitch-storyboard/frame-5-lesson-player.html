@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>openhow - Lesson Player</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#0053db",
+                        "surface-variant": "#e1e2ed",
+                        "surface": "#faf8ff",
+                        "on-secondary-container": "#fffbff",
+                        "surface-container-highest": "#e1e2ed",
+                        "tertiary-container": "#bc4800",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#3323cc",
+                        "on-background": "#191b23",
+                        "secondary": "#4b41e1",
+                        "inverse-primary": "#b4c5ff",
+                        "secondary-fixed-dim": "#c3c0ff",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-surface": "#191b23",
+                        "primary-fixed": "#dbe1ff",
+                        "outline": "#737686",
+                        "surface-container-low": "#f3f3fe",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e7e7f3",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-container": "#ffede6",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "primary": "#004ac6",
+                        "on-secondary-fixed": "#0f0069",
+                        "background": "#faf8ff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface-dim": "#d9d9e5",
+                        "inverse-surface": "#2e3039",
+                        "on-surface-variant": "#434655",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcd",
+                        "surface-container": "#ededf9",
+                        "secondary-container": "#645efb",
+                        "on-primary-fixed": "#00174b",
+                        "tertiary": "#943700",
+                        "surface-bright": "#faf8ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#e2dfff",
+                        "on-primary-container": "#eeefff",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f0f0fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "2xl": "64px",
+                        "lg": "24px",
+                        "xl": "40px",
+                        "xs": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "body-md": ["Pretendard"],
+                        "label-xs": ["Inter"],
+                        "title-sm": ["Pretendard"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Pretendard"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "label-xs": ["12px", { "lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "title-sm": ["20px", { "lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Pretendard', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar (Shared Component) -->
+<nav class="bg-slate-950 font-sans text-sm tracking-tight docked full-width top-0 z-50 border-b border-white/10 shadow-xl flex justify-between items-center w-full px-6 h-14 backdrop-blur-md">
+<div class="flex items-center gap-md">
+<span class="text-lg font-black text-white uppercase tracking-widest">OPENHOW</span>
+<div class="h-4 w-px bg-white/20 mx-xs"></div>
+<div class="flex items-center gap-xs text-slate-400 font-medium">
+<span class="hover:text-blue-400 transition-colors duration-200 cursor-pointer active:scale-95 transition-transform">드림스쿨</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="hover:text-blue-400 transition-colors duration-200 cursor-pointer active:scale-95 transition-transform">5단계 코어 공부법</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-white font-bold">2강. 회독의 본질</span>
+</div>
+</div>
+<div class="hidden md:flex gap-lg items-center">
+<div class="flex gap-lg">
+<!-- Navigation links from JSON, active state handled appropriately -->
+<a class="text-slate-400 font-medium hover:text-blue-400 transition-colors duration-200 active:scale-95 transition-transform" href="#">커리큘럼</a>
+<a class="text-slate-400 font-medium hover:text-blue-400 transition-colors duration-200 active:scale-95 transition-transform" href="#">학습노트</a>
+<a class="text-slate-400 font-medium hover:text-blue-400 transition-colors duration-200 active:scale-95 transition-transform" href="#">질의응답</a>
+</div>
+<div class="flex items-center gap-md border-l border-white/20 pl-md">
+<span class="text-slate-400 font-medium">진도율 75%</span>
+<button class="text-blue-600 dark:text-blue-400 font-medium hover:text-blue-400 transition-colors duration-200 active:scale-95 transition-transform">강의 종료</button>
+</div>
+<div class="flex items-center gap-sm cursor-pointer hover:opacity-80 transition-opacity">
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-white/20" data-alt="A small, professional circular avatar portrait of a user. The image features a clean, well-lit headshot against a neutral background. The lighting is soft and flattering, suitable for a professional educational platform. The overall style integrates seamlessly with a sleek, tech-forward interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDULoqBwie_POESB1ayo9vBxwf0dXbYXpxDJpwh3rqyrLYkVBH0NFTNSwKY3oBqQTGXDW-oBMggLh-7mZcf_rDdeL9gt4JUu9YGHtG9atrQnNDvYYRBQO0-NJx00HmkKD8Iuf9KVdXby0SDVrdy0KA2VTDjutoTLU9bW-5GGNnAViT6q9_RXohHUbCoGTIfCj-3Tca3gSJR8KUgLW29YZAO90vLhOEXWysmhwh5APBx7gJ1t8CtUimpwNZXjeV3fiDBpXEdniAOht0"/>
+<span class="material-symbols-outlined text-white">expand_more</span>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar (Shared Component) -->
+<aside class="bg-white dark:bg-slate-900 text-[13px] leading-tight font-medium docked left-0 h-screen border-r border-slate-200 dark:border-slate-800 w-80 flex flex-col shrink-0 h-full overflow-y-auto scrollbar-hide py-4 z-40">
+<div class="px-4 mb-4">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-xs">강의 목차</h3>
+<p class="font-body-sm text-body-sm text-outline">전체 24개 레슨 중 12개 완료</p>
+</div>
+<div class="flex-1 overflow-y-auto">
+<div class="mb-sm">
+<div class="px-4 py-2 font-label-xs text-label-xs text-outline uppercase tracking-wider">섹션 1. 오리엔테이션</div>
+<a class="text-slate-500 dark:text-slate-400 px-4 py-3 flex items-center gap-3 border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer active:bg-slate-100 dark:active:bg-slate-700" href="#">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>01. 오리엔테이션</span>
+</a>
+<a class="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-bold border-l-4 border-blue-600 px-4 py-3 flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer active:bg-slate-100 dark:active:bg-slate-700" href="#">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-500" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+<span>02. 비즈니스 모델 설계</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 px-4 py-3 flex items-center gap-3 border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer active:bg-slate-100 dark:active:bg-slate-700" href="#">
+<span class="material-symbols-outlined text-outline">lock</span>
+<span>03. 시장 조사 및 분석</span>
+</a>
+</div>
+<div class="mb-sm">
+<div class="px-4 py-2 font-label-xs text-label-xs text-outline uppercase tracking-wider">섹션 2. 본 강좌</div>
+<a class="text-slate-500 dark:text-slate-400 px-4 py-3 flex items-center gap-3 border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer active:bg-slate-100 dark:active:bg-slate-700" href="#">
+<span class="material-symbols-outlined text-outline">lock</span>
+<span>04. 마케팅 전략 수립</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 px-4 py-3 flex items-center gap-3 border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer active:bg-slate-100 dark:active:bg-slate-700" href="#">
+<span class="material-symbols-outlined text-outline">lock</span>
+<span>05. 성과 지표 관리</span>
+</a>
+</div>
+</div>
+<div class="px-4 mt-auto pt-4 border-t border-slate-200 dark:border-slate-800">
+<button class="w-full bg-surface-container-low text-primary font-label-xs text-label-xs py-2 px-4 rounded-lg border border-primary-fixed hover:bg-primary-fixed-dim transition-colors flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-[16px]">download</span>
+                    자료 다운로드
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full overflow-y-auto bg-surface-container-lowest">
+<!-- Video Player Area -->
+<div class="bg-inverse-surface w-full aspect-video relative group">
+<img alt="Video Thumbnail" class="w-full h-full object-cover opacity-80" data-alt="A high-quality 16:9 cinematic shot serving as a video thumbnail for an educational course. The scene depicts a modern, well-lit study environment with a sleek desk, laptop, and organized notes. Soft, cool lighting enhances focus and professionalism. The aesthetic aligns with a premium, tech-forward learning platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGNgUwTPCGJrAowHwAIQSPCljAB-Dz1qcjO-B9LmIiK9jpOGqcn0RVIezAFL7ya8k5-NEL0Edd3-Po9jSalrkWHKY6yGNQ62l1j7-o2CA5u8-lqzhogtYSUaT9ynvgol8zcuqekC-PfZlxtlCGfyAFEhCexkQfRq8Zn4quh0if1mOvfjpBz-sipxivySLGw63yEcNJeJ6jFo8K-lfhW-junh3Tuoq1c4Ab77dirAiaQvkZwW5VBwBIrjEgaX-B5z469N4vzdINUEw"/>
+<!-- Center Play Button (simulated) -->
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-primary/90 text-on-primary rounded-full p-4 shadow-lg backdrop-blur-md hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-[48px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<!-- Bottom Controls -->
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex flex-col gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<!-- Progress Bar -->
+<div class="h-1 bg-white/30 w-full rounded-full overflow-hidden cursor-pointer">
+<div class="h-full bg-primary w-[43%] relative">
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-sm"></div>
+</div>
+</div>
+<div class="flex justify-between items-center text-white font-label-xs text-label-xs">
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-sm">
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined">skip_previous</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pause</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined">skip_next</span></button>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">volume_up</span>
+<div class="w-16 h-1 bg-white/30 rounded-full"><div class="w-3/4 h-full bg-white rounded-full"></div></div>
+</div>
+<span>12:34 / 28:45</span>
+</div>
+<div class="flex items-center gap-md">
+<button class="hover:text-primary transition-colors flex items-center gap-xs"><span class="material-symbols-outlined text-[18px]">closed_caption</span></button>
+<button class="hover:text-primary transition-colors font-medium">1.0x</button>
+<button class="hover:text-primary transition-colors font-medium">1080p</button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">picture_in_picture_alt</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">fullscreen</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Progress Info -->
+<div class="bg-surface-container-low border-b border-outline-variant px-xl py-sm flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">본 강의 진도 43% · 전체 코스 진도 35%</span>
+</div>
+<!-- Content Area Below Video -->
+<div class="flex-1 flex px-xl py-lg gap-xl max-w-[1600px] mx-auto w-full">
+<!-- Main Tabbed Content -->
+<div class="flex-1 flex flex-col">
+<!-- Tabs -->
+<div class="flex border-b border-outline-variant mb-lg">
+<button class="px-md py-sm font-label-xs text-label-xs font-bold text-primary border-b-2 border-primary">개요</button>
+<button class="px-md py-sm font-label-xs text-label-xs font-medium text-outline hover:text-on-surface transition-colors">자료 다운로드</button>
+<button class="px-md py-sm font-label-xs text-label-xs font-medium text-outline hover:text-on-surface transition-colors">노트</button>
+<button class="px-md py-sm font-label-xs text-label-xs font-medium text-outline hover:text-on-surface transition-colors">Q&amp;A 게시판</button>
+</div>
+<!-- Tab Content: 개요 -->
+<div class="flex-1">
+<div class="flex justify-between items-start mb-md">
+<h2 class="font-headline-md text-headline-md text-on-surface">2강. 회독의 본질</h2>
+<button class="bg-primary text-on-primary font-label-xs text-label-xs px-md py-sm rounded-lg hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm flex items-center gap-xs">
+                                다음 강의로 <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-lg max-w-3xl">
+                            단순히 텍스트를 여러 번 읽는 것은 진정한 의미의 '회독'이 아닙니다. 본 강의에서는 인지심리학적 관점에서 왜 반복 학습이 중요한지, 그리고 어떻게 반복해야 장기 기억으로 전환되는지 그 본질적인 메커니즘을 파헤칩니다. 효율적인 지식 축적을 위한 첫 걸음을 시작하세요.
+                        </p>
+<div class="bg-surface-container rounded-xl p-md border border-outline-variant/50 max-w-3xl">
+<h4 class="font-title-sm text-title-sm text-on-surface mb-sm">학습 목표</h4>
+<ul class="space-y-sm">
+<li class="flex items-start gap-sm font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-[18px] mt-[2px]">check</span>
+<span>기계적 반복과 의식적 회독의 차이점 명확히 이해하기</span>
+</li>
+<li class="flex items-start gap-sm font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-[18px] mt-[2px]">check</span>
+<span>에빙하우스의 망각 곡선을 활용한 최적의 복습 타이밍 설계</span>
+</li>
+<li class="flex items-start gap-sm font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-[18px] mt-[2px]">check</span>
+<span>나만의 5단계 코어 회독 시스템 구축을 위한 기본 전제 파악</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Right Q&A Panel -->
+<div class="w-80 shrink-0 flex flex-col">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">forum</span>
+                            이 강의 관련 Q&amp;A (3)
+                        </h3>
+<a class="font-label-xs text-label-xs text-primary hover:underline" href="#">게시판으로</a>
+</div>
+<div class="flex flex-col gap-sm">
+<!-- Q&A Card 1 -->
+<div class="bg-surface-container rounded-lg p-sm border border-outline-variant/30 hover:border-primary/50 transition-colors cursor-pointer">
+<div class="flex gap-xs items-center mb-xs">
+<span class="bg-primary-container text-on-primary-container font-label-xs text-[10px] px-2 py-1 rounded-sm">답변완료</span>
+<span class="font-label-xs text-label-xs text-outline">김지훈 · 2시간 전</span>
+</div>
+<h4 class="font-body-sm text-body-sm font-semibold text-on-surface line-clamp-1 mb-1">회독 주기 설정에 관하여 질문드립니다.</h4>
+<p class="font-body-sm text-[13px] text-on-surface-variant line-clamp-2">강의에서 말씀하신 1-3-7 주기를 적용해보고 있는데, 과목별로 난이도가 달라서...</p>
+</div>
+<!-- Q&A Card 2 -->
+<div class="bg-surface-container rounded-lg p-sm border border-outline-variant/30 hover:border-primary/50 transition-colors cursor-pointer">
+<div class="flex gap-xs items-center mb-xs">
+<span class="bg-surface-variant text-on-surface-variant font-label-xs text-[10px] px-2 py-1 rounded-sm">대기중</span>
+<span class="font-label-xs text-label-xs text-outline">이수아 · 1일 전</span>
+</div>
+<h4 class="font-body-sm text-body-sm font-semibold text-on-surface line-clamp-1 mb-1">이해도 체크리스트 활용법</h4>
+<p class="font-body-sm text-[13px] text-on-surface-variant line-clamp-2">교재에 있는 체크리스트를 매 회독마다 새로 작성해야 하는지, 아니면 누적해서...</p>
+</div>
+</div>
+<button class="mt-md w-full bg-surface text-primary border border-primary/30 font-label-xs text-label-xs py-2 rounded-lg hover:bg-primary-fixed transition-colors">
+                        질문 작성하기
+                    </button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

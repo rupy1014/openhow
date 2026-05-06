@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>가격안내 - openhow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-container": "#eeefff",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "on-tertiary-fixed": "#360f00",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "secondary-fixed": "#e2dfff",
+                      "tertiary-container": "#bc4800",
+                      "on-error-container": "#93000a",
+                      "tertiary": "#943700",
+                      "inverse-primary": "#b4c5ff",
+                      "surface": "#faf8ff",
+                      "primary-fixed": "#dbe1ff",
+                      "tertiary-fixed": "#ffdbcd",
+                      "on-tertiary-container": "#ffede6",
+                      "on-tertiary": "#ffffff",
+                      "background": "#faf8ff",
+                      "surface-container-highest": "#e1e2ed",
+                      "surface-bright": "#faf8ff",
+                      "outline-variant": "#c3c6d7",
+                      "on-error": "#ffffff",
+                      "on-secondary-container": "#fffbff",
+                      "primary-container": "#2563eb",
+                      "inverse-surface": "#2e3039",
+                      "error-container": "#ffdad6",
+                      "tertiary-fixed-dim": "#ffb596",
+                      "secondary": "#4b41e1",
+                      "surface-dim": "#d9d9e5",
+                      "on-secondary-fixed": "#0f0069",
+                      "on-tertiary-fixed-variant": "#7d2d00",
+                      "inverse-on-surface": "#f0f0fb",
+                      "surface-container-high": "#e7e7f3",
+                      "on-background": "#191b23",
+                      "on-secondary-fixed-variant": "#3323cc",
+                      "secondary-container": "#645efb",
+                      "on-secondary": "#ffffff",
+                      "surface-variant": "#e1e2ed",
+                      "error": "#ba1a1a",
+                      "surface-container-low": "#f3f3fe",
+                      "outline": "#737686",
+                      "on-surface-variant": "#434655",
+                      "on-primary-fixed": "#00174b",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface": "#191b23",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed-dim": "#c3c0ff",
+                      "primary": "#004ac6",
+                      "surface-tint": "#0053db",
+                      "surface-container": "#ededf9"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "md": "16px",
+                      "lg": "24px",
+                      "xl": "40px",
+                      "2xl": "64px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "label-xs": [
+                              "Inter"
+                      ],
+                      "title-sm": [
+                              "Pretendard"
+                      ],
+                      "body-md": [
+                              "Pretendard"
+                      ],
+                      "body-sm": [
+                              "Pretendard"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-xs": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "title-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Pretendard:wght@400;500;600;700&display=swap');
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased pt-20">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50 shadow-sm dark:shadow-none transition-all">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+<div class="text-xl font-black tracking-tighter text-slate-900 dark:text-white">openhow</div>
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-['Inter','Pretendard'] text-sm font-medium tracking-tight text-blue-600 dark:text-blue-400 font-bold border-b-2 border-blue-600 pb-1 transition-all duration-200 hover:opacity-80 active:scale-95 transition-transform" href="#">Pricing</a>
+<a class="font-['Inter','Pretendard'] text-sm font-medium tracking-tight text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200 hover:opacity-80 active:scale-95 transition-transform" href="#">Platform</a>
+<a class="font-['Inter','Pretendard'] text-sm font-medium tracking-tight text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200 hover:opacity-80 active:scale-95 transition-transform" href="#">Features</a>
+<a class="font-['Inter','Pretendard'] text-sm font-medium tracking-tight text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200 hover:opacity-80 active:scale-95 transition-transform" href="#">Enterprise</a>
+</div>
+<div class="flex items-center gap-4">
+<a class="font-['Inter','Pretendard'] text-sm font-medium tracking-tight text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200 hover:opacity-80 active:scale-95 transition-transform" href="#">Login</a>
+<a class="px-4 py-2 bg-primary-container text-on-primary-container rounded-lg font-['Inter','Pretendard'] text-sm font-medium tracking-tight hover:opacity-90 transition-opacity active:scale-95" href="#">Get Started</a>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="pt-2xl pb-xl text-center px-6 max-w-4xl mx-auto">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-sm">초기 비용 없이, 팔린 만큼만</h1>
+<p class="font-headline-md text-headline-md text-on-surface-variant font-normal">월 구독료 없이 강의·콘텐츠 판매를 시작하세요</p>
+</header>
+<!-- Unified Fee Card -->
+<section class="px-6 max-w-3xl mx-auto mb-2xl">
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center relative overflow-hidden backdrop-blur-xl">
+<div class="absolute inset-0 bg-gradient-to-br from-primary-fixed/20 to-transparent pointer-events-none"></div>
+<h2 class="font-title-sm text-title-sm text-primary mb-md inline-block px-4 py-1 rounded-full bg-primary-fixed-dim/30">통합 요금</h2>
+<div class="my-lg flex flex-col items-center justify-center">
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-[72px] font-bold text-on-surface leading-none tracking-tighter">5%</span>
+<span class="font-body-md text-body-md text-on-surface-variant font-medium">거래 수수료</span>
+</div>
+<p class="font-label-xs text-label-xs text-outline mt-xs">(정책 잠정값, 정책 의도에서 확정)</p>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg pb-lg border-b border-surface-container-high">VAT/PG 수수료 정책 별도</p>
+<ul class="grid grid-cols-2 gap-md text-left mb-xl font-body-md text-body-md text-on-surface max-w-xl mx-auto">
+<li class="flex items-center gap-sm"><span class="material-symbols-outlined text-primary text-[20px]">check_circle</span> 카드/간편결제</li>
+<li class="flex items-center gap-sm"><span class="material-symbols-outlined text-primary text-[20px]">check_circle</span> 페이월</li>
+<li class="flex items-center gap-sm"><span class="material-symbols-outlined text-primary text-[20px]">check_circle</span> 멤버십</li>
+<li class="flex items-center gap-sm"><span class="material-symbols-outlined text-primary text-[20px]">check_circle</span> VOD 코스</li>
+<li class="flex items-center gap-sm col-span-2 justify-center"><span class="material-symbols-outlined text-primary text-[20px]">check_circle</span> 커스텀 도메인</li>
+</ul>
+<button class="bg-primary-container text-on-primary-container font-title-sm text-body-md py-4 px-xl rounded-full hover:opacity-90 transition-opacity active:scale-95 shadow-md w-full max-w-md mx-auto">
+                무료로 시작하기
+            </button>
+</div>
+</section>
+<!-- Settlement Flow -->
+<section class="max-w-5xl mx-auto px-6 mb-2xl">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-lg text-center">정산 프로세스</h3>
+<div class="bg-surface-container-low rounded-xl p-lg flex flex-col md:flex-row items-center justify-between gap-md border border-outline-variant/20">
+<div class="flex flex-col items-center text-center gap-sm w-full md:w-1/4">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">구매자 결제</span>
+</div>
+<span class="material-symbols-outlined text-outline hidden md:block">arrow_forward</span>
+<span class="material-symbols-outlined text-outline md:hidden rotate-90">arrow_forward</span>
+<div class="flex flex-col items-center text-center gap-sm w-full md:w-1/4">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">history</span>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">환불 가능 기간 (7일)</span>
+</div>
+<span class="material-symbols-outlined text-outline hidden md:block">arrow_forward</span>
+<span class="material-symbols-outlined text-outline md:hidden rotate-90">arrow_forward</span>
+<div class="flex flex-col items-center text-center gap-sm w-full md:w-1/4">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">calculate</span>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">익월 정산 산정</span>
+</div>
+<span class="material-symbols-outlined text-outline hidden md:block">arrow_forward</span>
+<span class="material-symbols-outlined text-outline md:hidden rotate-90">arrow_forward</span>
+<div class="flex flex-col items-center text-center gap-sm w-full md:w-1/4">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">익월 말일 송금</span>
+</div>
+</div>
+</section>
+<!-- Included Features Grid -->
+<section class="max-w-6xl mx-auto px-6 mb-2xl">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-lg text-center">기본 제공 기능</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-container-high hover:border-primary-fixed-dim transition-colors shadow-sm">
+<span class="material-symbols-outlined text-primary mb-sm text-[28px]">smart_display</span>
+<h4 class="font-title-sm text-body-md text-on-surface mb-xs">VOD 코스</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">고화질 영상 업로드 및 플레이어 제공</p>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-container-high hover:border-primary-fixed-dim transition-colors shadow-sm">
+<span class="material-symbols-outlined text-primary mb-sm text-[28px]">article</span>
+<h4 class="font-title-sm text-body-md text-on-surface mb-xs">구독형 블로그</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">지식 콘텐츠 유료 구독 시스템</p>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-container-high hover:border-primary-fixed-dim transition-colors shadow-sm">
+<span class="material-symbols-outlined text-primary mb-sm text-[28px]">lock</span>
+<h4 class="font-title-sm text-body-md text-on-surface mb-xs">페이월</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">특정 포스트만 유료로 판매하는 기능</p>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-container-high hover:border-primary-fixed-dim transition-colors shadow-sm">
+<span class="material-symbols-outlined text-primary mb-sm text-[28px]">card_membership</span>
+<h4 class="font-title-sm text-body-md text-on-surface mb-xs">멤버십</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">팬덤 관리를 위한 멤버십 등급 기능</p>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-container-high hover:border-primary-fixed-dim transition-colors shadow-sm">
+<span class="material-symbols-outlined text-primary mb-sm text-[28px]">credit_card</span>
+<h4 class="font-title-sm text-body-md text-on-surface mb-xs">결제(Bootpay)</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">국내 모든 결제 수단 자동 연동</p>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-container-high hover:border-primary-fixed-dim transition-colors shadow-sm">
+<span class="material-symbols-outlined text-primary mb-sm text-[28px]">language</span>
+<h4 class="font-title-sm text-body-md text-on-surface mb-xs">커스텀 도메인</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">나만의 독립된 도메인 연결</p>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-container-high hover:border-primary-fixed-dim transition-colors shadow-sm">
+<span class="material-symbols-outlined text-primary mb-sm text-[28px]">currency_exchange</span>
+<h4 class="font-title-sm text-body-md text-on-surface mb-xs">취소·환불 정책</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">플랫폼 표준 환불 규정 및 자동 처리</p>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-container-high hover:border-primary-fixed-dim transition-colors shadow-sm">
+<span class="material-symbols-outlined text-primary mb-sm text-[28px]">forum</span>
+<h4 class="font-title-sm text-body-md text-on-surface mb-xs">학생 게시판</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">질문답변 및 커뮤니티 대시보드</p>
+</div>
+</div>
+</section>
+<!-- FAQ Accordion (Static Representation) -->
+<section class="max-w-3xl mx-auto px-6 mb-xl">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-lg text-center">자주 묻는 질문</h3>
+<div class="space-y-sm">
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-lg p-md cursor-pointer hover:bg-surface-container-low transition-colors flex justify-between items-center">
+<span class="font-body-md text-body-md font-medium text-on-surface">수수료에 PG 수수료가 포함되나요?</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-lg p-md cursor-pointer hover:bg-surface-container-low transition-colors flex justify-between items-center">
+<span class="font-body-md text-body-md font-medium text-on-surface">VAT 처리는 어떻게 되나요?</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-lg p-md cursor-pointer hover:bg-surface-container-low transition-colors flex justify-between items-center">
+<span class="font-body-md text-body-md font-medium text-on-surface">정산일은 정확히 언제인가요?</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-lg p-md cursor-pointer hover:bg-surface-container-low transition-colors flex justify-between items-center">
+<span class="font-body-md text-body-md font-medium text-on-surface">환불·취소는 어떻게 처리되나요?</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-lg p-md cursor-pointer hover:bg-surface-container-low transition-colors flex justify-between items-center">
+<span class="font-body-md text-body-md font-medium text-on-surface">타사(인프런/클래스101) 대비 어떤가요?</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+</section>
+<!-- v2 Placeholder -->
+<div class="text-center py-lg mb-2xl">
+<p class="font-label-xs text-label-xs text-outline inline-block bg-surface-container-high px-4 py-2 rounded-full">사용량이 매우 큰 크리에이터 대상 별도 요금제는 v2 검토 중</p>
+</div>
+<!-- Footer -->
+<footer class="w-full py-12 mt-auto bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="text-lg font-bold text-slate-900 dark:text-white">openhow</div>
+<div class="font-['Inter','Pretendard'] text-xs text-slate-500 dark:text-slate-400">© 2024 openhow. All rights reserved. 지식 비즈니스의 새로운 기준.</div>
+<div class="flex gap-4">
+<a class="font-['Inter','Pretendard'] text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer" href="#">Terms of Service</a>
+<a class="font-['Inter','Pretendard'] text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer" href="#">Privacy Policy</a>
+<a class="font-['Inter','Pretendard'] text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer" href="#">Contact Support</a>
+<a class="font-['Inter','Pretendard'] text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer" href="#">Status</a>
+</div>
+</div>
+</footer>
+</body></html>

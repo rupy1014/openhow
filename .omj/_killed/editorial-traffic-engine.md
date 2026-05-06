@@ -1,11 +1,17 @@
 ---
-status: exploring
+status: killed
 created: 2026-04-21
-updated: 2026-04-21
+updated: 2026-04-30
+killed_at: 2026-04-30
+killed_reason: 정체성 결정 게이트 통과 — 사용자 α(liveklass-aligned 순수 크리에이터 SaaS) 선택. 본 의도가 제안한 "에디터 SEO 엔진" 정체성은 폐기.
 iteration: 1
+related: creator-platform-discovery.md, _killed/platform-pro-plan.md
 ---
 
-# editorial-traffic-engine — openhow 서비스 정체성을 "SEO 트래픽 엔진"으로 재정의
+# editorial-traffic-engine — openhow 서비스 정체성을 "SEO 트래픽 엔진"으로 재정의 [KILLED 2026-04-30]
+
+> **Status: killed.** 본 의도의 결정 게이트가 2026-04-30 사용자 결정으로 통과 — α(liveklass-aligned 순수 크리에이터 SaaS) 선택. "에디터 SEO 엔진" 정체성 폐기. 본 의도 산하 모든 hypothesis(외부 임포트, 에디터 파이프라인, 토픽 허브 1급화)는 v1+ 범위에서 제거. 부활 조건: 크리에이터 SaaS 정체성으로 12개월 운영 후에도 트래픽 엔진이 별도 필요한 경우. 부활 시 학습 자산: max5.ai 파이프라인, 한국 저작권 분석, gpters 구조 분석은 본 문서 Learnings 에 보존.
+
 
 ## Why
 
@@ -69,6 +75,19 @@ openhow의 현재 구조는 **멀티 크리에이터 플랫폼**(creator-platfor
 - 건드리는 기존 의도: `creator-platform`(done), `gpters-seo-flywheel`(done), `public-blog-home`(building), `workspace-ux-improvement`, `instructor-profile-page`(작가 신뢰 배지는 editor-curation에선 의미가 달라짐).
 - 피봇 vs 킬 판단은 모델 결정(A/B/C) 후에 일괄 재정돈.
 
+### 병행 정체성 의도와의 관계 (2026-04-30 추가)
+
+`creator-platform-discovery` (exploring, 2026-04-30) 가 같은 시기에 **"openhow = 지식플랫폼 (클래스 + 학생-as-author)"** 정체성으로 v1 MVP 를 좁혔다 (인강 + 기수제 인강 + 학생 게시판 + SEO). 본 의도의 "에디터 트래픽 엔진" 정체성과 **두 정체성이 상호 배타적이지 않지만, 같은 인프라 위에서 서로 다른 1순위 트래픽 전략**을 가진다:
+
+| 축 | discovery (지식플랫폼) | editorial-traffic-engine (트래픽 엔진) |
+|----|----------------------|--------------------------------------|
+| 1순위 콘텐츠 공급 | 강사·학생 자율 발행 (클래스 단위) | 에디터 큐레이션 (외부 임포트 + 내부 가공) |
+| SEO 자산 단위 | 클래스 워크스페이스 + 학생 게시판 | 토픽 허브 + 큐레이션 글 |
+| creator-ownership 원칙 | 유지 (강사/학생 자율) | 재정의 (에디터가 게이트) |
+| v1 검증 대상 | 클래스 + 게시판 SEO 양립 | 외부 임포트 정책 + 에디터 파이프라인 |
+
+**사용자 결정 필요**: 두 정체성이 (a) 한 서비스 안에 양립 (창작자 자율 루트 + 에디터 큐레이션 루트 두 갈래), (b) editorial-traffic-engine 의 "축 1 = 자율 루트 제거" 가 채택되어 discovery 의 강사·학생 자율 모델이 사라짐, (c) discovery 가 메인 정체성이 되고 editorial-traffic-engine 은 별도 surface (예: `/topics/`) 로 격하 — 셋 중 하나로 정리되어야 함. 본 의도의 "축 1 결정 게이트" 와 discovery 의 v1 MVP 검증이 **같은 결정 공간에 들어와 있다** — 한쪽 결정이 다른 쪽 의도의 피봇/킬 범위를 좌우.
+
 ## Footprint
 (None yet — 결정 게이트 통과 후 Phase 1부터 기록)
 
@@ -79,6 +98,21 @@ openhow의 현재 구조는 **멀티 크리에이터 플랫폼**(creator-platfor
 - 중복 콘텐츠 감지 / canonical 정책 자동화
 
 ## Learnings
+### 2026-04-30: [signal] UX 혼란 — "liveklass식 단순 클래스 SaaS 로 가야 하나?"
+- **사용자 발화**: "지금 ux 정리가 안되거든. liveklass.com 여기 레퍼런스로 하면 되게 쉬운데, 우리는 뭔가 에디터가 seo 도 신경쓰로 그런 느낌이긴 해. 어떻게 정리해야할까? 아니면 liveklass 이쪽으로 더 명확히 할까?"
+- **신호 해석**: 본 의도의 "축 1 = 자율 발행 루트 존폐" 결정이 미뤄진 채 `creator-platform-discovery`(building) v1 MVP 가 **인강 + SEO 게시판** 양립으로 진행 → 사용자 체감 UX 가 "크리에이터 SaaS" 와 "에디터 SEO 엔진" 두 정체성을 같은 surface 에 섞어 놓은 상태로 인식됨. UX 정리 안 됨 = 정체성 미결의 증상.
+- **liveklass 레퍼런스 분석** (firecrawl 2026-04-30):
+  - 포지션: "No.1 온라인 강의 홈페이지 플랫폼" — 크리에이터 각자 `{slug}.liveklass.com` 독립 스토어
+  - 제품: 온라인 라이브 강의 / VOD / 1:1 코칭 / 디지털 콘텐츠 — **모두 판매 단위**
+  - 플랫폼 홈: 크리에이터 쇼케이스 + 신규 크리에이터 가입 세일즈. **콘텐츠 디스커버리/SEO 토픽 허브 없음**
+  - 부속 surface: 회원 CRM, 마케팅 자동화, 매출 관리 — 전형적 크리에이터 SaaS 스택
+  - 본 의도 매핑: 본 의도의 "축 1 = 자율 발행 루트 제거" 와는 다른 차원. liveklass 는 **자율 발행은 유지하되 플랫폼-레벨 SEO/에디터 큐레이션 자체를 안 함**. → 본 의도에 **새 결정 옵션** 추가 필요: "editorial-SEO 자체 폐기 + 순수 크리에이터 SaaS"
+- **갱신된 결정 공간 (3 옵션)**:
+  - **(α) 순수 크리에이터 SaaS (liveklass-aligned)**: 플랫폼 홈은 크리에이터 가입 세일즈. 각 워크스페이스 = 독립 스토어 (subdomain/customDomain). editorial-traffic-engine 자체 kill, gpters-seo-flywheel/public-blog-home 도 대규모 피봇. 본 의도와 `editorial-traffic-engine` 둘 다 정리 대상.
+  - **(β) 에디터 SEO 엔진 (본 의도 원안)**: 플랫폼 홈 = 토픽 허브 + 큐레이션 글. 크리에이터는 보조. creator-platform-discovery v1 MVP 의 학생 게시판/클래스 SEO 는 평면 위로 흡수.
+  - **(γ) 분리된 양립 (현재 묵시적 상태)**: `openhow.io/` = 에디터 SEO 엔진, `{slug}.openhow.io` 또는 `/w/{slug}` = 크리에이터 SaaS. 두 surface 가 명확히 분리되면 UX 혼란 해소 가능. 단, 크리에이터-platform-discovery 의 "클래스 + 학생 게시판 + SEO 양립" 결정과는 다시 충돌 — 학생 게시판 SEO 가 플랫폼 토픽 허브로 흘러갈지 분리될지 별도 결정 필요.
+- **다음 결정**: 사용자 선택 → 본 의도 status 변동 + creator-platform-discovery / public-blog-home / gpters-seo-flywheel 파급 일괄 정리
+
 ### 2026-04-21: seed 생성 (iteration 1)
 - **배경**: 사용자 발화 — "오픈하우 서비스는 트래픽 모으는 SEO 위주 서비스로 가자. gpters.org 콘텐츠 원본 중 가져오는 경우도 있고, 에디터가 처리 후 발행. UI 구조도 바뀔 수 있음."
 - **핵심 식별**: 이건 단일 기능 의도가 아니라 **서비스 포지셔닝 결정**. creator-ownership 모델과 editor-curation 모델은 설계 공간이 다르며, 기존 `gpters-seo-flywheel`은 전자에 "플랫폼 admin이 creator 콘텐츠를 검수/승격 결정 = creator-ownership 원칙 위반"으로 명시.

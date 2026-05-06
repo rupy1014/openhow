@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>openhow - 나의 지식이 비즈니스가 되는 곳</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=Pretendard:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed-dim": "#b4c5ff",
+                      "tertiary": "#943700",
+                      "background": "#faf8ff",
+                      "surface-variant": "#e1e2ed",
+                      "tertiary-fixed": "#ffdbcd",
+                      "surface-bright": "#faf8ff",
+                      "surface-container-high": "#e7e7f3",
+                      "on-tertiary-fixed-variant": "#7d2d00",
+                      "surface-container-low": "#f3f3fe",
+                      "on-secondary-container": "#fffbff",
+                      "secondary-fixed-dim": "#c3c0ff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface": "#faf8ff",
+                      "on-secondary-fixed-variant": "#3323cc",
+                      "surface-tint": "#0053db",
+                      "error": "#ba1a1a",
+                      "surface-container-highest": "#e1e2ed",
+                      "on-primary-fixed": "#00174b",
+                      "on-error-container": "#93000a",
+                      "on-surface-variant": "#434655",
+                      "inverse-primary": "#b4c5ff",
+                      "outline": "#737686",
+                      "on-tertiary-fixed": "#360f00",
+                      "secondary-fixed": "#e2dfff",
+                      "secondary-container": "#645efb",
+                      "on-primary-container": "#eeefff",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "outline-variant": "#c3c6d7",
+                      "on-background": "#191b23",
+                      "on-surface": "#191b23",
+                      "tertiary-container": "#bc4800",
+                      "error-container": "#ffdad6",
+                      "primary-fixed": "#dbe1ff",
+                      "inverse-on-surface": "#f0f0fb",
+                      "on-tertiary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "primary": "#004ac6",
+                      "on-tertiary-container": "#ffede6",
+                      "on-secondary-fixed": "#0f0069",
+                      "surface-dim": "#d9d9e5",
+                      "tertiary-fixed-dim": "#ffb596",
+                      "inverse-surface": "#2e3039",
+                      "secondary": "#4b41e1",
+                      "surface-container": "#ededf9",
+                      "primary-container": "#2563eb"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "2xl": "64px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "lg": "24px",
+                      "xl": "40px",
+                      "md": "16px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "label-xs": [
+                              "Inter"
+                      ],
+                      "title-sm": [
+                              "Pretendard"
+                      ],
+                      "body-md": [
+                              "Pretendard"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Pretendard"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-xs": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "title-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+      </script>
+<style>
+        /* Custom styles to handle specific visual requirements not strictly covered by the JSON or simple tailwind */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .tech-gradient-text {
+            background: linear-gradient(135deg, #004ac6, #645efb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .tech-gradient-bg {
+            background: linear-gradient(135deg, #004ac6, #645efb);
+        }
+        .abstract-blob {
+            position: absolute;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.4;
+            border-radius: 50%;
+        }
+      </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Global Background Elements for Tech-forward Momentum -->
+<div class="abstract-blob bg-primary-fixed-dim w-[600px] h-[600px] top-[-200px] left-[-200px]"></div>
+<div class="abstract-blob bg-secondary-fixed-dim w-[500px] h-[500px] top-[20%] right-[-100px]"></div>
+<!-- TopNavBar -->
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl font-sans tracking-tight text-sm font-medium fixed top-0 w-full z-50 border-b border-slate-200/50 dark:border-white/10 shadow-sm">
+<div class="flex justify-between items-center h-16 px-6 lg:px-12 max-w-[1440px] mx-auto">
+<div class="text-xl font-black tracking-tighter text-slate-900 dark:text-white">openhow</div>
+<nav class="hidden md:flex items-center gap-lg">
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 active:scale-95 transition-transform" href="#">가격</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 active:scale-95 transition-transform" href="#">성공사례</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 active:scale-95 transition-transform" href="#">블로그</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 active:scale-95 transition-transform" href="#">로그인</a>
+</nav>
+<button class="tech-gradient-bg text-on-primary px-lg py-sm rounded-xl font-label-xs hover:opacity-90 transition-opacity shadow-sm active:scale-95">무료로 시작하기</button>
+</div>
+</header>
+<main class="flex-grow pt-[120px] pb-2xl flex flex-col gap-2xl">
+<!-- Section 2: Hero -->
+<section class="max-w-[1440px] mx-auto px-6 lg:px-12 w-full grid grid-cols-1 lg:grid-cols-2 gap-xl items-center relative">
+<div class="flex flex-col gap-md">
+<h1 class="font-display-lg text-display-lg tech-gradient-text">나의 지식이<br/>비즈니스가 되는 곳</h1>
+<p class="font-title-sm text-title-sm text-on-surface-variant max-w-[500px]">AI 시대, 5분 만에 나만의 클래스를 만드세요.<br/>강의부터 결제, 커뮤니티까지 완벽한 도구를 제공합니다.</p>
+<div class="flex gap-md mt-sm">
+<button class="tech-gradient-bg text-on-primary px-xl py-md rounded-xl font-label-xs hover:opacity-90 transition-opacity shadow-md active:scale-95">지금 무료로 시작하기</button>
+<button class="glass-panel text-on-surface px-xl py-md rounded-xl font-label-xs hover:bg-surface-variant transition-colors shadow-sm active:scale-95 border border-outline-variant">데모 보기</button>
+</div>
+</div>
+<div class="relative w-full h-[500px] lg:h-[600px] rounded-xl overflow-hidden shadow-2xl border border-surface-container-high bg-surface-container-lowest">
+<!-- Abstract Dashboard Visual -->
+<img class="w-full h-full object-cover opacity-80 mix-blend-luminosity" data-alt="A highly stylized, premium digital dashboard interface on a modern screen, displaying data charts and clean UI elements. The setting is a bright, tech-forward workspace with soft, diffused white lighting emphasizing a minimalist aesthetic. The color palette focuses on deep blacks, crisp whites, and vibrant gradient accents of deep blue and purple, reflecting an advanced, professional software environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAM3iXNoqYy2bFH0Ix0jPJ1a4137CUAPoL1vJsiGsdiuRl0XRka-pvDB8H_Y-dgb-rhmRzJzsJHDDEmtN4eMkJuLQBS5_oVfB4VgA7LqUD0qNDiNR_22kVFjjMatLZ-aOeX4LtJG3CB86yASsRMv_a9priMiCbnVCyIGW1v0QqnQLM4qN8TwxRNDnZIO6TAiUGB2eIYd6a6I92AjtNkg1bDWksFb8TnyGjwan5EbqnW9axPm9ETCOc4v12ShiUD9YoiEo4cz9pBZpw"/>
+<!-- Floating UI Elements representing the product -->
+<div class="absolute bottom-lg right-lg glass-panel p-md rounded-lg shadow-lg max-w-[250px]">
+<div class="flex items-center gap-sm mb-xs">
+<span class="material-symbols-outlined text-primary text-xl">trending_up</span>
+<span class="font-label-xs text-on-surface font-bold">월 최고 매출 달성</span>
+</div>
+<div class="font-title-sm text-title-sm text-on-surface font-bold mt-xs">₩ 120,000,000</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Creator Showcase Carousel (Static representation) -->
+<section class="max-w-[1440px] mx-auto px-6 lg:px-12 w-full py-xl overflow-hidden relative">
+<div class="flex justify-between items-end mb-lg">
+<h2 class="font-headline-md text-headline-md text-on-surface">최고의 크리에이터들이<br/>선택한 플랫폼</h2>
+<button class="text-primary font-label-xs flex items-center gap-xs hover:underline">
+                    전체 보기 <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Simulated Carousel Track -->
+<div class="flex gap-md overflow-x-auto pb-md snap-x hide-scrollbar">
+<!-- Card 1 -->
+<div class="min-w-[280px] w-[280px] flex-shrink-0 bg-surface-container-lowest rounded-xl border border-surface-variant p-md shadow-sm snap-start">
+<div class="h-[140px] rounded-lg overflow-hidden mb-sm bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A close-up portrait of a confident young professional woman in a modern, well-lit studio setting. She is looking directly at the camera with a slight smile. The background is slightly blurred with soft, neutral tones. The lighting is bright and clean, emphasizing a premium, trustworthy professional image in a modern tech-forward environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArLnuq2QQerOCND9ZxH9JU19GE1U5rtcxC5Y7Cgx5gLqcQpxqGw78xNAwspJkw0oBgjmvsMV9E3Ci_tn-Mdfv8r6JJrFXh3zCsCjxuIT7DOpCN9xe93y28lI7wCs1T2XohkAQDOD0n3j4b0J4EmZzGZ-RntF34KBn9gJv3proDFih6r-wx6q77n99jxKutCpvscvIKGSBKktP7SmjTtCBoX1gLoSFkHCygov8UtY2Vi1bTUx-pcqdxuoZsCi9uX0xrrkowqCw0Rpk"/>
+</div>
+<div class="flex items-center gap-xs mb-xs">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-label-xs">M</div>
+<span class="font-label-xs text-on-surface-variant font-medium">마케팅 마스터리</span>
+</div>
+<h3 class="font-body-md text-body-md text-on-surface font-semibold truncate">데이터 기반 퍼포먼스 마케팅</h3>
+<div class="mt-sm flex items-center gap-xs text-outline text-xs">
+<span class="material-symbols-outlined text-xs">group</span>
+<span class="font-label-xs">수강생 12,400명</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[280px] w-[280px] flex-shrink-0 bg-surface-container-lowest rounded-xl border border-surface-variant p-md shadow-sm snap-start">
+<div class="h-[140px] rounded-lg overflow-hidden mb-sm bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A sleek, modern desk setup featuring multiple monitors displaying code and design software, illuminated by subtle cool blue LED lighting. The environment is dark and focused, creating a high-tech developer aesthetic. The composition highlights the monitors and keyboard, with a shallow depth of field blurring the background slightly to emphasize the deep work atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1T3ZKp7uxts8FeN9ZvMSGRymcYJPnBpBEzvz0JzX5y6OB5XxQMwNeXJM7ESVHdZy7u9PiVr0j4gOd-AFljb6COjBZfgrJIL9FdoqlrQaCKQ70twc7fBlP4KAl1c3PO9BNy0YbDI47lbOSDRBYkoqAQUIqxqpYL93nX6CLb55-cKDJBNOm0IaJBdX8WHlo_T_wuPdY0Ly9m82TBJi5wolcA62LaAgUP6p_AhHI9QzQOw4ZC3HN5dnwBxfVzSH8LUTn06VwvTqe1NA"/>
+</div>
+<div class="flex items-center gap-xs mb-xs">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-label-xs">D</div>
+<span class="font-label-xs text-on-surface-variant font-medium">디자인 브로</span>
+</div>
+<h3 class="font-body-md text-body-md text-on-surface font-semibold truncate">Figma 실전 UI/UX 구축</h3>
+<div class="mt-sm flex items-center gap-xs text-outline text-xs">
+<span class="material-symbols-outlined text-xs">group</span>
+<span class="font-label-xs">수강생 8,200명</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="min-w-[280px] w-[280px] flex-shrink-0 bg-surface-container-lowest rounded-xl border border-surface-variant p-md shadow-sm snap-start">
+<div class="h-[140px] rounded-lg overflow-hidden mb-sm bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A professional setting showing a modern boardroom table with blurred figures in the background discussing financial charts on a large screen. The lighting is crisp and bright, focusing on sleek business professionalism. The overall mood is serious, analytical, and successful, utilizing a color palette of crisp whites, soft grays, and muted blues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHuwoKzyi6tzzyYcmaS34wvy3T6vD7E7uRpwABLOScowf70EP1voPtvGvgj4mThcHr51gORm-vcVO_4CIQ64MHcmj1LrKoFM2ImF7TtaDRJ0FCP1865tilbW0OtHYJNv3Xrm92tpyw0ILBx_p1Xvf1lwVf_qwxqGv5VFEMLP7d8u98wP5FwB0WCj_I3hlI0vhRYeuQvNJNNTX0ddHbPHlLuXbFlANDGucNRwABRUdfHqcr2iafkegzRWVpacey6nuNolk-cKg-zfA"/>
+</div>
+<div class="flex items-center gap-xs mb-xs">
+<div class="w-8 h-8 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container font-label-xs">F</div>
+<span class="font-label-xs text-on-surface-variant font-medium">재무 인사이트</span>
+</div>
+<h3 class="font-body-md text-body-md text-on-surface font-semibold truncate">스타트업 재무 모델링</h3>
+<div class="mt-sm flex items-center gap-xs text-outline text-xs">
+<span class="material-symbols-outlined text-xs">group</span>
+<span class="font-label-xs">수강생 5,100명</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="min-w-[280px] w-[280px] flex-shrink-0 bg-surface-container-lowest rounded-xl border border-surface-variant p-md shadow-sm snap-start">
+<div class="h-[140px] rounded-lg overflow-hidden mb-sm bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A close-up of a person writing in a high-quality leather notebook with an expensive fountain pen. The setting is a quiet, well-lit study with soft, natural light coming from a nearby window. The mood is contemplative and intellectual, utilizing warm earth tones and crisp whites to convey a sense of deep thought and literary focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZkR-bXGVy4VAJY7ZQdGb4NWMZLbempJtr0QCr1xrts9F3RLoMtqjWAszP2G1fl2N_9nuHv8hAlNOacreMBCXv4Uc8cHEngNexElcD2rB-7H_jXX5cgGRkgtLmH3uTQMl06KQVVoq0jUzs5GOqs26L3R2sA6v_M75g05oaXAVUUXyxZoTaJkozQu2du0v5uoT69ar8V6Fufg6LQuPw-fvJ5J1PaCeO07kACmZTC5xmd4hHpOmVct1NK_4ph0F5CcC8GQ-1ueRg_Wk"/>
+</div>
+<div class="flex items-center gap-xs mb-xs">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant font-label-xs">W</div>
+<span class="font-label-xs text-on-surface-variant font-medium">작가노트</span>
+</div>
+<h3 class="font-body-md text-body-md text-on-surface font-semibold truncate">에세이 출판의 모든 것</h3>
+<div class="mt-sm flex items-center gap-xs text-outline text-xs">
+<span class="material-symbols-outlined text-xs">group</span>
+<span class="font-label-xs">수강생 3,800명</span>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="min-w-[280px] w-[280px] flex-shrink-0 bg-surface-container-lowest rounded-xl border border-surface-variant p-md shadow-sm snap-start">
+<div class="h-[140px] rounded-lg overflow-hidden mb-sm bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A high-angle shot of a complex architecture blueprint laid out on a clean white desk, with various drawing tools like compasses and rulers scattered around. The lighting is incredibly sharp and bright, highlighting the precise lines of the drawing. The mood is analytical and precise, using high contrast between the stark white background and the intricate blue and black lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbnbPhUhNk5v43o5ZaJi6ae6Lf5M8P4IYo9C0B1lz9F_XtyaIpnEo0X8p47FT9lICVGjyv4mPLsXkuAU0Co1O7mS7lB-dU9kq19YPjRwrR32_n3lOl01c_LjVA9-aB4C9oTvfTbGqAiT5mz8-8E_nY__trC5STuMp6iCFimm-a_1c6c-B3lLzDbFN959ScqkXA6jaBRBFCYBLDP7XN2L8or1KhuWWAteqDpEJE3P1UxA8gR6T5URY8E6MxFyJL8IUMjGS7vPaxPsA"/>
+</div>
+<div class="flex items-center gap-xs mb-xs">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-label-xs">A</div>
+<span class="font-label-xs text-on-surface-variant font-medium">아키텍처 스쿨</span>
+</div>
+<h3 class="font-body-md text-body-md text-on-surface font-semibold truncate">실무자를 위한 시스템 설계</h3>
+<div class="mt-sm flex items-center gap-xs text-outline text-xs">
+<span class="material-symbols-outlined text-xs">group</span>
+<span class="font-label-xs">수강생 9,500명</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: KPI Band -->
+<section class="w-full bg-surface-container border-y border-surface-variant py-xl">
+<div class="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col md:flex-row justify-around items-center gap-lg text-center divide-y md:divide-y-0 md:divide-x divide-outline-variant">
+<div class="w-full py-sm md:py-0">
+<div class="font-display-lg text-display-lg text-primary font-bold">1,200+</div>
+<div class="font-label-xs text-on-surface-variant mt-xs">활성 크리에이터</div>
+</div>
+<div class="w-full py-sm md:py-0">
+<div class="font-display-lg text-display-lg text-secondary font-bold">38만+</div>
+<div class="font-label-xs text-on-surface-variant mt-xs">누적 수강신청</div>
+</div>
+<div class="w-full py-sm md:py-0">
+<div class="font-display-lg text-display-lg text-tertiary font-bold">1.2억</div>
+<div class="font-label-xs text-on-surface-variant mt-xs">크리에이터 월 최고 매출</div>
+</div>
+</div>
+</section>
+<!-- Section 5: Product Type Grid (Bento style) -->
+<section class="max-w-[1440px] mx-auto px-6 lg:px-12 w-full py-xl">
+<div class="text-center mb-xl">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-sm">모든 형태의 지식 비즈니스를 지원합니다</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">단방향 VOD부터 실시간 코칭까지, 필요한 모든 클래스 포맷을 한 곳에서.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- VOD -->
+<div class="bg-surface-container-lowest rounded-xl p-lg border border-surface-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-md opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[100px] text-primary">play_circle</span>
+</div>
+<div class="w-12 h-12 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center mb-md">
+<span class="material-symbols-outlined">movie</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-xs flex items-center gap-sm">
+                        VOD 인강 <span class="bg-primary text-on-primary text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">v1 지원</span>
+</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">언제 어디서나 수강 가능한 고품질 VOD 강의 시스템</p>
+</div>
+<!-- Live -->
+<div class="bg-surface-container-lowest rounded-xl p-lg border border-surface-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-md opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[100px] text-secondary">groups</span>
+</div>
+<div class="w-12 h-12 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center mb-md">
+<span class="material-symbols-outlined">live_tv</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-xs flex items-center gap-sm">
+                        기수제 라이브 <span class="bg-primary text-on-primary text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">v1 지원</span>
+</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">동기 부여를 극대화하는 기수 기반의 실시간 라이브 클래스</p>
+</div>
+<!-- 1:1 -->
+<div class="bg-surface-container-lowest rounded-xl p-lg border border-surface-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-md opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[100px] text-outline">person_book</span>
+</div>
+<div class="w-12 h-12 rounded-lg bg-surface-variant text-on-surface-variant flex items-center justify-center mb-md">
+<span class="material-symbols-outlined">mic</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-xs flex items-center gap-sm text-outline">
+                        1:1 코칭 <span class="bg-surface-dim text-outline text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-wider border border-outline-variant">vision</span>
+</h3>
+<p class="font-body-sm text-body-sm text-outline">개인 맞춤형 성장을 위한 심도 깊은 1:1 프라이빗 멘토링 세션</p>
+</div>
+<!-- Digital Goods -->
+<div class="bg-surface-container-lowest rounded-xl p-lg border border-surface-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-md opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[100px] text-outline">description</span>
+</div>
+<div class="w-12 h-12 rounded-lg bg-surface-variant text-on-surface-variant flex items-center justify-center mb-md">
+<span class="material-symbols-outlined">download</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-xs flex items-center gap-sm text-outline">
+                        디지털 콘텐츠 <span class="bg-surface-dim text-outline text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-wider border border-outline-variant">vision</span>
+</h3>
+<p class="font-body-sm text-body-sm text-outline">전자책, 템플릿, 프롬프트 등 다운로드 가능한 지식 자산 판매</p>
+</div>
+</div>
+</section>
+<!-- Section 6: Solution Strip -->
+<section class="max-w-[1440px] mx-auto px-6 lg:px-12 w-full py-xl">
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-sm">
+<div class="bg-surface-container-low p-md rounded-lg text-center flex flex-col items-center justify-center gap-xs border border-surface-variant">
+<span class="material-symbols-outlined text-primary text-xl">language</span>
+<span class="font-label-xs text-on-surface font-semibold">웹사이트 구축</span>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg text-center flex flex-col items-center justify-center gap-xs border border-surface-variant">
+<span class="material-symbols-outlined text-secondary text-xl">contact_page</span>
+<span class="font-label-xs text-on-surface font-semibold">고객 관리(CRM)</span>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg text-center flex flex-col items-center justify-center gap-xs border border-surface-variant">
+<span class="material-symbols-outlined text-tertiary text-xl">forum</span>
+<span class="font-label-xs text-on-surface font-semibold">커뮤니티 운영</span>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg text-center flex flex-col items-center justify-center gap-xs border border-surface-variant">
+<span class="material-symbols-outlined text-primary text-xl">payments</span>
+<span class="font-label-xs text-on-surface font-semibold">결제 및 정산</span>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg text-center flex flex-col items-center justify-center gap-xs border border-surface-variant">
+<span class="material-symbols-outlined text-secondary text-xl">campaign</span>
+<span class="font-label-xs text-on-surface font-semibold">마케팅 도구</span>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg text-center flex flex-col items-center justify-center gap-xs border border-surface-variant">
+<span class="material-symbols-outlined text-tertiary text-xl">bar_chart</span>
+<span class="font-label-xs text-on-surface font-semibold">매출 분석</span>
+</div>
+</div>
+</section>
+<!-- Section 7: Success Story Grid -->
+<section class="max-w-[1440px] mx-auto px-6 lg:px-12 w-full py-xl bg-surface rounded-2xl">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-lg text-center">오픈하우와 함께 성장한 이야기</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- Story 1 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-variant shadow-sm relative pt-xl mt-lg">
+<img class="w-16 h-16 rounded-full object-cover border-4 border-surface-container-lowest absolute -top-8 left-lg shadow-sm" data-alt="A portrait of a smiling female professional in a bright, modern office space. She exudes confidence and warmth. The background is a slightly blurred, high-end corporate setting with soft, natural lighting. The color palette emphasizes clean whites, soft greys, and warm skin tones, projecting a successful and approachable persona." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7SGydAn1XXwKlg5cJmIGzLSFM6ZanwAf7BpOpAZ9orFaO9nOcKgWasgSe8sU90VPquhevn1DEtNjixfSgfbqkJD8Io60wMKrL-fHVLj3bigdrGMPC6eRpbhzGVV1aLRJ0PbNiteROF4u58Ae8doG0d2_ko8VoPfeSmdrYCkaBtXkgn2UF9sBoyZb2RXXnNKiWcIvP0V-xS8AGnLoUJALkhfiCeE4LxDWNjMCQjqN9rsO31kamGenI90_Dg9lEy-iHXoFUQn3JwHs"/>
+<div class="font-title-sm text-title-sm text-on-surface font-bold mb-xs">3개월 만에 월 2천만원 돌파</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md italic">"복잡한 코딩 없이 저만의 전문적인 아카데미를 하루 만에 오픈했습니다. 결제부터 수강생 관리까지 알아서 해주니 콘텐츠 에만 집중할 수 있었어요."</p>
+<div class="font-label-xs text-outline">김지연 (외국어 코치)</div>
+</div>
+<!-- Story 2 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-variant shadow-sm relative pt-xl mt-lg">
+<img class="w-16 h-16 rounded-full object-cover border-4 border-surface-container-lowest absolute -top-8 left-lg shadow-sm" data-alt="A portrait of a middle-aged male executive looking thoughtfully off-camera. He is dressed in a smart business casual outfit. The setting is a minimalist, modern room with subtle, cool-toned lighting that highlights his facial features and conveys deep experience and intellectual authority. The mood is serious and trustworthy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7FnnAbBDbY6gSYTWjOkNTClhZuFsL0vDqxkchtGpvlvsj_a1frZEzdrPmX5jKJ1LMuKPSE3JHJnUgdCAWk7OZWRfeviUpqyU5q3uCchp5YNeNAtzOO2QbAHqI8qA9BAkeHcR3sYsWY9D_gvpKEfBajkVGeIJqemINUcvudsPRKwZuh7bNOGvmYNzStXcira-aT2l7gtNzOiIozyZP1-Sq0KCIdXirf3ACa6aWmwDW8iwSUw3AfUkBqbFNho3YTYoIxpgSZVnCeKU"/>
+<div class="font-title-sm text-title-sm text-on-surface font-bold mb-xs">수강생 유지율 90% 달성</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md italic">"기수제 라이브 기능과 내장된 커뮤니티 덕분에 수강생들과의 유대감이 엄청나게 높아졌습니다. 재수강률이 놀랍도록 상승했습니다."</p>
+<div class="font-label-xs text-outline">박성호 (재테크 강사)</div>
+</div>
+<!-- Story 3 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-surface-variant shadow-sm relative pt-xl mt-lg">
+<img class="w-16 h-16 rounded-full object-cover border-4 border-surface-container-lowest absolute -top-8 left-lg shadow-sm" data-alt="A portrait of a young male creative professional in a casual, artsy studio setting. He is looking at the camera with a relaxed, creative vibe. The background includes blurred art supplies and a modern desk setup. The lighting is warm and slightly dramatic, emphasizing a vibrant, innovative, and modern creator aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBW7cQG0TIxaHrvWfxuBj1dUM7ntJoqA2hEV7or0GqZmGZ5VmKHlemK-FjQk3UID_uQGCr41OeLuH3hlzO--jxtffVnkTsAjk0FElQh19wI0t_zk3SLkUnc7JXTR3jAVILhp9uJEIB-S6DHMONHzXrgQxDKQzrZhTWlJC_qm000HjA84kivKGbget4UEcjIvPwDzhwiT_1bcHM9wQlAlk1W8VK3gRe42prEOOEtN5eFhh5XF5uoEQrRleSCOg9FPdoeuPSl3qzvgT8"/>
+<div class="font-title-sm text-title-sm text-on-surface font-bold mb-xs">관리 시간 80% 단축</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md italic">"기존에는 엑셀과 구글폼으로 수동 관리하던 것들을 오픈하우가 모두 자동화해 주었습니다. 이제 남는 시간에 새로운 강의를 기획합니다."</p>
+<div class="font-label-xs text-outline">이현우 (디자인 튜터)</div>
+</div>
+</div>
+</section>
+<!-- Section 8: Partner Logo Strip -->
+<section class="max-w-[1440px] mx-auto px-6 lg:px-12 w-full py-xl border-t border-surface-variant">
+<div class="flex flex-wrap justify-center items-center gap-xl opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+<span class="font-display-lg text-xl font-bold tracking-tighter">Bootpay</span>
+<span class="font-display-lg text-xl font-bold tracking-tighter">Cloudflare</span>
+<span class="font-display-lg text-xl font-bold tracking-tighter">오픈클로</span>
+<span class="font-display-lg text-xl font-bold tracking-tighter">KAIST</span>
+<span class="font-display-lg text-xl font-bold tracking-tighter">Anthropic</span>
+</div>
+</section>
+<!-- Section 9: Bottom CTA -->
+<section class="max-w-[1440px] mx-auto w-full px-6 lg:px-12 py-2xl text-center">
+<div class="tech-gradient-bg rounded-2xl p-xl shadow-lg relative overflow-hidden">
+<div class="abstract-blob bg-white w-[300px] h-[300px] top-[-100px] left-[-100px] opacity-20"></div>
+<div class="relative z-10">
+<h2 class="font-headline-md text-headline-md text-on-primary mb-md">지식 비즈니스의 시작, openhow 와 함께하세요</h2>
+<p class="font-body-md text-body-md text-on-primary/80 mb-lg max-w-2xl mx-auto">지금 바로 나만의 지식 스토어를 개설하고 첫 수강생을 모집해 보세요.</p>
+<button class="bg-white text-primary px-xl py-md rounded-xl font-label-xs font-bold hover:bg-surface transition-colors shadow-md active:scale-95">지금 무료로 시작하기</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 w-full py-16 border-t border-slate-200 dark:border-slate-800 text-xs sm:text-sm leading-relaxed font-normal">
+<div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+<div class="col-span-2 md:col-span-4 lg:col-span-2">
+<span class="text-lg font-bold text-slate-900 dark:text-white mb-4 block">openhow</span>
+<p class="text-slate-500 dark:text-slate-400 mb-4">© 2024 openhow. All rights reserved.</p>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors opacity-80 hover:opacity-100" href="#">이용약관</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors opacity-80 hover:opacity-100" href="#">개인정보처리방침</a>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors opacity-80 hover:opacity-100" href="#">고객센터</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors opacity-80 hover:opacity-100" href="#">인재채용</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -9,7 +9,7 @@ const DEFAULT_CONCURRENCY = 5;
 
 function printUsage() {
   console.log(`Usage:
-  node scripts/verify-urls.mjs --input urls.txt [--valid-out valid-links.txt] [--csv-out results.csv]
+  node scripts/verify-urls.mjs --input references/liveklass-urls.txt [--valid-out valid-links.txt] [--csv-out results.csv]
                                [--allow-domain example.com] [--concurrency 5] [--timeout-ms 8000]
 
 Options:
@@ -22,7 +22,7 @@ Options:
   -h, --help               Show this help
 
 Example:
-  node scripts/verify-urls.mjs --input urls.txt --allow-domain docs.example.com`);
+  node scripts/verify-urls.mjs --input references/liveklass-urls.txt --allow-domain docs.example.com`);
 }
 
 function parseArgs(argv) {

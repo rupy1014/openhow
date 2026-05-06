@@ -16,6 +16,7 @@ iteration: 1
 - **부모 의도**:
   - `public-blog-home.md` — 홈 큐레이션 (시리즈 4개 컷 + 카테고리/도메인 분류축이 빠져있음)
   - `creator-platform.md` — UGC 발행자 + 메인 큐레이션 확장
+  - `creator-platform-discovery.md` (exploring, 2026-04-30) — v1 MVP "지식플랫폼" 정체성에서 "시리즈" = "클래스 (인강 + 기수제 인강)" 와 동일 단위. 본 catalog 의 분류·발견 surface 가 discovery 의 클래스 카탈로그 역할을 겸함.
 - **직전 합의 (2026-04-17 대화)**:
   - UI 라벨은 **"시리즈"** 한 단어로 통일 (course/blog/docs 모두 포괄)
   - **카테고리** = 도메인 분류축 (개발/AI/마케팅/디자인 등 — `topicTags` 활용)

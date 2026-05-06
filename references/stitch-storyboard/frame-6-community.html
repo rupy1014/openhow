@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>openhow - Dreamschool Community</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Pretendard:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#dbe1ff",
+                      "primary-container": "#2563eb",
+                      "on-tertiary-container": "#ffede6",
+                      "inverse-surface": "#2e3039",
+                      "tertiary-container": "#bc4800",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "surface-container-low": "#f3f3fe",
+                      "on-surface-variant": "#434655",
+                      "inverse-on-surface": "#f0f0fb",
+                      "surface-dim": "#d9d9e5",
+                      "on-tertiary": "#ffffff",
+                      "surface-container": "#ededf9",
+                      "surface": "#faf8ff",
+                      "primary": "#004ac6",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "outline-variant": "#c3c6d7",
+                      "on-secondary-fixed": "#0f0069",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface": "#191b23",
+                      "surface-container-highest": "#e1e2ed",
+                      "on-tertiary-fixed": "#360f00",
+                      "surface-bright": "#faf8ff",
+                      "on-error-container": "#93000a",
+                      "surface-container-high": "#e7e7f3",
+                      "error-container": "#ffdad6",
+                      "outline": "#737686",
+                      "on-secondary-container": "#fffbff",
+                      "on-primary-container": "#eeefff",
+                      "on-background": "#191b23",
+                      "on-primary-fixed": "#00174b",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed": "#ffdbcd",
+                      "tertiary-fixed-dim": "#ffb596",
+                      "on-secondary": "#ffffff",
+                      "surface-tint": "#0053db",
+                      "secondary-fixed-dim": "#c3c0ff",
+                      "on-tertiary-fixed-variant": "#7d2d00",
+                      "on-primary": "#ffffff",
+                      "background": "#faf8ff",
+                      "secondary-container": "#645efb",
+                      "secondary-fixed": "#e2dfff",
+                      "on-error": "#ffffff",
+                      "tertiary": "#943700",
+                      "secondary": "#4b41e1",
+                      "inverse-primary": "#b4c5ff",
+                      "on-secondary-fixed-variant": "#3323cc",
+                      "surface-variant": "#e1e2ed"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "xs": "4px",
+                      "xl": "40px",
+                      "sm": "8px",
+                      "lg": "24px",
+                      "2xl": "64px"
+              },
+              "fontFamily": {
+                      "label-xs": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Pretendard"
+                      ],
+                      "title-sm": [
+                              "Pretendard"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Pretendard"
+                      ]
+              },
+              "fontSize": {
+                      "label-xs": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="h-screen w-64 fixed left-0 border-r border-r border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 z-40 hidden md:flex flex-col">
+<div class="flex flex-col p-4 gap-2 h-full">
+<!-- Header -->
+<div class="flex items-center gap-3 px-3 py-4 mb-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center overflow-hidden flex-shrink-0">
+<img alt="Workspace Avatar" class="w-full h-full object-cover" data-alt="A modern, abstract technological icon featuring a stylized microchip or circuit board pattern in deep blues and bright whites. The image should convey a sense of professional intelligence and tech-forward momentum, set against a pristine, minimalist light background. High-resolution, crisp edges, and a polished glassmorphism aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6qCB75CUEETkdrwSNokJZsNG9rGdIPUR-H0IU0J5NRR-knfKiCVpigqQxx3xXoM9CLROD7l5iqreBj7rPPRHmJgsUsCoHPgAf4qfTtznub4gFRKpe4K_QOQEgt50Xyr6bUy_EIYo2zDROaY6lYa2YmsQCF-r8XDG6_Csz-zhDY2QjSSXTgXL9kQWpQepnGm750crPqeMXkn0F-fg9vc-Mxbwxejhjf9B4RbGzHNojEKHsy-Jjq17Niegn6wqlzFNnwl1FgEzTkTA"/>
+</div>
+<div class="flex flex-col overflow-hidden">
+<span class="text-xl font-bold text-slate-900 dark:text-white truncate">openhow Workspace</span>
+<span class="font-label-xs text-label-xs text-outline truncate">Professional Intelligence</span>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-1 flex-grow overflow-y-auto">
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all font-sans text-sm font-medium" href="#">
+<span class="material-symbols-outlined">home</span>
+<span>Home</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all font-sans text-sm font-medium" href="#">
+<span class="material-symbols-outlined">school</span>
+<span>Lectures</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all font-sans text-sm font-medium" href="#">
+<span class="material-symbols-outlined">campaign</span>
+<span>Notices</span>
+</a>
+<a class="flex items-center gap-3 text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/20 rounded-lg px-3 py-2 font-semibold font-sans text-sm transition-all" href="#">
+<span class="material-symbols-outlined fill">group</span>
+<span>Community</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all font-sans text-sm font-medium" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span>Assignments</span>
+</a>
+</div>
+<!-- Footer -->
+<div class="mt-auto pt-4 border-t border-outline-variant/30 flex flex-col gap-2">
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all font-sans text-sm font-medium" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all font-sans text-sm font-medium" href="#">
+<span class="material-symbols-outlined">help</span>
+<span>Support</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:ml-[256px] flex flex-col xl:flex-row min-h-screen">
+<!-- Center Canvas -->
+<main class="flex-1 p-md md:p-lg xl:p-xl flex flex-col gap-lg max-w-5xl mx-auto w-full">
+<!-- Header Section -->
+<header class="flex flex-col gap-sm">
+<div class="flex items-center gap-sm font-label-xs text-label-xs text-outline">
+<span>드림스쿨</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary-container">커뮤니티</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="flex flex-col gap-xs">
+<h1 class="font-headline-md text-headline-md text-on-surface">드림스쿨 커뮤니티</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">함께 공부하는 동료들의 질문, 후기, 숙제 회고</p>
+</div>
+<button class="bg-primary-container text-on-primary rounded-lg px-4 py-2 font-title-sm text-[14px] flex items-center gap-xs hover:bg-primary transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        글쓰기
+                    </button>
+</div>
+</header>
+<!-- Filter Bar -->
+<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-3 flex flex-wrap lg:flex-nowrap items-center justify-between gap-md shadow-sm sticky top-4 z-30 backdrop-blur-md bg-white/80">
+<!-- Category Chips -->
+<div class="flex gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide flex-1">
+<button class="px-4 py-1.5 rounded-full bg-primary-container text-on-primary font-label-xs text-label-xs whitespace-nowrap transition-colors">전체</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs whitespace-nowrap transition-colors border border-outline-variant/30">질문</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs whitespace-nowrap transition-colors border border-outline-variant/30">후기</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs whitespace-nowrap transition-colors border border-outline-variant/30">숙제</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-xs text-label-xs whitespace-nowrap transition-colors border border-outline-variant/30">회고</button>
+</div>
+<!-- Controls & Search -->
+<div class="flex items-center gap-3 w-full lg:w-auto">
+<div class="flex gap-2">
+<select class="form-select border-none bg-surface-container-low rounded-lg py-1.5 pl-3 pr-8 font-label-xs text-label-xs text-on-surface-variant focus:ring-1 focus:ring-primary-container cursor-pointer appearance-none shadow-sm">
+<option>전체 기수</option>
+<option>3기</option>
+<option>2기</option>
+<option>1기</option>
+</select>
+<select class="form-select border-none bg-surface-container-low rounded-lg py-1.5 pl-3 pr-8 font-label-xs text-label-xs text-on-surface-variant focus:ring-1 focus:ring-primary-container cursor-pointer appearance-none shadow-sm">
+<option>최신순</option>
+<option>조회순</option>
+<option>댓글순</option>
+</select>
+</div>
+<div class="relative flex-1 lg:w-48">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg py-1.5 pl-9 pr-3 font-body-sm text-body-sm text-on-surface focus:ring-1 focus:ring-primary-container placeholder:text-outline/70 shadow-sm transition-shadow" placeholder="게시글 검색" type="text"/>
+</div>
+</div>
+</div>
+<!-- Post List (Bento-ish Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Card 1: Question -->
+<article class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer group">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-[11px] px-2 py-0.5 rounded text-blue-700 bg-blue-50 border border-blue-100">질문</span>
+<span class="font-label-xs text-outline text-[11px]">2025.04.28</span>
+</div>
+<h3 class="font-title-sm text-[16px] text-on-surface group-hover:text-primary-container transition-colors line-clamp-2">5단계 학습법에서 3단계 어떻게 넘어가나요?</h3>
+<div class="flex items-center justify-between mt-auto pt-2 border-t border-surface-variant/50">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded-full bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface-variant">박</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant">박지윤 <span class="text-outline">(2기)</span></span>
+</div>
+<div class="flex gap-3 font-label-xs text-[11px] text-outline">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">visibility</span> 142</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">chat_bubble</span> 12</span>
+</div>
+</div>
+</article>
+<!-- Card 2: Review (With Thumbnail) -->
+<article class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer group relative overflow-hidden">
+<div class="flex gap-4 h-full">
+<div class="flex-1 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-[11px] px-2 py-0.5 rounded text-emerald-700 bg-emerald-50 border border-emerald-100">후기</span>
+<span class="flex items-center gap-1 font-label-xs text-[11px] text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded"><span class="material-symbols-outlined text-[12px] fill">star</span> 5.0</span>
+</div>
+<h3 class="font-title-sm text-[16px] text-on-surface group-hover:text-primary-container transition-colors line-clamp-2">드림스쿨 6주 완주 후기 — 서울대 합격까지</h3>
+<div class="flex items-center justify-between mt-auto pt-2 border-t border-surface-variant/50">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded-full bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface-variant">이</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant">이서연 <span class="text-outline">(1기)</span></span>
+</div>
+<div class="flex gap-3 font-label-xs text-[11px] text-outline hidden sm:flex">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">visibility</span> 850</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">chat_bubble</span> 45</span>
+</div>
+</div>
+</div>
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container">
+<img alt="Study group" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A bright, airy study session happening in a modern university library setting. A diverse group of students are focused on their laptops and notebooks, bathed in natural light from large windows. The mood is collaborative and intellectually engaging, rendered in high resolution with a clean, professional light-mode aesthetic emphasizing whites, soft grays, and natural wood tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAH6fzzSn8oIdzqvtrEakz7OcZOIlSKKuY6SMYqESXW2pW6z8tfwR9gBvsSz4mbUp_7YMcRN_91sbf7tRFM0kezjsHGw8QHmuv2JxCP3ytkh_L3FgUOvmrBYn2LMl26H8hcLtS3NsORDPYAIunTXKOH8pAw_Nd2hzYuxGECRBRGVFz_WHjPhn19KDqNLKZ-6v-QKizwL-NwsEx4yohwuDuEXL2P2g7yf0LiTPv36VCKQlh-oDSbJlsK4yOvCpm2fv8sWM0tx9lqkOs"/>
+</div>
+</div>
+</article>
+<!-- Card 3: Homework (With Thumbnail) -->
+<article class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer group">
+<div class="flex gap-4 h-full">
+<div class="flex-1 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-[11px] px-2 py-0.5 rounded text-orange-700 bg-orange-50 border border-orange-100">숙제</span>
+<span class="font-label-xs text-outline text-[11px]">2025.04.26</span>
+</div>
+<h3 class="font-title-sm text-[16px] text-on-surface group-hover:text-primary-container transition-colors line-clamp-2">Week 3 회독 결과 공유합니다 (페이스 노트 포함)</h3>
+<div class="flex items-center justify-between mt-auto pt-2 border-t border-surface-variant/50">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded-full bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface-variant">김</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant">김도현 <span class="text-outline">(3기)</span></span>
+</div>
+<div class="flex gap-3 font-label-xs text-[11px] text-outline">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">visibility</span> 320</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">chat_bubble</span> 18</span>
+</div>
+</div>
+</div>
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container mt-auto mb-auto">
+<img alt="Notes" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A meticulously organized notebook showing handwritten notes, charts, and highlighted text lying flat on a pristine white desk. A sleek modern pen and a minimalist tablet are visible nearby. The lighting is soft and even, highlighting the detailed texture of the paper and conveying a sense of disciplined study and academic rigor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMEVRx0-s77hp_RECpuoo-GiQ72sON3rZUMEQlZi8JlDny-D1CeBtd0TJpPGhxYZgN2t3YDHsb70s78OwLLaTEkMzb4IXqp63-RO-mej4RvlRk5B5yyQB796gOp1WaKXTZIfErcqZeUKiXth9zjDJGA4GvuVJf_Gin4dx-bZSxB5pzbU55bWeuYBWa7OHp7j9lLO38bNfRw6-ZdIWUeXRmAjI0odcjgTTV5sz_y3I0dbDp2S8vXythgeJWpjEraK8gfLWrsVDRipY"/>
+</div>
+</div>
+</article>
+<!-- Card 4: Question -->
+<article class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer group">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-[11px] px-2 py-0.5 rounded text-blue-700 bg-blue-50 border border-blue-100">질문</span>
+<span class="font-label-xs text-outline text-[11px]">2025.04.25</span>
+</div>
+<h3 class="font-title-sm text-[16px] text-on-surface group-hover:text-primary-container transition-colors line-clamp-2">오답노트 정리 방식이 헷갈려요</h3>
+<div class="flex items-center justify-between mt-auto pt-2 border-t border-surface-variant/50">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded-full bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface-variant">최</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant">최유진 <span class="text-outline">(3기)</span></span>
+</div>
+<div class="flex gap-3 font-label-xs text-[11px] text-outline">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">visibility</span> 210</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">chat_bubble</span> 5</span>
+</div>
+</div>
+</article>
+<!-- Card 5: Retrospective -->
+<article class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer group">
+<div class="flex items-center justify-between">
+<div class="flex gap-2 items-center">
+<span class="font-label-xs text-[11px] px-2 py-0.5 rounded text-purple-700 bg-purple-50 border border-purple-100">회고</span>
+<span class="flex items-center gap-1 font-label-xs text-[11px] text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded"><span class="material-symbols-outlined text-[12px] fill">star</span> 4.7</span>
+</div>
+<span class="font-label-xs text-outline text-[11px]">2025.04.24</span>
+</div>
+<h3 class="font-title-sm text-[16px] text-on-surface group-hover:text-primary-container transition-colors line-clamp-2">한 달간의 변화 — 집중력이 정말 늘었나</h3>
+<div class="flex items-center justify-between mt-auto pt-2 border-t border-surface-variant/50">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded-full bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface-variant">정</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant">정태우 <span class="text-outline">(2기)</span></span>
+</div>
+<div class="flex gap-3 font-label-xs text-[11px] text-outline">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">visibility</span> 540</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">chat_bubble</span> 22</span>
+</div>
+</div>
+</article>
+<!-- Card 6: Review (With Thumbnail) -->
+<article class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer group">
+<div class="flex gap-4 h-full">
+<div class="flex-1 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-[11px] px-2 py-0.5 rounded text-emerald-700 bg-emerald-50 border border-emerald-100">후기</span>
+<span class="font-label-xs text-outline text-[11px]">2025.04.23</span>
+</div>
+<h3 class="font-title-sm text-[16px] text-on-surface group-hover:text-primary-container transition-colors line-clamp-2">수능 D-100 시점에 만난 강의</h3>
+<div class="flex items-center justify-between mt-auto pt-2 border-t border-surface-variant/50">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded-full bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface-variant">강</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant">강민서 <span class="text-outline">(1기)</span></span>
+</div>
+<div class="flex gap-3 font-label-xs text-[11px] text-outline">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">visibility</span> 1.2k</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">chat_bubble</span> 56</span>
+</div>
+</div>
+</div>
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container mt-auto mb-auto">
+<img alt="Study" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A focused perspective on a student's desk showing a calendar with days marked off, surrounded by textbooks and a glowing desk lamp. The environment feels intense yet hopeful, captured in a high-quality, bright aesthetic with sharp contrast. Deep navy blues and stark whites create a sense of professional urgency and progress." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMyuztm6GfoX2AMCayCl21HdUnTb8OUBloQZpltz3OMELKQ-3724VXJUAJFJN6seZ42fJClMS7JKky5YLBep_Ai-P4Kw2pzmAAiSb4B6BHIp5iSPUdhlmqJtADKrRsftcTSo0kTYLZxaEQ0l_tUE5O_EXac4y0Y2BRWSNBhqTeJlwEHMJnPriDFFg85j7HzjvGMgasfCvVL-T-hOQ29ZZ3d3g9oLrBl_dHM3bUTCPUEkDZoGMlRNzgGMTEziofK1HKxB_sspL1FNo"/>
+</div>
+</div>
+</article>
+<!-- Card 7: Question -->
+<article class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer group">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-[11px] px-2 py-0.5 rounded text-blue-700 bg-blue-50 border border-blue-100">질문</span>
+<span class="font-label-xs text-outline text-[11px]">2025.04.22</span>
+</div>
+<h3 class="font-title-sm text-[16px] text-on-surface group-hover:text-primary-container transition-colors line-clamp-2">강의 슬라이드 PDF 어디서 받나요?</h3>
+<div class="flex items-center justify-between mt-auto pt-2 border-t border-surface-variant/50">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded-full bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface-variant">윤</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant">윤하늘 <span class="text-outline">(3기)</span></span>
+</div>
+<div class="flex gap-3 font-label-xs text-[11px] text-outline">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">visibility</span> 180</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">chat_bubble</span> 3</span>
+</div>
+</div>
+</article>
+<!-- Card 8: Homework -->
+<article class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer group">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-[11px] px-2 py-0.5 rounded text-orange-700 bg-orange-50 border border-orange-100">숙제</span>
+<span class="font-label-xs text-outline text-[11px]">2025.04.21</span>
+</div>
+<h3 class="font-title-sm text-[16px] text-on-surface group-hover:text-primary-container transition-colors line-clamp-2">Week 5 자기진단 결과</h3>
+<div class="flex items-center justify-between mt-auto pt-2 border-t border-surface-variant/50">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded-full bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface-variant">임</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant">임채원 <span class="text-outline">(2기)</span></span>
+</div>
+<div class="flex gap-3 font-label-xs text-[11px] text-outline">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">visibility</span> 290</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">chat_bubble</span> 14</span>
+</div>
+</div>
+</article>
+</div>
+<!-- Footer -->
+<footer class="mt-xl pt-lg border-t border-outline-variant/30 text-center pb-md">
+<p class="font-label-xs text-label-xs text-outline">Powered by <span class="font-bold text-on-surface-variant">openhow</span> workspace</p>
+</footer>
+</main>
+<!-- Right Sidebar (Contextual Insights) -->
+<aside class="w-full xl:w-[320px] p-md border-t xl:border-t-0 xl:border-l border-outline-variant/30 bg-surface-container-lowest flex flex-col gap-lg xl:min-h-screen">
+<!-- Popular Posts -->
+<section class="flex flex-col gap-3">
+<h2 class="font-title-sm text-[16px] text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary-container text-[18px]">local_fire_department</span>
+                    이번 주 인기글
+                </h2>
+<div class="flex flex-col gap-2">
+<a class="group p-3 rounded-lg hover:bg-surface-container-low transition-colors border border-transparent hover:border-outline-variant/30" href="#">
+<div class="flex gap-2 items-start">
+<span class="font-bold text-tertiary-container mt-0.5 text-sm">1</span>
+<div>
+<span class="font-label-xs text-[10px] px-1.5 py-0.5 rounded text-emerald-700 bg-emerald-50 mb-1 inline-block">후기</span>
+<p class="font-body-sm text-[13px] text-on-surface group-hover:text-primary-container line-clamp-2 leading-snug">수능 D-100 시점에 만난 강의, 정말 인생이 바뀌었습니다</p>
+</div>
+</div>
+</a>
+<a class="group p-3 rounded-lg hover:bg-surface-container-low transition-colors border border-transparent hover:border-outline-variant/30" href="#">
+<div class="flex gap-2 items-start">
+<span class="font-bold text-outline-variant mt-0.5 text-sm">2</span>
+<div>
+<span class="font-label-xs text-[10px] px-1.5 py-0.5 rounded text-purple-700 bg-purple-50 mb-1 inline-block">회고</span>
+<p class="font-body-sm text-[13px] text-on-surface group-hover:text-primary-container line-clamp-2 leading-snug">한 달간의 변화 — 집중력이 정말 늘었나 객관적 분석</p>
+</div>
+</div>
+</a>
+<a class="group p-3 rounded-lg hover:bg-surface-container-low transition-colors border border-transparent hover:border-outline-variant/30" href="#">
+<div class="flex gap-2 items-start">
+<span class="font-bold text-outline-variant mt-0.5 text-sm">3</span>
+<div>
+<span class="font-label-xs text-[10px] px-1.5 py-0.5 rounded text-blue-700 bg-blue-50 mb-1 inline-block">질문</span>
+<p class="font-body-sm text-[13px] text-on-surface group-hover:text-primary-container line-clamp-2 leading-snug">5단계 학습법에서 3단계 어떻게 넘어가나요? 정체기 극복 팁</p>
+</div>
+</div>
+</a>
+</div>
+</section>
+<!-- Active Peers -->
+<section class="flex flex-col gap-3">
+<h2 class="font-title-sm text-[16px] text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">group</span>
+                    활발한 동료
+                </h2>
+<div class="flex flex-wrap gap-3">
+<div class="flex flex-col items-center gap-1 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-100 to-indigo-100 border border-white shadow-sm flex items-center justify-center text-primary-container font-bold group-hover:scale-110 transition-transform">이</div>
+<span class="font-label-xs text-[10px] text-outline">이서연</span>
+</div>
+<div class="flex flex-col items-center gap-1 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-100 to-teal-100 border border-white shadow-sm flex items-center justify-center text-emerald-700 font-bold group-hover:scale-110 transition-transform">강</div>
+<span class="font-label-xs text-[10px] text-outline">강민서</span>
+</div>
+<div class="flex flex-col items-center gap-1 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-100 to-fuchsia-100 border border-white shadow-sm flex items-center justify-center text-purple-700 font-bold group-hover:scale-110 transition-transform">정</div>
+<span class="font-label-xs text-[10px] text-outline">정태우</span>
+</div>
+<div class="flex flex-col items-center gap-1 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-100 to-orange-100 border border-white shadow-sm flex items-center justify-center text-amber-700 font-bold group-hover:scale-110 transition-transform">김</div>
+<span class="font-label-xs text-[10px] text-outline">김도현</span>
+</div>
+<div class="flex flex-col items-center gap-1 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-rose-100 to-pink-100 border border-white shadow-sm flex items-center justify-center text-rose-700 font-bold group-hover:scale-110 transition-transform">박</div>
+<span class="font-label-xs text-[10px] text-outline">박지윤</span>
+</div>
+</div>
+</section>
+<!-- CTA Box -->
+<div class="mt-auto pt-lg">
+<button class="w-full bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-sm text-[14px] py-3 rounded-xl flex items-center justify-center gap-2 transition-colors border border-outline-variant/30 shadow-sm">
+                    📚 강의로 돌아가기
+                </button>
+</div>
+</aside>
+</div>
+</body></html>

@@ -50,7 +50,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Read explicit LiveKlass class URLs from a text file and export public course info to CSV."
     )
-    parser.add_argument("--input", default="urls.txt", help="Input text file. Default: urls.txt")
+    parser.add_argument(
+        "--input",
+        default="references/liveklass-urls.txt",
+        help="Input text file. Default: references/liveklass-urls.txt",
+    )
     parser.add_argument(
         "--output",
         default="liveklass-courses.csv",

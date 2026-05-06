@@ -1,5 +1,5 @@
 ---
-status: building
+status: done
 created: 2026-04-29
 updated: 2026-04-29
 iteration: 1
@@ -91,7 +91,13 @@ stage: build
 - `examples/clauders.ai/openhow.json` 유효 JSON ✅
 
 ### 미완 / Deferred
-- **E2E 브라우저 검증** (Playwright 5-시나리오) — `examples/clauders.ai/` 트리에 무관한 dirty 변경 366건 (한글 폴더 → 영어 폴더 리스트럭처) 가 쌓여 있어 publish 진행 시 production 콘텐츠가 같이 바뀜. 사용자 콘텐츠 작업이라 본 의도에서 처리 불가. **사용자가 그 dirty 처리를 결정한 뒤 별도 publish/검증 단계** 로 이관.
+- (없음) — 컨텐츠 리스트럭처 별도 커밋 후 publish 완료. 프로덕션 검증도 완료.
+
+### 프로덕션 검증 (2026-04-29, post-publish)
+- `https://class.clauders.ai/getting-started/00-welcome` (free, idx 1): paywall 클래스 없음, sidebar `data-locked` 존재 ✅
+- `https://class.clauders.ai/getting-started/04-create-project` (gated, idx 5): `isAccessibleForFree` + `md-paywalled-body` + `ssg-paywall-cta` + 한글 CTA "이 글은" 모두 존재 ✅
+- `https://class.clauders.ai/claude-code-intro/01-model-choice` (gated, idx 6+): paywall 메타/wrapper/CTA 모두 존재 ✅
+- 5/5 시나리오 pass
 
 ### 결정 메모
 - 멤버 전용 문서 기본 `freeSections` 는 `defaultFreeSections ?? 1` 로 fallback (paid 와 동일 정책). per-doc frontmatter `freeSections` override 그대로 동작.

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>1강. 모든 시험에 통하는 5단계 코어 공부법 - 드림스쿨</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface": "#faf8ff",
+                      "tertiary-fixed": "#ffdbcd",
+                      "tertiary-container": "#bc4800",
+                      "secondary-fixed-dim": "#c3c0ff",
+                      "on-error-container": "#93000a",
+                      "primary-container": "#2563eb",
+                      "on-surface": "#191b23",
+                      "inverse-surface": "#2e3039",
+                      "on-primary-fixed": "#00174b",
+                      "inverse-on-surface": "#f0f0fb",
+                      "surface-container-low": "#f3f3fe",
+                      "surface-tint": "#0053db",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-container": "#645efb",
+                      "on-secondary-fixed": "#0f0069",
+                      "on-secondary-fixed-variant": "#3323cc",
+                      "primary": "#004ac6",
+                      "on-tertiary-fixed": "#360f00",
+                      "on-tertiary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "inverse-primary": "#b4c5ff",
+                      "tertiary": "#943700",
+                      "outline": "#737686",
+                      "on-surface-variant": "#434655",
+                      "on-primary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "on-primary-container": "#eeefff",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "secondary-fixed": "#e2dfff",
+                      "surface-container-highest": "#e1e2ed",
+                      "on-secondary": "#ffffff",
+                      "on-background": "#191b23",
+                      "primary-fixed": "#dbe1ff",
+                      "on-secondary-container": "#fffbff",
+                      "secondary": "#4b41e1",
+                      "error": "#ba1a1a",
+                      "surface-variant": "#e1e2ed",
+                      "surface-container-high": "#e7e7f3",
+                      "outline-variant": "#c3c6d7",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "on-tertiary-container": "#ffede6",
+                      "surface-container": "#ededf9",
+                      "tertiary-fixed-dim": "#ffb596",
+                      "background": "#faf8ff",
+                      "surface-dim": "#d9d9e5",
+                      "surface-bright": "#faf8ff",
+                      "on-tertiary-fixed-variant": "#7d2d00"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "xl": "40px",
+                      "md": "16px",
+                      "2xl": "64px",
+                      "sm": "8px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "label-xs": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Pretendard"
+                      ],
+                      "body-md": [
+                              "Pretendard"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "title-sm": [
+                              "Pretendard"
+                      ]
+              },
+              "fontSize": {
+                      "label-xs": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "title-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased pb-24 md:pb-32">
+<!-- TopNavBar -->
+<nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-slate-200/60 dark:border-slate-800/60 shadow-sm font-['Pretendard','Inter'] antialiased tracking-tight">
+<div class="flex justify-between items-center h-16 px-4 md:px-8 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-4">
+<button class="text-blue-600 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 active:scale-95 duration-150 ease-in-out flex items-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<div class="text-lg font-black text-slate-900 dark:text-white tracking-tighter text-blue-600 dark:text-blue-400 font-bold border-b-2 border-blue-600">
+                    드림스쿨
+                </div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 dark:text-slate-400 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 active:scale-95 duration-150 ease-in-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">share</span>
+</button>
+<button class="text-slate-500 dark:text-slate-400 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 active:scale-95 duration-150 ease-in-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">bookmark</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-24 max-w-[1440px] mx-auto px-4 md:px-8">
+<!-- Course Hero -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-xl mb-2xl">
+<!-- Left: Video Placeholder -->
+<div class="lg:col-span-7 rounded-xl overflow-hidden relative aspect-video bg-surface-container-high group cursor-pointer shadow-sm">
+<img alt="Course Hero Video Thumbnail" class="w-full h-full object-cover opacity-90 transition-opacity group-hover:opacity-100" data-alt="A highly professional and clean desk setup featuring a laptop displaying educational content, a neatly organized notebook, and a sleek coffee mug. The setting is illuminated by soft, natural daylight creating a bright, modern light-mode aesthetic. The color palette focuses on deep blacks, crisp whites, and subtle blue accents representing an intellectual and tech-forward environment. The mood is focused, inspiring, and sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpKmZS979vrsKwcjoSWToZO7lImzKIKc78ojnII8RwTrLl5npufHPkKUHHmg0cSPfv6yLxQgAxQbX7HwsJHrBgJPdf6GhrQir6o0pDh5bNPEKkeTvctlqJyeG1PCd1VmALvsNQoxIx90PbmLlfWpfWcAg7vIo124HdPra7Wm87MecD5hzwEgZUR9A8p0sNgEZKSCa7mkdWadizM2E3CgKhiU5jB6uRkR17ze8eQ6VDITFai8GHAcKTkXoXDCsLl1BchxTIrvYnG44"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+<div class="w-16 h-16 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg transform transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined text-primary text-3xl ml-1" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<!-- Right: Course Info -->
+<div class="lg:col-span-5 flex flex-col justify-center">
+<div class="flex gap-2 mb-4">
+<span class="px-2 py-1 bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs rounded">VOD</span>
+<span class="px-2 py-1 bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs rounded">기수제</span>
+<span class="px-2 py-1 bg-primary-container/10 text-primary font-label-xs text-label-xs rounded">패키지</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface mb-md">1강. 모든 시험에 통하는 5단계 코어 공부법</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mb-lg">원리부터 실전 적용까지, 어떤 시험이든 합격으로 이끄는 본질적인 학습 시스템 구축 가이드</p>
+<div class="flex items-center gap-4 text-on-surface-variant font-body-sm text-body-sm flex-wrap bg-surface-container-low p-4 rounded-xl border border-surface-dim">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary-container text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-medium text-on-surface">5.0</span>
+<span>(15)</span>
+</div>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span>30일 수강</span>
+</div>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">group</span>
+<span>인원무제한</span>
+</div>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">school</span>
+<span>강사 드림스쿨</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Two Column Layout for details -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+<div class="lg:col-span-2 flex flex-col gap-2xl">
+<!-- Outcomes -->
+<section class="bg-surface-container-lowest border border-surface-dim rounded-2xl p-lg md:p-xl shadow-sm">
+<h2 class="font-title-sm text-title-sm text-on-surface mb-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">psychology</span>
+                        이 강의를 듣고 나면
+                    </h2>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">자신의 현재 학습 상태를 객관적으로 진단하고 문제점을 파악할 수 있습니다.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">어떤 종류의 시험이든 적용 가능한 5단계 코어 학습 프로세스를 체화합니다.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">방대한 분량의 학습 내용을 효율적으로 구조화하고 암기하는 기술을 습득합니다.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">단기 기억을 장기 기억으로 전환하는 과학적인 복습 주기를 설계할 수 있습니다.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">시험 당일 최상의 컨디션과 멘탈을 유지하는 실전 대비 전략을 완성합니다.</span>
+</li>
+</ul>
+</section>
+<!-- Curriculum -->
+<section>
+<h2 class="font-title-sm text-title-sm text-on-surface mb-lg">커리큘럼</h2>
+<div class="space-y-4">
+<!-- Section 1 (Expanded) -->
+<div class="border border-surface-dim rounded-xl bg-surface-container-lowest overflow-hidden shadow-sm">
+<button class="w-full flex items-center justify-between p-md bg-surface-container-low hover:bg-surface-container transition-colors text-left">
+<span class="font-title-sm text-[18px] text-on-surface font-semibold">1. 5단계 코어 공부법 개론</span>
+<span class="material-symbols-outlined text-on-surface-variant">expand_less</span>
+</button>
+<div class="p-4 border-t border-surface-dim divide-y divide-surface-dim">
+<div class="flex items-center justify-between py-3 group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">play_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">오리엔테이션: 왜 5단계 코어인가?</span>
+</div>
+<span class="font-label-xs text-label-xs text-outline bg-surface-container-highest px-2 py-1 rounded">12:45</span>
+</div>
+<div class="flex items-center justify-between py-3 group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">play_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">STEP 1. 메타인지: 내 위치 파악하기</span>
+</div>
+<span class="font-label-xs text-label-xs text-outline bg-surface-container-highest px-2 py-1 rounded">24:10</span>
+</div>
+<div class="flex items-center justify-between py-3 group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">play_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">STEP 2. 구조화: 지식의 뼈대 세우기</span>
+</div>
+<span class="font-label-xs text-label-xs text-outline bg-surface-container-highest px-2 py-1 rounded">31:20</span>
+</div>
+<div class="flex items-center justify-between py-3 group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">description</span>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">[과제] 나의 학습 구조도 그리기</span>
+</div>
+<span class="font-label-xs text-label-xs text-primary bg-primary-container/10 px-2 py-1 rounded">과제</span>
+</div>
+</div>
+</div>
+<!-- Section 2 (Collapsed) -->
+<div class="border border-surface-dim rounded-xl bg-surface-container-lowest overflow-hidden shadow-sm">
+<button class="w-full flex items-center justify-between p-md hover:bg-surface-container-low transition-colors text-left">
+<span class="font-title-sm text-[18px] text-on-surface font-semibold">2. 정보 입력과 체화의 기술</span>
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</button>
+</div>
+<!-- Section 3 (Collapsed) -->
+<div class="border border-surface-dim rounded-xl bg-surface-container-lowest overflow-hidden shadow-sm">
+<button class="w-full flex items-center justify-between p-md hover:bg-surface-container-low transition-colors text-left">
+<span class="font-title-sm text-[18px] text-on-surface font-semibold">3. 실전 출력과 피드백 루프</span>
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Reviews -->
+<section>
+<h2 class="font-title-sm text-title-sm text-on-surface mb-lg flex items-center gap-2">
+                        수강 후기 <span class="text-primary">(15)</span>
+</h2>
+<div class="bg-surface-container-low border border-surface-dim rounded-2xl p-lg flex flex-col md:flex-row items-center gap-xl mb-lg">
+<div class="flex flex-col items-center text-center">
+<span class="font-display-lg text-display-lg text-on-surface">5.0</span>
+<div class="flex text-tertiary-container my-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">15개의 수강평</span>
+</div>
+<div class="flex-1 w-full space-y-2">
+<div class="flex items-center gap-3">
+<span class="font-label-xs text-label-xs w-8 text-right text-on-surface-variant">5점</span>
+<div class="flex-1 h-2 bg-surface-dim rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 100%"></div>
+</div>
+<span class="font-label-xs text-label-xs w-8 text-on-surface-variant">15</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-label-xs text-label-xs w-8 text-right text-on-surface-variant">4점</span>
+<div class="flex-1 h-2 bg-surface-dim rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 0%"></div>
+</div>
+<span class="font-label-xs text-label-xs w-8 text-on-surface-variant">0</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-label-xs text-label-xs w-8 text-right text-on-surface-variant">3점</span>
+<div class="flex-1 h-2 bg-surface-dim rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 0%"></div>
+</div>
+<span class="font-label-xs text-label-xs w-8 text-on-surface-variant">0</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-label-xs text-label-xs w-8 text-right text-on-surface-variant">2점</span>
+<div class="flex-1 h-2 bg-surface-dim rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 0%"></div>
+</div>
+<span class="font-label-xs text-label-xs w-8 text-on-surface-variant">0</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-label-xs text-label-xs w-8 text-right text-on-surface-variant">1점</span>
+<div class="flex-1 h-2 bg-surface-dim rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 0%"></div>
+</div>
+<span class="font-label-xs text-label-xs w-8 text-on-surface-variant">0</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-lowest border border-surface-dim p-4 rounded-xl shadow-sm">
+<div class="flex items-center gap-2 mb-2 text-tertiary-container text-sm">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface mb-4 line-clamp-3">진짜 인생 강의입니다. 그동안 무작정 암기만 하던 제 공부 방식이 얼마나 비효율적이었는지 깨달았습니다. 구조화하는 방법을 배우고 나니 공부 시간이 절반으로 줄었어요.</p>
+<div class="flex items-center justify-between text-on-surface-variant font-label-xs text-label-xs">
+<span>김*현</span>
+<span>2024.05.12</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-surface-dim p-4 rounded-xl shadow-sm">
+<div class="flex items-center gap-2 mb-2 text-tertiary-container text-sm">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface mb-4 line-clamp-3">메타인지의 중요성을 뼈저리게 느꼈습니다. 강의에서 알려주신 체크리스트를 매일 활용하고 있는데, 스스로 피드백이 되니까 실력이 느는 게 눈에 보입니다. 강력 추천합니다.</p>
+<div class="flex items-center justify-between text-on-surface-variant font-label-xs text-label-xs">
+<span>이*지</span>
+<span>2024.05.10</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Sidebar -->
+<div class="lg:col-span-1 space-y-xl">
+<!-- Instructor -->
+<section class="bg-surface-container-lowest border border-surface-dim rounded-2xl p-lg shadow-sm">
+<h2 class="font-title-sm text-title-sm text-on-surface mb-md">강사 소개</h2>
+<div class="flex items-center gap-4 mb-4">
+<img alt="Instructor Profile" class="w-16 h-16 rounded-full object-cover border-2 border-surface-container" data-alt="A professional headshot of a confident, approachable male instructor in his mid-30s. He is wearing a smart-casual dark navy blazer over a crisp white shirt. The background is a slightly blurred, modern office environment with subtle architectural lines. The lighting is soft and flattering, creating a high-quality, trustworthy aesthetic appropriate for an educational platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaBq5JiO72tiVoGVoRrQVjUQxStMVPcLfTuB-1i1hS3CgXCqymLeSrrGGW6S0W-v3korfkGHwiOZaLqYD63PT4UIGjcAbxGD4hjwC7sRhYcJXFa_tkJG8uWsLtOV59jH95neTNr4MV_hNhP6I_Zml8PPbF8UBJg-oDM_5Tc-lgcRNAeyeK7k_WN0ikD9blGtfU1LbpeMe0ZicRFG8tTXa_XlybLJFGBoSX14ou1nhPji_j53kDsJBJhZh37yLOo9wNLs8g1oD_u7o"/>
+<div>
+<h3 class="font-title-sm text-[18px] text-on-surface font-semibold">드림스쿨</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">학습 설계 전문가</p>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">
+                        10년간 5,000명 이상의 수험생을 코칭하며 축적된 데이터를 바탕으로, 누구에게나 통하는 '5단계 코어 공부법'을 개발했습니다. 지식이 자산이 되는 올바른 학습의 길을 안내합니다.
+                    </p>
+<h4 class="font-label-xs text-label-xs text-on-surface font-semibold mb-3 uppercase tracking-wider">Related Courses</h4>
+<div class="space-y-3">
+<a class="flex gap-3 p-2 rounded-lg hover:bg-surface-container transition-colors group" href="#">
+<img alt="Related Course 1" class="w-16 h-12 rounded object-cover" data-alt="A minimalist close-up shot of hands typing on a modern, sleek laptop keyboard. A subtle glowing analytical chart is partially visible on the screen. The aesthetic is tech-forward, utilizing deep blacks, crisp whites, and a touch of professional blue light. High-quality photography conveying business intelligence and focused work." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_AL49Rlpo58emqy5GKgJ66ITq1PIOIWntreXrIL-g6SaYcdRJuWmtOwbNjZKnhYe2dllUJBm5QQjGqEtBjnHwilrGSbPi1GIuMCwWvXiH_lklahKIYZY3h2Vel29I3XWTxZjo6i1dSru88mFrABeGBMiyo4fetSjFrA1FHvxm6i9jmBw8BeoNLQ0RCetP8Qj0hVoWfqGAc1VJWxHMMd9T6W07GnKCRpGmbB5cTjzREz48vEp1SLoGRoduOpWfkyYWtvjT4Sxs1dE"/>
+<div class="flex flex-col justify-center">
+<span class="font-body-sm text-[13px] text-on-surface font-medium group-hover:text-primary transition-colors line-clamp-2">실전! 업무 효율을 높이는 노션 완벽 활용법</span>
+</div>
+</a>
+<a class="flex gap-3 p-2 rounded-lg hover:bg-surface-container transition-colors group" href="#">
+<img alt="Related Course 2" class="w-16 h-12 rounded object-cover" data-alt="An abstract, high-quality photograph of digital networks and connections. Glowing nodes and lines interweave against a dark, sophisticated background. The color palette features technological blues and subtle neon accents, representing tech-forward momentum and advanced digital systems. Minimalist and highly professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnqTqHlll-fxu5GRKEzStQgEJmMUdprH8ojrKjIKJwbyc9INz9aUEFJfLYhD3iY4Fgul9GGoamHOpX-cvGL6lOo6DNMxMBXIRMgHU_jxtIKjZQmO01qLIPzqAhSYtiCDVElCOuSDElyHRi9HrIVikieB2kF9ldUF3QmTD2rhWgB2kYvZTEVPcAf83qEsnuU5lp7C6IlNXrJJyObbfWh6FSFFhxKbu6tVnGWdR5WYU_aejIPWb95aRTrvSMS6fSjw94S9S9rZJgEdw"/>
+<div class="flex flex-col justify-center">
+<span class="font-body-sm text-[13px] text-on-surface font-medium group-hover:text-primary transition-colors line-clamp-2">데이터 리터러시: 숫자로 설득하는 기획의 기술</span>
+</div>
+</a>
+</div>
+</section>
+<!-- FAQ -->
+<section class="bg-surface-container-lowest border border-surface-dim rounded-2xl p-lg shadow-sm">
+<h2 class="font-title-sm text-title-sm text-on-surface mb-md">자주 묻는 질문</h2>
+<div class="divide-y divide-surface-dim">
+<details class="group py-3">
+<summary class="flex items-center justify-between font-body-sm text-body-sm text-on-surface font-medium cursor-pointer list-none">
+<span>비전공자나 초보자도 수강할 수 있나요?</span>
+<span class="material-symbols-outlined text-outline-variant group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-3 pr-6">네, 이 강의는 특정 과목의 지식을 전달하는 것이 아니라 '공부하는 방법' 자체를 다루기 때문에 누구나 수강하실 수 있습니다.</p>
+</details>
+<details class="group py-3">
+<summary class="flex items-center justify-between font-body-sm text-body-sm text-on-surface font-medium cursor-pointer list-none">
+<span>수강 기간은 어떻게 되나요?</span>
+<span class="material-symbols-outlined text-outline-variant group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-3 pr-6">결제일로부터 30일 동안 무제한 반복 수강이 가능합니다.</p>
+</details>
+<details class="group py-3">
+<summary class="flex items-center justify-between font-body-sm text-body-sm text-on-surface font-medium cursor-pointer list-none">
+<span>과제 피드백이 제공되나요?</span>
+<span class="material-symbols-outlined text-outline-variant group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-3 pr-6">본 VOD 클래스는 셀프 코칭 위주로 진행되며, 별도의 1:1 과제 피드백은 제공되지 않습니다.</p>
+</details>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- BottomNavBar / Sticky Purchase Bar -->
+<div class="fixed bottom-0 w-full z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-xl pb-safe">
+<div class="max-w-[1440px] mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="hidden md:block">
+<h3 class="font-title-sm text-[16px] text-on-surface font-semibold truncate max-w-md">1강. 모든 시험에 통하는 5단계 코어 공부법</h3>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
+<div class="flex flex-col items-end">
+<span class="font-body-sm text-[13px] text-outline line-through">420,000원</span>
+<span class="font-title-sm text-title-sm text-primary font-bold">349,000원</span>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container-high text-on-surface font-label-xs text-label-xs rounded-lg py-3 px-4 hover:bg-surface-container transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">redeem</span>
+<span class="hidden sm:inline">선물하기</span>
+</button>
+<button class="bg-blue-600 text-white rounded-lg py-3 px-8 flex items-center justify-center gap-2 hover:opacity-90 transition-opacity font-['Pretendard'] text-xs font-semibold shadow-md active:opacity-90 transform transition-transform">
+                        수강신청
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="w-full border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 font-['Pretendard'] text-sm text-slate-400 mt-2xl">
+<div class="py-12 px-8 flex flex-col md:flex-row justify-between items-start md:items-center max-w-7xl mx-auto gap-6">
+<div class="flex flex-col gap-4">
+<div class="text-slate-900 dark:text-white font-bold text-lg">드림스쿨</div>
+<div class="flex flex-wrap gap-4">
+<a class="text-slate-500 hover:text-blue-600 underline underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">이용약관</a>
+<a class="text-slate-500 hover:text-blue-600 underline underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">개인정보처리방침</a>
+<a class="text-slate-500 hover:text-blue-600 underline underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">고객센터</a>
+<a class="text-slate-500 hover:text-blue-600 underline underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">기업교육문의</a>
+</div>
+</div>
+<div class="text-slate-400">
+                © 2024 드림스쿨. All rights reserved. Powered by openhow.
+            </div>
+</div>
+</footer>
+</body></html>

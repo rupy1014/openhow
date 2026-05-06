@@ -1,8 +1,9 @@
 ---
 status: done
 created: 2026-04-15
-updated: 2026-04-17
+updated: 2026-04-30
 iteration: 1
+related: creator-platform-discovery.md, editorial-traffic-engine.md, _killed/platform-pro-plan.md
 ---
 
 # creator-platform — AX 전문 지식 공간 + 구독자 모으기
@@ -45,6 +46,11 @@ openhow가 DAU/MAU를 쌓으려면 콘텐츠 공급이 운영자 혼자의 몫�
 - 초대제/승인제 (누구나 쓸 수 있되, 메인 노출만 큐레이션으로 품질 관리)
 
 ## Learnings
+
+### 2026-04-30: [signal] 정체성 잠금으로 톤 조정 — "AX 큐레이션" → "크리에이터 SaaS 일반화"
+- **사용자 결정 (editorial-traffic-engine kill, α 선택)**: 플랫폼 메인 홈 큐레이션은 폐기 (public-blog-home 피봇). 본 의도 What 의 "메인 홈 큐레이션 확장"·"큐레이션 정책 (AX 우선)" 두 항목은 무효화. 본 의도의 핵심 ("작가 = 가입자, 형식 자유, 구독 모델, `{username}@openhow.kr` 이메일 발송")은 그대로 살아남되, **"메인 홈 노출이 인센티브"** 라는 동기 디자인은 사라짐.
+- **새 동기 디자인**: 작가 = 자기 클래스/스토어를 운영하는 크리에이터. 인센티브는 (1) 자기 브랜드·구독자, (2) 결제·CRM·이메일 인프라 제공, (3) `{username}@openhow.kr`. 메인 홈 노출 = 성공 사례 쇼케이스 슬롯 정도 (선별적·간헐적).
+- **다음 행동**: 본 의도 status done 유지. What 섹션의 "메인 홈 큐레이션 확장"·"큐레이션 정책" 2개 항목은 별도 update 로 제거 또는 Backlog 강등.
 
 ### 2026-04-15: seed 생성
 - **배경**: DAU/MAU 중심 퍼널 논의에서 "콘텐츠 공급 확장" 필요성 도출. 운영자 혼자 콘텐츠를 만드는 구조로는 DAU 엔진이 안 돌아감.
@@ -335,8 +341,17 @@ openhow.kr (메인 홈)
 
 - ~~뉴스레터 이메일 발송 기능~~ → What으로 승격
 - [ ] 발행자 대시보드 (구독자 수, 조회 수, 인기 글)
-- [ ] 플랫폼 수수료 모델 설계 (유료 콘텐츠 거래 시)
-- [ ] 커스텀 도메인 셀프서비스 (발행자가 직접 도메인 연결)
+- [ ] 플랫폼 수수료 모델 설계 (유료 콘텐츠 거래 시) — `creator-platform-discovery` v1 MVP 검증 후 매출 모델 별도 의도 (`platform-pro-plan` 은 2026-04-30 killed)
+- [ ] ~~커스텀 도메인 셀프서비스 (발행자가 직접 도메인 연결)~~ — 2026-04-30 보류 (`creator-platform-discovery` 결정으로 v1 셀프서비스 안 함, 운영자 본인 워크스페이스만 비공개 사용. 부활 조건 = 매출 모델 재설계 시 가치 번들 일부로 재검토)
 - [ ] 발행자 등급/뱃지 시스템
 - [ ] 태그/카테고리 검색 (발행자 발견 채널)
-- [ ] SEO 메타 자동 생성 (발행자 공간 + 개별 글)
+- [ ] SEO 메타 자동 생성 (발행자 공간 + 개별 글) — 일부 `workspace-seo-v1` 에서 처리됨
+
+## 후속 의도 (2026-04-30 추가)
+
+본 의도(done) 위에서 정체성 레벨 결정 2건이 동시에 exploring 중:
+
+- **`creator-platform-discovery`** (exploring, 2026-04-30) — "openhow = 지식플랫폼 (클래스 + 학생-as-author)" 정체성으로 v1 MVP 좁힘. 본 의도의 작가/구독 모델 위에 **클래스 단위 운영 + 학생 게시판 + SEO 분배 3축**(강사·학생·플랫폼)을 얹음.
+- **`editorial-traffic-engine`** (exploring, 2026-04-21) — "openhow = 에디터 큐레이션 트래픽 엔진" 정체성으로 본 의도의 **creator-ownership 원칙 자체를 재정의**할 가능성 (외부 임포트 + 에디터 게이트). 본 의도의 작가 자율 발행 루트 존폐 결정 게이트.
+
+두 의도의 양립 시나리오는 각각의 의도 Context 참조. 본 의도(done)는 두 결정 어느 쪽이 채택되어도 인프라 자산 (`/s/{username}`, authorFollow, 이메일 발송) 은 재사용 가능하나, 정체성 narrative 는 후속 의도 결정에 따라 iter 2 검토 가능.

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>드림스쿨 - Creator Store</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#e1e2ed",
+                      "on-tertiary-fixed-variant": "#7d2d00",
+                      "secondary-fixed-dim": "#c3c0ff",
+                      "on-error": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "outline": "#737686",
+                      "on-background": "#191b23",
+                      "on-primary-fixed": "#00174b",
+                      "surface-container-high": "#e7e7f3",
+                      "primary-container": "#2563eb",
+                      "primary-fixed": "#dbe1ff",
+                      "on-surface": "#191b23",
+                      "tertiary-container": "#bc4800",
+                      "tertiary-fixed-dim": "#ffb596",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "background": "#faf8ff",
+                      "surface-dim": "#d9d9e5",
+                      "surface-container-low": "#f3f3fe",
+                      "inverse-primary": "#b4c5ff",
+                      "inverse-on-surface": "#f0f0fb",
+                      "tertiary": "#943700",
+                      "primary": "#004ac6",
+                      "on-tertiary-fixed": "#360f00",
+                      "secondary-container": "#645efb",
+                      "error": "#ba1a1a",
+                      "on-primary-container": "#eeefff",
+                      "surface-tint": "#0053db",
+                      "on-secondary-fixed": "#0f0069",
+                      "outline-variant": "#c3c6d7",
+                      "surface": "#faf8ff",
+                      "on-tertiary-container": "#ffede6",
+                      "inverse-surface": "#2e3039",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-bright": "#faf8ff",
+                      "on-secondary": "#ffffff",
+                      "on-secondary-fixed-variant": "#3323cc",
+                      "secondary": "#4b41e1",
+                      "on-tertiary": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "surface-container": "#ededf9",
+                      "secondary-fixed": "#e2dfff",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "on-surface-variant": "#434655",
+                      "surface-variant": "#e1e2ed",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed": "#ffdbcd",
+                      "on-secondary-container": "#fffbff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "lg": "24px",
+                      "2xl": "64px",
+                      "xl": "40px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "label-xs": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "title-sm": [
+                              "Pretendard"
+                      ],
+                      "body-sm": [
+                              "Pretendard"
+                      ],
+                      "body-md": [
+                              "Pretendard"
+                      ]
+              },
+              "fontSize": {
+                      "label-xs": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "title-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl font-sans tracking-tight antialiased sticky top-0 w-full z-50 border-b border-slate-200/50 dark:border-slate-800/50 shadow-sm">
+<div class="flex justify-between items-center h-16 px-6 max-w-7xl mx-auto">
+<div class="flex items-center gap-6">
+<a class="text-xl font-extrabold tracking-tighter text-slate-900 dark:text-white" href="#">드림스쿨</a>
+<div class="hidden md:flex gap-6">
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-500 dark:hover:text-blue-300 transition-colors duration-200 active:scale-95 transform transition-transform" href="#">공지</a>
+<a class="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400 pb-1 font-semibold hover:text-blue-500 dark:hover:text-blue-300 transition-colors duration-200 active:scale-95 transform transition-transform" href="#">강의</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-500 dark:hover:text-blue-300 transition-colors duration-200 active:scale-95 transform transition-transform" href="#">소개</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-500 dark:hover:text-blue-300 transition-colors duration-200 active:scale-95 transform transition-transform" href="#">문의</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-600 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<a class="text-blue-600 dark:text-blue-400 font-medium hover:text-blue-500 dark:hover:text-blue-300 transition-colors duration-200" href="#">로그인</a>
+</div>
+</div>
+</nav>
+<!-- Campaign Banner -->
+<div class="bg-primary-container text-on-primary-container py-2 text-center font-body-sm">
+        🔔 신학기 BEST 인기 캠페인 진행 중
+    </div>
+<main class="flex-grow max-w-7xl mx-auto w-full px-6 py-lg space-y-2xl">
+<!-- Hero Featured Class -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden flex flex-col md:flex-row">
+<div class="w-full md:w-1/2 h-64 md:h-auto bg-surface-variant relative">
+<img alt="Students studying together" class="w-full h-full object-cover" data-alt="A highly professional and clean educational setting showing young students studying together with modern laptops and textbooks. The scene is brightly lit with natural light, emphasizing a trustworthy, tech-forward, and premium learning environment. The color palette incorporates cool blues and pristine whites, conveying an atmosphere of focused, intellectual authority. The composition is balanced, making it ideal as a high-quality thumbnail for a premium online course." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBejhUmh8GDUeVzQ_7Kp31Gphm5eudCivxLcigHwwB-lhjt_Y9NBnwvcul1QX4GhuOyAb5wrKFeknkmXsbDFcaNO2ip5SmOmt9b97QT1pdcSKnug5HXG98CzotqxJ5EGR0XaPLuPoUVCQJd3h1UXOcMocyLYpNoMPYVLIbWFt4MvACBCNBbXUKDrPCtRZdm1wzhik9XWwPOHBSDXM4zLgn3YHGk8FSmPT0dNAzbrcprfze6GXpH7SfeqgTHm7UtjWDRWXa8jWkr2TA"/>
+</div>
+<div class="p-lg md:w-1/2 flex flex-col justify-center gap-md">
+<div class="flex flex-wrap gap-sm">
+<span class="bg-error-container text-on-error-container px-2 py-1 rounded font-label-xs">할인 17%</span>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-1 rounded font-label-xs">패키지</span>
+<span class="bg-surface-variant text-on-surface-variant px-2 py-1 rounded font-label-xs">VOD</span>
+</div>
+<div>
+<h1 class="font-headline-md text-on-surface">14일 한시 판매 | All-in-One 풀패키지</h1>
+<div class="flex items-center gap-sm mt-xs">
+<span class="text-tertiary-container">★★★★★</span>
+<span class="font-body-sm text-on-surface-variant">5.0 (15) · <a class="underline" href="#">공유하기</a></span>
+</div>
+</div>
+<div class="font-body-sm text-on-surface-variant space-y-xs">
+<p>모집기간 2026.04.22 ~ 2026.05.05</p>
+<p>30일 수강 / 인원무제한</p>
+</div>
+<div class="flex items-center gap-md mt-sm">
+<span class="font-title-sm text-on-surface">349,000원</span>
+<span class="font-body-sm text-outline line-through">420,000원</span>
+</div>
+<button class="bg-primary text-on-primary py-sm px-lg rounded-lg font-body-md font-medium hover:bg-primary/90 transition-colors mt-sm w-fit">
+                    자세히 보기
+                </button>
+</div>
+</section>
+<!-- Creator Bio Strip -->
+<section class="bg-surface-container-low rounded-xl p-md flex flex-col sm:flex-row items-center justify-between gap-md border border-outline-variant">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-variant overflow-hidden">
+<img alt="Creator Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a confident educator. The lighting is bright and modern, creating a trustworthy and premium feel. The background is clean and neutral, putting the focus entirely on the subject, which aligns perfectly with a high-end knowledge business platform. The image exudes intellectual authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOdQ8ps6FbB9u_59xyCDxjjlUG2JKDdpKtNslxTsslDgCh0ZovQJy75UdIc081dcFKjY27I_Dh-Tgi4VS_tESlfYna81b9uiO0ujK893iqvUKJDTOZHqyLqu6xxxMPH68scKRxTV1ah2_iSgWS2HXAkeVwV3lvdQFMBTfwYJdTCxtgvbM1_P5Mt5d2F3UFP8rcqRDRz1oe0J2nPCMPdRO3_WxY-I6MKbvrW23e8Hl27OcbJqfv-YWxfGy0L6LBjnZxakP6mXF5uMo"/>
+</div>
+<span class="font-title-sm text-on-surface">드림스쿨은 '합격'을 약속합니다.</span>
+</div>
+<button class="border border-outline text-on-surface py-sm px-md rounded-lg font-body-sm hover:bg-surface-variant transition-colors whitespace-nowrap">
+                모든 강의 한눈에 보기
+            </button>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 w-full py-12 mt-auto">
+<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col gap-2">
+<span class="text-sm font-bold text-slate-400 grayscale opacity-100 hover:opacity-80 transition-opacity">© 2024 드림스쿨. Powered by openhow</span>
+</div>
+<div class="flex gap-4">
+<a class="text-sm font-normal text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 underline underline-offset-4 opacity-100 hover:opacity-80 transition-opacity" href="#">이용약관</a>
+<a class="text-sm font-normal text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 underline underline-offset-4 opacity-100 hover:opacity-80 transition-opacity" href="#">개인정보처리방침</a>
+<a class="text-sm font-normal text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 underline underline-offset-4 opacity-100 hover:opacity-80 transition-opacity" href="#">고객센터</a>
+<a class="text-sm font-normal text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 underline underline-offset-4 opacity-100 hover:opacity-80 transition-opacity" href="#">무료로 시작하기</a>
+</div>
+</div>
+</footer>
+</body></html>

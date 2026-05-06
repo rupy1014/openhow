@@ -1,0 +1,21 @@
+{
+  "designSystem": {
+    "displayName": "openhow Creator SaaS DS",
+    "theme": {
+      "bodyFont": "INTER",
+      "colorMode": "LIGHT",
+      "colorVariant": "TONAL_SPOT",
+      "customColor": "#3158E8",
+      "designMd": "# openhow Creator SaaS storyboard design system\n\nProduct: openhow, a Korean creator SaaS for VOD/class businesses.\nTone: trustworthy, premium, calm, conversion-focused, not childish.\nBenchmark: Liveklass structure, but openhow identity is AI-era knowledge business platform.\nLanguage: Korean UI copy.\nCanvas: desktop web, 1440px wide, responsive sections.\nVisual style:\n- Clean SaaS editorial layout with generous whitespace.\n- White / near-white background, deep ink text, subtle warm neutral cards.\n- Accent color: deep indigo-blue for primary CTAs; emerald/mint for success signals and revenue/learning highlights.\n- Rounded cards, soft shadows, clear section rhythm.\n- Typography: modern Korean-friendly sans, strong large hero headings, readable cards.\nComponents to keep consistent across screens:\n- Top nav with openhow/creator brand, text links, primary CTA.\n- Course/Lesson cards with the standard six elements: tags, duration/capacity, creator, title, enrollment window, price, rating count.\n- Pill tags: VOD, 기수제, 패키지, 무료 미리보기. Do not present LIVE/1:1/디지털 as active v1 features; only as vision copy on platform page.\n- Sticky purchase CTA on course landing.\n- Community cards as SEO trust signals.\nOutput expectation: high fidelity product mockup, real Korean text, realistic cards and spacing, no lorem ipsum.",
+      "headlineFont": "PLUS_JAKARTA_SANS",
+      "labelFont": "INTER",
+      "overrideNeutralColor": "#F8FAFC",
+      "overridePrimaryColor": "#3158E8",
+      "overrideSecondaryColor": "#10B981",
+      "overrideTertiaryColor": "#F59E0B",
+      "roundness": "ROUND_TWELVE"
+    }
+  },
+  "name": "assets/17017918716681881668",
+  "version": "1"
+}

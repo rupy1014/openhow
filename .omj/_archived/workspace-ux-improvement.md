@@ -1,8 +1,9 @@
 ---
-status: building
+status: done
 created: 2026-04-13
-updated: 2026-04-17
-iteration: 3
+updated: 2026-05-03
+iteration: 4
+superseded_by: core/creator-admin-console-v1.md
 ---
 
 # Workspace 관리 페이지 UX 개선
@@ -63,6 +64,18 @@ CLI/API로 기능은 갖춰졌지만, 실제 사용자가 UI에서 접근하고 
 - core/packages/viewer/src/locales/ko.ts, en.ts — `dashboard.hub.*` 키 블록 추가 (title, subtitle, role, actions, errorBody 등) (2026-04-17, iteration 3)
 
 ## Learnings
+
+### 2026-05-03: (iteration 4) closeout — superseded by creator-admin-console-v1
+
+- **결론**: 본 의도의 잔여 What 항목 (전반적 UX 갭 검토) 은 `core/creator-admin-console-v1.md` 의 8 surface 셸 신설 (P0~P2, 9 wedge) 로 완전 흡수. 본 의도 status → done.
+- **흡수 매핑** (1:1):
+  - "워크스페이스 생성 7타입 + 스켈레톤 미리보기" (이미 done, iter 1) → P0 admin-shell-ia-v1 의 `/dashboard/:workspace` 진입 → P1.1 WorkspaceOverview 가 첫 인상 차지.
+  - "게시글 작성 UX" (이미 done, iter 1) → 영향 범위 그대로 유지. AdminEngagement 셸이 wrap 하지 않는 EditorPage 는 별도.
+  - "댓글 dashboard 접근성" (iter 1 created `AdminComments`) → P2 admin-engagement-v1 의 `/dashboard/:workspace/engagement/comments` sub-tab 으로 wrap (컴포넌트 무수정).
+  - "대시보드 인덱스 페이지 개선" (iter 3 done — `/dashboard` 카드 그리드) → 그대로 유지. 워크스페이스 내부 진입은 P1.1 WorkspaceOverview 가 담당.
+  - "최근 본 문서 패널" (iter 2 done) → 워크스페이스 home sub-nav 슬롯에 그대로 유지. 본 의도 P0~P2 와 충돌 없음.
+- **archive 결정**: 본 파일은 `_archived/` 로 이동 가능. iter 1~3 학습 (Codex review 패턴, locale 누수, generic class scope 누수, autonomous drift 등) 은 본 의도 + 후속 의도들이 patterns 로 흡수.
+- **Scope**: _root → 흡수 후 무관
 
 ### 2026-04-17: (iteration 3) dashboard index 워크스페이스 허브
 - **시도**: `/dashboard` 빈 placeholder를 워크스페이스 카드 그리드 허브로 전환. 자동 리다이렉트 제거, empty/error/loading/hub 4상태, 역할별 액션 노출.

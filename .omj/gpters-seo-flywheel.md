@@ -1,8 +1,9 @@
 ---
 status: done
 created: 2026-04-16
-updated: 2026-04-17
+updated: 2026-04-30
 iteration: 2
+related: editorial-traffic-engine.md, creator-platform-discovery.md
 ---
 
 # gpters-seo-flywheel — creator 콘텐츠를 검색 유입 자산으로 구조화
@@ -28,7 +29,7 @@ openhow는 `creator-platform`(done)에서 "creator 정체성 + 구독 + 이메�
 
 - **`promotionStatus` 별도 승격 게이트** — 코호트 모델 전제. creator 소유 워크스페이스에서는 `accessLevel: public`이 곧 발행 의사 (나중에 워크스페이스 옵션 `requireReview`로 추가 가능)
 - **에디터/점수 기반 SEO 큐레이션** — post-MVP. 지금은 creator가 발행하면 색인, operator가 `featured`로 메인만 큐레이션하는 2-트랙으로 충분
-- **플랫폼 admin이 creator 콘텐츠를 검수/승격 결정** — creator-ownership 원칙 위반
+- **플랫폼 admin이 creator 콘텐츠를 검수/승격 결정** — creator-ownership 원칙 위반 (단, **`editorial-traffic-engine` (exploring, 2026-04-21) 이 이 원칙 자체를 재정의할 가능성** 있음 — 채택 시 본 의도의 SEO 색인 정책이 "에디터 승인 후 색인" 으로 피봇 필요. `creator-platform-discovery` (exploring, 2026-04-30) 는 강사·학생 자율 모델 유지하므로 본 의도와 정합.)
 - **topic 허브 페이지 (`/topics/:slug`, `/w/{workspace}/topics/:slug`)** — Backlog (P2)
 - **관련 문서 자동 추천 엔진** — Backlog (P2)
 - **승격/검수 워크플로우 (internal→review→public)** — Backlog (P3, 워크스페이스 옵션)
@@ -100,6 +101,12 @@ openhow는 `creator-platform`(done)에서 "creator 정체성 + 구독 + 이메�
 - 에디터/점수 기반 SEO 큐레이션 설계 (post-MVP)
 
 ## Learnings
+
+### 2026-04-30: [signal] 정체성 결정으로 일부 자산 무관해짐
+- **사용자 결정 (editorial-traffic-engine kill, α 선택)**: 외부 임포트 + 에디터 큐레이션 컨셉 폐기. 본 의도가 깐 `contentType / ctaType / topicTags` 메타 레이어와 SEO sitemap·GA·schema.org 플러밍은 **각 클래스(=워크스페이스) 단위 SEO 자산** 으로 그대로 활용 — 본 의도 자체는 done 유지, 다만 "다른 의도가 본 의도 위에 토픽 허브를 쌓는다" 같은 후속 가설은 폐기.
+- **무관해진 후속 가설**: 토픽 허브 `/topics/:slug` (P2 Backlog), 관련 문서 자동 연결 (P2.5), 크리에이터 콘텐츠 검수/승격 — 모두 α 정체성과 양립 불가.
+- **남는 자산**: contentType/ctaType/topicTags 스키마, sitemap·GA·schema.org 자동화. workspace-scoped 로만 쓰면 됨.
+- **재방문 조건**: 12개월 후 트래픽 엔진 재고려 시 본 의도와 _killed/editorial-traffic-engine.md 함께 부활 평가.
 
 ### 2026-04-17: (iteration 2) /omj:build 실행 피드백 — clarified → done
 - **범위 분리 원칙 확인**: 기존 workspace-seo-v1이 building 상태로 working tree에 공존. 각 Codex step을 "MUST NOT touch workspace-seo-v1 scope"로 제약해서 교차 오염 방지. 1 intent = 1 build 원칙이 멀티 workstream 공존 시 효과적.
