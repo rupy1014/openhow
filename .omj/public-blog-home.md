@@ -1,8 +1,9 @@
 ---
 status: building
 created: 2026-04-13
-updated: 2026-04-17
-iteration: 4
+updated: 2026-05-06
+iteration: 5
+related: creator-platform-discovery.md, creator-platform.md, core/platform-admin-workspace-exposure-v1.md, openhow-positioning-clauders-seo.md
 ---
 
 # public-blog-home — openhow 홈을 공개 블로그 랜딩으로 전환
@@ -19,6 +20,7 @@ openhow 콘텐츠가 로그인 뒤에 숨어있어서 외부 유입 경로가 �
 - 작가 = 워크스페이스명. 개별 워크스페이스가 하나의 매거진/칼럼 역할.
 - 기존 auth-gate-ux 의도(공개 블로그 로그인 잔상 제거)와 시너지 — 홈이 공개되면 auth 잔상 문제도 함께 해결해야 함.
 - **퍼널 구조 (2026-04-15 전환)**: 유튜브(발견) → openhow 무료 콘텐츠(DAU/MAU) → 인강(비동기 유료) + clauders 기수제(동기 유료). 구독 모델은 DAU가 충분히 쌓인 후 재검토.
+- **2026-04-30 정합성 신호 — 정체성 결정 미해결**: `creator-platform-discovery` (exploring) 가 v1 MVP 를 "지식플랫폼 = 인강 + 기수제 인강 + 학생 게시판 + SEO" 로 좁힘. 본 home 의 "워크스페이스 그리드 + contentType 섹션" 구조는 그 정체성과 정합. 동시에 `editorial-traffic-engine` (exploring) 가 "에디터 큐레이션" 정체성으로 home 의 1순위 노출 단위를 **에디터 픽 글**로 바꿀 가능성 있음 — 결정 시 home 카드 모델 재설계 (워크스페이스 중심 → 토픽 허브 + 큐레이션 글 중심) 필요. 본 building iter 4 작업은 워크스페이스 중심 그대로 진행하되, editorial-traffic-engine 결정 채택 시 iter 5 피봇 가능성 인지.
 - **openhow 기존 인프라**: 인증(Better Auth), CF Workers + D1 + R2, 결제(Bootpay) — 결제/구독 인프라는 구현 완료 상태이나 당분간 미사용. 무료 공개 우선.
 - **초기 워크스페이스**: `vibe-coding`(바이브코딩 20챕터, sequential), `vibe-planning`(바이브기획, sequential), `ax-usecases`(AX 유즈케이스, blog)
 - clauders.ai는 커뮤니티 브랜드 + 기수제 전환에 집중.
@@ -45,6 +47,14 @@ openhow 콘텐츠가 로그인 뒤에 숨어있어서 외부 유입 경로가 �
   - 현재 DB 스키마에 필드 존재하지만 Admin UI에서 변경 불가
   - 최소: sort 모드 선택 (커리큘럼 순서 / 최신순 / 수동 정렬)
   - 이 설정이 홈의 카드 표현과 워크스페이스 내부 정렬 모두에 반영
+
+- [ ] **iter 5: 디스커버리 진열대로 / 복귀 (롱블랙-pivot)** — 2026-05-04 정체성 재잠금 + 5-6 admin gate(platform_exposure) 구현 후속
+
+  - `Home.tsx` 비로그인 분기: `CreatorSaasHome` → `PublicBlogHome` 스왑 (iter 4 Phase 3 의 swap 을 4-30 lock 으로 되돌렸던 걸 다시 복구)
+  - `router.tsx`: 마케팅 LP 는 `/for-creators` 로 이동 (영업 funnel 보존)
+  - `public-feed` API: workspace SELECT 에 `platformExposure` 추가 + featured-first 정렬
+  - `PublicBlogHome` 워크스페이스 그리드: featured 티어 시각 차별화 (Featured 라벨 + 큰 카드 또는 hero 배치)
+  - 데이터 출구 정합: superadmin 이 admin 화면에서 listed/featured 토글 → 홈에 즉시 반영
 
 - [x] 에디토리얼 섹션 구성 — 롱블랙처럼 테마/유형별 섹션
 
@@ -86,6 +96,23 @@ openhow 콘텐츠가 로그인 뒤에 숨어있어서 외부 유입 경로가 �
 - **개별 아티클만으로 홈 구성** — 시리즈 맥락 없이 챕터가 뜨면 혼란
 
 ## Learnings
+
+### 2026-05-06: [signal] iter 5 — 4-30 lock 폐기, 롱블랙 재잠금 후 디스커버리 진열대 복귀
+
+- **사용자 결정 (2026-05-04 → 5-6)**: openhow = 롱블랙-style 큐레이션 multi-tenant. iter 4 Phase 3 의 PublicBlogHome 스왑이 4-30 lock 으로 CreatorSaasHome 으로 되돌아갔던 걸, 이번에 다시 복구.
+- **새 데이터 출구**: `core/platform-admin-workspace-exposure-v1` (5-6 done) 가 superadmin gate (`workspace.platform_exposure` hidden|listed|featured) 를 깔았음. 본 의도 iter 5 는 그 데이터의 시각적 출구.
+- **선택**: `/` 교체 (진열대를 메인 홈으로) + `/for-creators` 신설 (마케팅 LP). 단위는 워크스페이스 그리드 (글 큐레이션은 별도 의도 — featured_content 테이블에 있음, 추후 섹션화 가능).
+- **남는 자산**: PublicBlogHome.tsx (401줄, 4-30 시점 자산) + public-feed API + featuredContent 테이블 — 모두 그대로 사용. 루트 라우트 스왑 + featured tier 시각화만.
+- **logged-in 분기**: 일단 WorkspaceHub 유지 (creator 본인 자산 우선). 추후 로그인 사용자도 디스커버리 우선 노출 검토 가능.
+
+### 2026-04-30: [signal] 정체성 결정으로 본 의도 피봇 필요 — "에디토리얼 홈" → "크리에이터 가입 LP"
+- **사용자 결정 (editorial-traffic-engine kill, α 선택)**: openhow.io/ 홈을 **liveklass 식 크리에이터 가입 세일즈 LP** 로 재정의. 즉 본 의도의 toss.tech-style 에디토리얼 홈 (워크스페이스 카드 + contentType 섹션) 컨셉은 폐기 대상.
+- **새 홈 골격 (α 옵션 미리보기 기반)**:
+  1. Hero: "나만의 클래스 5분 만에" + [지금 시작하기] CTA
+  2. 성공 사례 카드 그리드 (= 활성 크리에이터/클래스 쇼케이스)
+  3. 기능 / 가격 / 파트너 / 신뢰 시그널
+- **남는 자산**: workspace 메타 (creator name, contentType, 썸네일) 는 쇼케이스 카드 데이터로 재사용 가능. SSG 인프라도 그대로 사용.
+- **다음 행동**: 본 의도 status `building` → 피봇 모드. Why·What 전면 재작성 필요. 별도 /omj:prd pivot 세션에서 처리.
 
 - \[signal\] 콘텐츠 유입 경로가 없어서 성장이 막혀있다는 인식
 - toss.tech 예제에서 blog + team-blog preset으로 에디토리얼 홈 구현 가능 확인 (examples/toss-tech)
