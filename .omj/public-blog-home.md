@@ -1,5 +1,5 @@
 ---
-status: building
+status: done
 created: 2026-04-13
 updated: 2026-05-06
 iteration: 5
@@ -48,13 +48,13 @@ openhow 콘텐츠가 로그인 뒤에 숨어있어서 외부 유입 경로가 �
   - 최소: sort 모드 선택 (커리큘럼 순서 / 최신순 / 수동 정렬)
   - 이 설정이 홈의 카드 표현과 워크스페이스 내부 정렬 모두에 반영
 
-- [ ] **iter 5: 디스커버리 진열대로 / 복귀 (롱블랙-pivot)** — 2026-05-04 정체성 재잠금 + 5-6 admin gate(platform_exposure) 구현 후속
+- [x] **iter 5: 디스커버리 진열대로 / 복귀 (롱블랙-pivot)** — 2026-05-04 정체성 재잠금 + 5-6 admin gate(platform_exposure) 구현 후속 (완료 2026-05-06)
 
-  - `Home.tsx` 비로그인 분기: `CreatorSaasHome` → `PublicBlogHome` 스왑 (iter 4 Phase 3 의 swap 을 4-30 lock 으로 되돌렸던 걸 다시 복구)
-  - `router.tsx`: 마케팅 LP 는 `/for-creators` 로 이동 (영업 funnel 보존)
-  - `public-feed` API: workspace SELECT 에 `platformExposure` 추가 + featured-first 정렬
-  - `PublicBlogHome` 워크스페이스 그리드: featured 티어 시각 차별화 (Featured 라벨 + 큰 카드 또는 hero 배치)
-  - 데이터 출구 정합: superadmin 이 admin 화면에서 listed/featured 토글 → 홈에 즉시 반영
+  - `Home.tsx` 비로그인 분기: `CreatorSaasHome` → `PublicBlogHome` 스왑 ✅
+  - `router.tsx`: 마케팅 LP 는 `/for-creators` 로 이동 ✅
+  - `public-feed` API: workspace SELECT 에 `platformExposure` 추가 + featured-first 정렬 ✅
+  - `PublicBlogHome` 워크스페이스 그리드: featured 티어 시각 차별화 (outline + Featured 라벨) ✅
+  - 데이터 출구 정합: superadmin 이 admin 화면에서 listed/featured 토글 → 홈에 즉시 반영 ✅ (코어 c5e3ae0 + 본 iter 3164844 두 단계로 닫힘)
 
 - [x] 에디토리얼 섹션 구성 — 롱블랙처럼 테마/유형별 섹션
 
@@ -96,6 +96,25 @@ openhow 콘텐츠가 로그인 뒤에 숨어있어서 외부 유입 경로가 �
 - **개별 아티클만으로 홈 구성** — 시리즈 맥락 없이 챕터가 뜨면 혼란
 
 ## Learnings
+
+### 2026-05-06: iter 5 [done] — 디스커버리 진열대 복귀 + DB 드리프트 정리
+
+- **시도**: Home.tsx 스왑 (CreatorSaasHome → PublicBlogHome), router.tsx 에 `/for-creators` 추가, public-feed featured-first 정렬, PublicBlogHome featured 티어 시각화 (outline + Featured 라벨).
+- **결과**: 5 파일 변경 (core@3164844). `/` 라우팅 검증 OK, `/for-creators` 라우팅 OK. featured 시각 차별화는 prod 데이터 또는 시드 필요 (로컬 DB 비어있음).
+- **부수효과 — DB 드리프트 정리**: `/api/public/feed` 가 fresh 로컬 DB 에서 500 으로 깨지던 이슈를 끝까지 추적해 fix (core@9a09518).
+  - 0017 `join_policy` ALTER 중복 (이미 0001 에 있음) → 중복 제거
+  - 0020 `type/default_access_level/navigation_mode` ALTER 중복 (이미 0001 에 있음) → no-op 화
+  - 0061 `document.thumbnail` 컬럼 누락 → 새 마이그레이션 추가 (schema.ts 에는 있었지만 어떤 마이그레이션도 만들지 않았음 — sequential drift)
+  - 0059 SEO overrides 마이그레이션 등록
+  - 결과: `rm -rf .wrangler/state/v3/d1 && pnpm wrangler d1 migrations apply mdshare-db --local` 한 줄로 fresh 재구축 가능. API 200 OK 검증.
+- **배운 것**:
+  - **Drizzle schema vs migration drift 는 자동 검출 안 됨** — `thumbnail` 처럼 schema.ts 에 직접 추가됐지만 마이그레이션 누락이면 production 환경에서는 prod 가 이미 hand-altered 라 안 깨지고, 신규 dev 환경만 깨진다 (silent footgun).
+  - **migration dedup 은 prod safe** — idempotent ALTER (이미 컬럼 있으면 ALTER 가 fail) 라서, 중복 제거는 prod 영향 없음. 신규 dev 환경 살아남.
+  - 이번 진열대 복귀의 데이터 출구는 superadmin gate (`workspace.platform_exposure`). featured 토글 → 홈 출력 흐름이 닫힘. 글 큐레이션 (featured_content 테이블 활용) 은 별도 의도로 분리 (현재 PublicBlogHome 의 editorPicks 섹션 자체는 이미 동작).
+- **다음 행동**: 시각 차별화 검증은 prod 노출 후 자연스레 가능. 추가 의도 후보:
+  - 로컬 시드 워크스페이스 (DAU 측정 / dev 검증용 더미 데이터)
+  - Drizzle schema-vs-migration 정합성 lint
+  - 글 단위 큐레이션 섹션 노출 (featured_content 활용)
 
 ### 2026-05-06: [signal] iter 5 — 4-30 lock 폐기, 롱블랙 재잠금 후 디스커버리 진열대 복귀
 
@@ -248,6 +267,14 @@ openhow 콘텐츠가 로그인 뒤에 숨어있어서 외부 유입 경로가 �
 - core/packages/worker/src/routes/public-feed.ts — 워크스페이스 스텁(설명·OG·아티클 모두 없음) 제외 필터 추가 (2026-04-17)
 - core/packages/viewer/src/pages/PublicBlogHome.tsx — Phase 4 재설계, 596줄 → 325줄 (Hero 제거, 워크스페이스 그리드 우선, 빈 섹션 자동 숨김) (2026-04-17)
 - core/packages/viewer/src/pages/PublicBlogHome.css — 워크스페이스 톤으로 전면 재작성, `pbh-*` prefix (2026-04-17)
+- core/packages/viewer/src/pages/Home.tsx — 비로그인 분기 CreatorSaasHome → PublicBlogHome 재스왑 (iter 5, 2026-05-06)
+- core/packages/viewer/src/router.tsx — `/for-creators` 라우트 신설 (마케팅 LP 보존, iter 5, 2026-05-06)
+- core/packages/viewer/src/pages/CreatorSaasHome.tsx, .css — 4-30 자산 신규 등록 (`/for-creators` 에서 사용, iter 5, 2026-05-06)
+- core/packages/worker/src/routes/public-feed.ts — workspace SELECT 에 `platformExposure` + featured-first 정렬 (iter 5, 2026-05-06)
+- core/packages/viewer/src/pages/PublicBlogHome.tsx, .css — featured 카드 시각 차별화 (outline + Featured 라벨, iter 5, 2026-05-06)
+- core/packages/worker/migrations/0017_add_join_policy.sql — `join_policy` 중복 ALTER 제거 (iter 5 부수, 2026-05-06)
+- core/packages/worker/migrations/0020_add_workspace_type.sql — type/default_access_level/navigation_mode 중복 ALTER 제거, no-op (iter 5 부수, 2026-05-06)
+- core/packages/worker/migrations/0061_add_document_thumbnail.sql — schema.ts 에는 있었지만 누락된 컬럼 마이그레이션 신규 (iter 5 부수, 2026-05-06)
 
 ## Backlog
 
