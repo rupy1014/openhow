@@ -147,13 +147,20 @@ related:
 - 결정: 백엔드 변경 0건 — 마크다운 변환은 viewer-only 이고 detail 화면 렌더와 동일 함수 재사용으로 일치 보장. 별 컴포넌트 추출 안 함 — composer/edit form 두 곳만 쓰는 30줄 패턴이라 inline state 관리가 더 명확.
 - 검증: TS 0 에러, Playwright 로컬 (dev-login → seed_author 세션) — composer 미리보기 h1=1/strong=1/li=2 + 탭 toggle 후 textarea 복귀, edit form 미리보기 h2=1/code=1/ol-li=2, 두 화면 스크린샷 확인. dev-login 으로 better-auth 세션 happy path 도 처음으로 검증됨 (기존엔 apikey 만).
 
-### Wedge I — 다음 후보 (Backlog 로 이관)
-- 토픽 admin CRUD (관리자 페이지에서 토픽 추가/수정/seed 보강 — 수동 SQL 안 쓰게)
+### Wedge I — 토픽 admin CRUD `/superadmin/topics` (5-08, done)
+- API: `GET/POST/PATCH/DELETE /api/superadmin/topics` (`requireSuperadmin`) — slug ascii kebab-case 검증, slug uniqueness 409, postCount > 0 인 토픽 삭제 차단 409 (`packages/worker/src/routes/superadmin.ts`)
+- Viewer: `/superadmin/topics` 라우트 + `TopicsAdmin.tsx` + CSS — 인라인 create form (slug/제목/태그/설명), 행 수정 toggle (slug immutable), 삭제 confirm + postCount 가드 (`packages/viewer/src/pages/superadmin/TopicsAdmin.tsx`)
+- Layout: `SuperadminLayout` 에 NavLink 두 개 (워크스페이스 / 토픽) — 활성 시 primary-color 배지 (`packages/viewer/src/layouts/SuperadminLayout.tsx`, `.css`)
+- 결정: 백엔드는 GET 한 번만 leftJoin+groupBy 로 postCount 동봉 (Wedge A 와 동일 패턴) — 별 endpoint 분리 안 함. id 는 `topic_${slug.replace(/-/g, '_')}` 결정론적 — 시드 컨벤션 (`topic_claude_code`) 과 일치.
+- 검증: Worker/Viewer TS 0 에러, Playwright 로컬 (seed_author 임시 superadmin 부여) — 생성/수정/삭제 happy path + 글 있는 토픽 삭제 버튼 disabled 확인. 프로덕션 배포 후 `/api/superadmin/topics` 401 (no auth) + `/superadmin/topics` 200 (SPA) + `/api/topics` 공개 응답 정상.
+
+### Wedge J — 다음 후보 (Backlog 로 이관)
 - 큐레이터 워크스페이스 ↔ 토픽 게시판 endorse/승격 bridge — featured_content 패턴 재사용 가능성 검토
 - 작성자 본인용 "내 글" 임시저장/draft 흐름
 - 토픽 글 viewCount + 인기 토픽 글 rail
 - 토픽 인덱스에 정렬/필터 (post count 순, ai_domain_tag 그룹) — 현재는 createdAt desc 단일
-- 미리보기 v2 — 코드 하이라이트, 캔버스 차트, link-card 디렉티브 등 SSG/SPA 확장 마크다운 미리보기 안 검증 (현재는 기본 마크다운만 확인)
+- 미리보기 v2 — 코드 하이라이트, 캔버스 차트, link-card 디렉티브 등 SSG/SPA 확장 마크다운 미리보기 안 검증
+- DEV_LOGIN_EMAIL 정상화 (현재 `.dev.vars` 의 typo `rupy1008@gamil.com`) — Wedge H/I 테스트마다 임시 변경/원복 부담 누적
 
 ## Footprint (initial guess, validate during explore)
 
@@ -172,6 +179,17 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-08: Wedge I 빌드 — 토픽 admin CRUD `/superadmin/topics`
+- **Source**: 빌드 세션 (5-08, "다음 진행해줘")
+- **Signal**: 토픽이 늘어날 때마다 D1 SQL 직접 박는 마찰 — 첫 두 토픽 (claude-code, cursor) 은 마이그레이션 INSERT 로 박았지만, AI 도메인-specific 정체성을 살리려면 토픽 추가가 일상이 돼야 함. CLAUDE.md memory 의 "Admin UI architecture = Route-first Resource Admin" 과도 정렬.
+- **결정 / 학습**:
+  - GET 응답에 leftJoin+groupBy postCount 동봉 — Wedge A 의 공개 `GET /api/topics` 와 동일 패턴 재사용. 별 admin-전용 엔드포인트로 분리 안 함, 같은 데이터 형태에 권한 게이트만 다름.
+  - id 컨벤션 `topic_${slug.replace(/-/g, '_')}` — 결정론적이라 seed/admin 양쪽이 같은 id 규칙. uuid 안 씀 (운영자가 D1 console 에서 추론 가능해야 디버그 빠름).
+  - postCount > 0 인 토픽 삭제 차단 — soft-delete 안 하고 hard-delete 채택 이유. 토픽 자체는 게시글과 다르게 한 번 만들면 거의 안 지움 (정책적 결정), 지울 일이 있다면 글이 0건이어야 안전. Cascade 안 함.
+  - SuperadminLayout 에 NavLink 두 개로 — 워크스페이스 페이지 한 장만 있던 시절엔 nav 가 없었지만, 두 장이 되니까 패턴이 안 맞아 졌음. 미래 superadmin 페이지가 생길 때마다 NavLink 한 줄 추가로 끝나는 구조.
+  - 검증을 위해 `.dev.vars` 의 SUPERADMIN_EMAILS/DEV_LOGIN_EMAIL 임시 변경 후 원복 — Wedge H 학습에 적었던 이슈가 실제로 또 한 번 마찰. 다음 wedge 후보에 정상화 항목 명시.
+- **다음 wedge 후보**: 큐레이터 ↔ 토픽 endorse bridge / draft 흐름 / viewCount + 인기 rail / DEV_LOGIN_EMAIL 정상화.
 
 ### 2026-05-08: Wedge H 빌드 — 마크다운 미리보기 토글
 - **Source**: 빌드 세션 (5-08, "다음 진행해줘")
