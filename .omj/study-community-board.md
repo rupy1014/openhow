@@ -163,13 +163,16 @@ related:
 - 결정: detail GET 시 매번 +1 (de-dup 안 함) — 봇/같은 사용자 여러 번 등 노이즈 있지만 wedge 단계에선 단순 카운터로 시작. de-dup/세션 기준은 트래픽 쌓이면 separate wedge.
 - 검증: Worker/Viewer TS 0 에러, 로컬 curl — 같은 글 3번 GET → viewCount 0→1→2→3, feed 응답이 viewCount=3 글을 첫 카드로 정렬, Playwright 홈/디테일/보드 세 화면 모두 "조회 N" 노출 확인. 프로덕션 migration apply 후 `/api/topics`, `/api/public/feed`, `/api/topics/claude-code` 정상 (글 0건이지만 컬럼 추가로 인한 select 깨짐 없음).
 
-### Wedge K — 다음 후보 (Backlog 로 이관)
-- 큐레이터 워크스페이스 ↔ 토픽 게시판 endorse/승격 bridge — featured_content 패턴 재사용 가능성 검토
-- 작성자 본인용 "내 글" 임시저장/draft 흐름
-- 인기 토픽 글 rail v2 — 기간 필터 (이번 주/이번 달), de-dup 카운터 (세션/IP), 인기/최신 두 rail 분리
-- 토픽 인덱스에 정렬/필터 (post count 순, ai_domain_tag 그룹) — 현재는 createdAt desc 단일
-- 미리보기 v2 — 코드 하이라이트, 캔버스 차트, link-card 디렉티브 등 SSG/SPA 확장 마크다운 미리보기 안 검증
-- DEV_LOGIN_EMAIL 정상화 (현재 `.dev.vars` 의 typo `rupy1008@gamil.com`) — wedge 마다 임시 변경/원복 부담 누적
+### Wedge K — 워크스페이스 ↔ 토픽 endorse bridge Phase 1 (admin CRUD) (5-08, done)
+- DB: `workspace_topic_endorsement` (id, workspace_id, topic_id, created_at) — workspace/topic FK cascade, (workspace_id, topic_id) unique pair (migration 0064, schema.ts 동기화) — 로컬/프로덕션 모두 적용 (0063 d1_migrations 추적 누락은 수동 INSERT 로 보정 후 0064 정상 apply)
+- API: `GET/POST/DELETE /api/workspaces/:slug/endorsements` — GET 은 누구나 (joined topic 메타 동봉), POST/DELETE 는 워크스페이스 owner 만 (`ws.ownerId !== user.id` → 403). POST 는 topicSlug 검증·중복 409·결정론적 id `endorse_${ws_id}_${topic_id_short}` 생성 (`packages/worker/src/routes/workspaces.ts`)
+- Viewer: `/dashboard/:workspace/topics` 라우트 + `WorkspaceTopicEndorsements.tsx` + CSS — 토픽 picker 드롭다운 (이미 endorse 한 토픽은 자동 제외) + endorsement 리스트 (태그 pill + 제목 링크 + endorse 일자 + 해제 버튼) (`packages/viewer/src/pages/admin/WorkspaceTopicEndorsements.tsx`)
+- Layout: AdminLayout 사이드바에 "토픽 endorse" 항목 추가 (canManage 게이트, 댓글 항목 다음) — 별 NavLink 스타일 변경 없이 기존 nav-item 재사용 (`packages/viewer/src/layouts/AdminLayout.tsx`)
+- 결정: 옵션 C 의 "큐레이터 ↔ 토픽 bridge" 큰 promise 를 한 번에 안 닫고 Phase 1 (admin CRUD) 만 — 워크스페이스 화면에서 endorsed 토픽 글 surface 하는 public 렌더링은 별 wedge K2 로 분리. 한 wedge 가 너무 크면 결정/검증 압축됨.
+- 결정: 새 admin 메뉴 surface 안 만들고 기존 워크스페이스 admin 사이드바 한 칸 추가 — Route-first Resource Admin (CLAUDE.md memory) 패턴, modal/dialog 안 씀.
+- 결정: 결정론적 id (`endorse_${ws_id}_${topic_short_id}`) — uuid 안 씀, D1 console 에서 운영자 추론 가능.
+- 검증: Worker/Viewer TS 0 에러, Playwright 로컬 (dev-login → seed@local.dev = vibe-coding owner) — 빈 상태 → claude-code endorse → cursor endorse → 2건 → 1건 제거 → 0건 정리 happy path, GET 200 (joined 메타 정상), POST 비로그인 401. 프로덕션 — `/api/workspaces/clauders-ai/endorsements` 200 + `[]`, POST no-auth 401.
+- 다음 wedge 후보 (K2 등): 워크스페이스 화면에 endorsed 토픽 글 surface (Wedge F 홈 rail 패턴 재사용), 큐레이터 promotion (mirror 토픽 글 → 큐레이션 라인업), 작성자 draft 흐름, 인기 rail v2 (de-dup, 기간 필터), DEV_LOGIN_EMAIL 정상화.
 
 ## Footprint (initial guess, validate during explore)
 
@@ -188,6 +191,18 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-08: Wedge K 빌드 — 워크스페이스 ↔ 토픽 endorse bridge Phase 1 (admin CRUD)
+- **Source**: 빌드 세션 (5-08, "다음 진행해줘")
+- **Signal**: 옵션 C 핵심 promise (큐레이션 ↔ 토픽 bridge) 의 첫 연결 — Wedge A~J 가 토픽 라인 (Reddit 축) 을 read/write/discover 까지 닫았고 Wedge F 가 홈에서 토픽 글을 노출했지만, 큐레이션 워크스페이스 (Medium 축) 와 토픽 사이는 여전히 분리된 두 라인이었음. endorse 가 두 축 사이의 첫 명시적 관계.
+- **결정 / 학습**:
+  - 옵션 C 약속을 한 wedge 로 안 닫고 Phase 1 (admin CRUD only) 으로 잘림 — 웍스페이스 owner 가 토픽을 endorse 하는 메커니즘을 먼저 박고, 워크스페이스 화면에서 endorsed 토픽 글 surface (public 렌더링) 는 K2 로 분리. 한 번에 schema + admin + public surface + 큐레이션 promotion 까지 다 잡으면 결정/검증 둘 다 얕아짐. wedge 사이즈는 "결정 5개, 검증 5분 안" 에 닫히는 게 기준.
+  - 결정론적 id (`endorse_${ws_id}_${topic_short_id}`) — uuid 안 씀. 운영자가 D1 console 에서 어느 워크스페이스가 어느 토픽을 endorse 했는지 id 만 보고 추론 가능. Wedge I (`topic_${slug.replace(/-/g,'_')}`) 와 동형 패턴.
+  - admin 사이드바에 "토픽 endorse" 한 칸 추가 — 별 modal/dialog 안 만듦. CLAUDE.md memory 의 "Admin UI architecture = Route-first Resource Admin" 정렬: list/new/edit 라우트로 정착, modal 은 작은 보조 작업일 때만.
+  - workspace owner 검증은 `ws.ownerId !== user.id` 인라인 — middleware 분리 안 함. 토픽 admin 은 superadmin (Wedge I), 워크스페이스 endorse 는 owner — 권한 모델이 다른 두 surface 라 middleware 추출하면 한쪽 invariant 가 흐려짐.
+  - 0063 d1_migrations 추적 누락 발견 — Wedge J 의 prod migration apply 가 view_count 컬럼은 추가했지만 d1_migrations 행을 안 적었음 (혹은 wrangler 버전 이슈). 0064 apply 시 0063 가 다시 시도돼 "duplicate column" 에러. d1_migrations 에 0063 row 수동 INSERT 하고 0064 정상 apply. 다음 wedge 부터 deploy 직후 `d1_migrations` 마지막 행 확인하는 절차 추가 권장.
+  - public GET 은 모두에게 — endorsed 관계는 워크스페이스의 큐레이션 정체성을 비-멤버에게 보여주는 신호이기도 함. K2 의 public surface 가 이 endpoint 위에 자연스럽게 올라갈 수 있게 미리 공개 형태로 둠.
+- **다음 wedge 후보**: K2 워크스페이스 화면에서 endorsed 토픽 글 surface (Wedge F 홈 rail 패턴 재사용) / 큐레이터 promotion (mirror 토픽 글 → 큐레이션 라인업) / 작성자 draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화.
 
 ### 2026-05-08: Wedge J 빌드 — 토픽 글 viewCount + 인기 rail
 - **Source**: 빌드 세션 (5-08, "다음 진행해줘")
