@@ -142,14 +142,18 @@ related:
 - 결정: 워커/DB 변경 0건 — Wedge A 의 `GET /api/topics` 가 이미 postCount 포함이라 viewer-only wedge 로 자연스럽게 닫힘. 디스커버리 루프 (Wedge F 홈 카드 → Wedge G 토픽 인덱스 → Wedge A 토픽 보드 → Wedge C 글 상세) 완결.
 - 검증: TS 0 에러 (viewer), Playwright 로컬 — 카드 2개 (Claude Code 3개의 글 / Cursor 1개의 글) 정상 렌더 + 카드 클릭 → `/t/claude-code` 라우팅 확인, 프로덕션 배포 후 `/t` 200 + `/api/topics` 응답 정상
 
-### Wedge H — 다음 후보 (Backlog 로 이관)
+### Wedge H — 마크다운 미리보기 토글 (5-08, done)
+- Viewer: TopicBoard composer 와 TopicPostDetail edit form 양쪽에 "쓰기/미리보기" 탭 — 같은 `cachedRenderMarkdown` (DocPage 와 동일 토대) 으로 본문 렌더, 빈 본문 시 "미리볼 내용이 없어요." placeholder, 탭 active 색상은 인덱스/보드 일치 (`accent-soft`/`accent`) (`packages/viewer/src/pages/TopicBoard.tsx`, `.css`, `TopicPostDetail.tsx`, `.css`)
+- 결정: 백엔드 변경 0건 — 마크다운 변환은 viewer-only 이고 detail 화면 렌더와 동일 함수 재사용으로 일치 보장. 별 컴포넌트 추출 안 함 — composer/edit form 두 곳만 쓰는 30줄 패턴이라 inline state 관리가 더 명확.
+- 검증: TS 0 에러, Playwright 로컬 (dev-login → seed_author 세션) — composer 미리보기 h1=1/strong=1/li=2 + 탭 toggle 후 textarea 복귀, edit form 미리보기 h2=1/code=1/ol-li=2, 두 화면 스크린샷 확인. dev-login 으로 better-auth 세션 happy path 도 처음으로 검증됨 (기존엔 apikey 만).
+
+### Wedge I — 다음 후보 (Backlog 로 이관)
 - 토픽 admin CRUD (관리자 페이지에서 토픽 추가/수정/seed 보강 — 수동 SQL 안 쓰게)
 - 큐레이터 워크스페이스 ↔ 토픽 게시판 endorse/승격 bridge — featured_content 패턴 재사용 가능성 검토
-- 로그인 사용자 인증된 POST 흐름 E2E 검증 (현재는 401/403 unauth + apikey 시드 happy path 만 검증, better-auth 세션 happy path 미검증)
-- 마크다운 작성 폼 미리보기/리치 에디터
 - 작성자 본인용 "내 글" 임시저장/draft 흐름
 - 토픽 글 viewCount + 인기 토픽 글 rail
 - 토픽 인덱스에 정렬/필터 (post count 순, ai_domain_tag 그룹) — 현재는 createdAt desc 단일
+- 미리보기 v2 — 코드 하이라이트, 캔버스 차트, link-card 디렉티브 등 SSG/SPA 확장 마크다운 미리보기 안 검증 (현재는 기본 마크다운만 확인)
 
 ## Footprint (initial guess, validate during explore)
 
@@ -168,6 +172,18 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-08: Wedge H 빌드 — 마크다운 미리보기 토글
+- **Source**: 빌드 세션 (5-08, "다음 진행해줘")
+- **Signal**: 작성/수정 폼이 textarea 한 칸이라 글 등록 직전 형태 확인이 안 됨. 마크다운 문법 익숙한 사용자에게도 "내가 친 *문법* 이 의도대로 변환되나?" 가 가장 잦은 인지 부담. Medium/Reddit 모두 미리보기 탭이 기본.
+- **결정 / 학습**:
+  - 별 컴포넌트 추출 (`MarkdownBodyField` 같은) 안 함 — 두 곳만 쓰는 ~30줄 패턴이고 추출하면 부모 폼 CSS naming 과 분리돼서 시각 일치를 보장하기 더 어려워짐. 같은 코드를 두 번 쓰는 게 한 줄 추상화보다 나음.
+  - 미리보기 함수는 `cachedRenderMarkdown` (DocPage / TopicPostDetail 과 동일) — 별 미리보기-only 렌더러를 만들지 않음. "미리보기 ≡ 실제 렌더" 가 사용자 약속.
+  - 빈 본문 분기를 placeholder 텍스트로 — 빈 미리보기 박스가 그대로 보이면 "왜 안 나와?" 의 침묵이 더 무서움.
+  - 탭 active 색상은 `accent-soft`/`accent` 로 TopicIndex 카드 태그 색과 일치 — 토픽 라인업 전체가 같은 시각 시그널.
+  - dev-login (`/api/dev/login`) 의 better-auth 세션 cookie 가 viewer 의 `useAuthStore` 로 정상 전파됨 — Wedge E 까지 apikey 만 검증했던 happy path 가 이번에 처음으로 세션-기반으로도 닫힘. 다만 `.dev.vars` 의 `DEV_LOGIN_EMAIL` 이 여전히 typo (`rupy1008@gamil.com`) 라 임시 변경 후 원복하는 워크플로 — 다음 wedge 에서 정상화 필요.
+  - 미리보기 v2 (코드 하이라이트, canvas-flow, link-card 등 SSG/SPA 확장 디렉티브) 는 backlog — 현재는 기본 마크다운만 확인. 토픽 글이 아직 노트 길이라 확장 디렉티브 사용은 드물 가정.
+- **다음 wedge 후보**: 토픽 admin CRUD / 큐레이션 ↔ 토픽 endorse bridge / draft 흐름 / 토픽 글 viewCount + 인기 rail.
 
 ### 2026-05-08: Wedge G 빌드 — 토픽 인덱스 라우트 `/t`
 - **Source**: 빌드 세션 (5-08, "다음 진행해줘")
