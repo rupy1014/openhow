@@ -154,13 +154,22 @@ related:
 - 결정: 백엔드는 GET 한 번만 leftJoin+groupBy 로 postCount 동봉 (Wedge A 와 동일 패턴) — 별 endpoint 분리 안 함. id 는 `topic_${slug.replace(/-/g, '_')}` 결정론적 — 시드 컨벤션 (`topic_claude_code`) 과 일치.
 - 검증: Worker/Viewer TS 0 에러, Playwright 로컬 (seed_author 임시 superadmin 부여) — 생성/수정/삭제 happy path + 글 있는 토픽 삭제 버튼 disabled 확인. 프로덕션 배포 후 `/api/superadmin/topics` 401 (no auth) + `/superadmin/topics` 200 (SPA) + `/api/topics` 공개 응답 정상.
 
-### Wedge J — 다음 후보 (Backlog 로 이관)
+### Wedge J — 토픽 글 viewCount + 인기 rail (5-08, done)
+- DB: `topic_post.view_count INTEGER NOT NULL DEFAULT 0` (migration 0063, schema.ts 동기화) — 로컬/프로덕션 모두 적용
+- API: `GET /api/topics/:slug/posts/:postSlug` 가 응답 직전 best-effort `view_count = view_count + 1` 업데이트 후 새 값 반환 (try/catch — 카운터는 read 를 막지 않음). list/feed/profile select 도 `viewCount` 동봉 (`packages/worker/src/routes/topics.ts`, `public-feed.ts`, `authors.ts`)
+- API: `/api/public/feed` 의 `topicPostsFeed` 정렬 `desc(viewCount), desc(createdAt)` — 같은 viewCount 안에서는 최신 글이 위, 점수 쌓이면 자연스럽게 인기순
+- Viewer: 홈 rail "토픽 게시판" → "인기 토픽 글" (조회수 순), 카드 메타에 "조회 N" 추가 (`packages/viewer/src/pages/PublicBlogHome.tsx`). TopicBoard 카드 + TopicPostDetail 헤더에도 `조회 N` 노출 (`TopicBoard.tsx`, `TopicPostDetail.tsx`)
+- 결정: 별 popularTopicPosts 필드 추가 안 함 — 기존 단일 rail 의 정렬 기준만 바꿈. 새 사이트라 인기/최신 두 rail 을 따로 띄우면 둘 다 비어 보이는 게 더 어색. 데이터 쌓이면 자연스럽게 "인기" 의미가 강해짐.
+- 결정: detail GET 시 매번 +1 (de-dup 안 함) — 봇/같은 사용자 여러 번 등 노이즈 있지만 wedge 단계에선 단순 카운터로 시작. de-dup/세션 기준은 트래픽 쌓이면 separate wedge.
+- 검증: Worker/Viewer TS 0 에러, 로컬 curl — 같은 글 3번 GET → viewCount 0→1→2→3, feed 응답이 viewCount=3 글을 첫 카드로 정렬, Playwright 홈/디테일/보드 세 화면 모두 "조회 N" 노출 확인. 프로덕션 migration apply 후 `/api/topics`, `/api/public/feed`, `/api/topics/claude-code` 정상 (글 0건이지만 컬럼 추가로 인한 select 깨짐 없음).
+
+### Wedge K — 다음 후보 (Backlog 로 이관)
 - 큐레이터 워크스페이스 ↔ 토픽 게시판 endorse/승격 bridge — featured_content 패턴 재사용 가능성 검토
 - 작성자 본인용 "내 글" 임시저장/draft 흐름
-- 토픽 글 viewCount + 인기 토픽 글 rail
+- 인기 토픽 글 rail v2 — 기간 필터 (이번 주/이번 달), de-dup 카운터 (세션/IP), 인기/최신 두 rail 분리
 - 토픽 인덱스에 정렬/필터 (post count 순, ai_domain_tag 그룹) — 현재는 createdAt desc 단일
 - 미리보기 v2 — 코드 하이라이트, 캔버스 차트, link-card 디렉티브 등 SSG/SPA 확장 마크다운 미리보기 안 검증
-- DEV_LOGIN_EMAIL 정상화 (현재 `.dev.vars` 의 typo `rupy1008@gamil.com`) — Wedge H/I 테스트마다 임시 변경/원복 부담 누적
+- DEV_LOGIN_EMAIL 정상화 (현재 `.dev.vars` 의 typo `rupy1008@gamil.com`) — wedge 마다 임시 변경/원복 부담 누적
 
 ## Footprint (initial guess, validate during explore)
 
@@ -179,6 +188,17 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-08: Wedge J 빌드 — 토픽 글 viewCount + 인기 rail
+- **Source**: 빌드 세션 (5-08, "다음 진행해줘")
+- **Signal**: 글마다 인기 신호가 0이면 큐레이터가 "어떤 글을 라인업으로 승격할지" 의 후보 풀이 비어 있음. endorse bridge 의 전제 데이터. 동시에 가입자 입장에선 "내 글이 얼마나 읽혔는가" 가 다음 글 쓸 동력.
+- **결정 / 학습**:
+  - 별 popular rail 추가 안 함 — 기존 "토픽 게시판" rail 의 정렬을 viewCount DESC, createdAt DESC 로 바꾸고 헤더 카피만 "인기 토픽 글" 로 교체. 빈 사이트에서 두 rail (최신 / 인기) 이 둘 다 같은 글로 채워지면 어색. 데이터 쌓이면 의미가 살아남.
+  - 검증을 위해 detail GET 으로 카운터를 직접 bump 함 — 새 사이트에서는 인기 신호가 0 누적 상태이므로 데모/테스트도 어렵다. 추후 인기 rail v2 에서 de-dup (세션 기반, IP 기반) 가능성. 현재는 hit = 1 의 단순 카운터.
+  - SQL `view_count + 1` 은 race condition 에 안전 (atomic). drizzle 의 `sql\`...\`` template 으로 `set({ viewCount: sql\`...\` })` 패턴. JS 에서 +1 후 set 하면 동시 GET 시 손실.
+  - 카운터 업데이트는 try/catch 로 감싸서 실패해도 read 가 깨지지 않게 함 — viewCount 는 부수 정보, prod 에서 락/타임아웃 같은 D1 건드림이 detail render 를 막으면 본질 손실.
+  - "조회 N" 표기는 세 surface (홈 카드 / 보드 카드 / 디테일 헤더) 동일 톤으로 — 한 곳에서만 보이면 "이게 신호인가" 가 약해짐.
+- **다음 wedge 후보**: 큐레이터 ↔ 토픽 endorse bridge / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화.
 
 ### 2026-05-08: Wedge I 빌드 — 토픽 admin CRUD `/superadmin/topics`
 - **Source**: 빌드 세션 (5-08, "다음 진행해줘")
