@@ -125,13 +125,19 @@ related:
 - 결정: `/u/:handle` 분리 라우트 만들지 않고 기존 `/s/:username` 한 화면에 큐레이션 글 + 토픽 글을 병렬 섹션으로 둠 — 가입자 1급 시민화 (intent 본문 정의) 의 가시화는 동일 프로필 안에서 두 라인을 같이 보여주는 게 더 강함
 - 검증: TS 0 에러 (worker, viewer), `GET /api/authors/profile/seed_author` 응답에 `topicPosts: [{ id: post_test_1, title: "Wedge B 첫 글", topicSlug: "claude-code", ... }]` 1건 반환, Playwright 스크린샷 — "토픽 게시글" 섹션 + 카드 1개 렌더 정상
 
-### Wedge E — 다음 후보 (Backlog 로 이관)
+### Wedge E — 글 수정/삭제 (5-08, done)
+- API: `PUT /api/topics/:slug/posts/:postSlug` + `DELETE /api/topics/:slug/posts/:postSlug` — `requireAuth` + author 본인 검증 (403), POST 와 동일 validation, soft-delete (`status='deleted'` — list/detail 쿼리는 `status='published'` 필터로 자동 숨김)
+- Viewer: TopicPostDetail nav 우측에 "수정"/"삭제" 버튼 (작성자 본인만), 인라인 edit form (title + bodyMd 재사용), 삭제 confirm dialog → 200 후 토픽 보드로 `navigate(replace: true)`
+- 검증: 401 unauth · 403 wrong user (별도 user + apikey 시드해서 재현) · 404 missing post · 400 empty body validation · 200 happy + soft-delete 후 GET 404 + D1 `status='deleted'` 확인 · Playwright 비로그인 화면 owner-actions 0개 확인
+- 결정: hard delete 대신 soft-delete — `topic_post.status` 필드 이미 존재 (default 'published'), 모든 read 쿼리가 published 만 가져오므로 자연 숨김. 추후 복구·트래시 UI 가능. Edit/delete API key 흐름으로 검증한 패턴은 다음 wedge 의 dev-login 정상화 전까지 임시 — 운영 사용자는 better-auth 세션으로 동일 endpoint 호출.
+
+### Wedge F — 다음 후보 (Backlog 로 이관)
 - 토픽 admin CRUD (관리자 페이지에서 토픽 추가/수정/seed 보강 — 수동 SQL 안 쓰게)
 - 큐레이터 워크스페이스 ↔ 토픽 게시판 endorse/승격 bridge
-- 로그인 사용자 인증된 POST 흐름 E2E 검증 (현재는 401 unauth + 시드 INSERT 만 검증, full happy path 미검증)
-- 글 수정/삭제 (작성자 본인만)
+- 로그인 사용자 인증된 POST 흐름 E2E 검증 (현재는 401/403 unauth + apikey 시드 happy path 만 검증, better-auth 세션 happy path 미검증)
 - 마크다운 작성 폼 미리보기/리치 에디터
 - 디스커버리 진열대에 토픽 글 진입 (지금은 워크스페이스/큐레이션 글만 노출)
+- 작성자 본인용 "내 글" 임시저장/draft 흐름
 
 ## Footprint (initial guess, validate during explore)
 
@@ -150,6 +156,17 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-08: Wedge E 빌드 — 글 수정/삭제 (작성자 본인만)
+- **Source**: 빌드 세션 (5-08, "다음 진행해줘")
+- **Signal**: 작성→읽기→프로필 모음 (Wedge B/C/D) 흐름 다음, 작성자가 자기 글을 손볼 수 없는 게 가장 기본 빈칸. 댓글·보팅 같은 큰 wedge 보다 CRUD 완결을 먼저.
+- **결정 / 학습**:
+  - Soft-delete (`status='deleted'`) 채택 — `topic_post.status` 필드 이미 default 'published' 로 존재하고 모든 read 쿼리가 published 필터를 갖고 있어 변경 0. Hard delete 였으면 cascading 검토 필요했을 것.
+  - Edit form 은 별도 라우트 (`/edit`) 안 만들고 Detail 화면 안 toggle — Wedge B 의 인라인 composer 패턴과 동형. 라우트 늘리면 작성→수정 mental model 분기.
+  - 권한 체크는 endpoint handler 안에서 (`post.authorUserId !== user.id` → 403) — middleware 로 추출하기엔 path 의존도가 너무 높고 토픽/포스트 양쪽 lookup 이 묶여 있음.
+  - 인증된 happy path 검증은 임시 API key 시드 + Bearer 헤더로 — dev-login 의 DEV_LOGIN_EMAIL 환경 변수 변경 부담 회피. 별도 user/apikey 시드해서 403 도 검증.
+  - `crypto.subtle.digest` SHA-256 해시 == Node `crypto.createHash('sha256').digest('hex')` 동일 결과 — 시드 스크립트는 Node 로, 검증은 Worker 안에서 자연스럽게 일치.
+- **다음 wedge 후보**: 토픽 admin CRUD / 큐레이션 ↔ 토픽 endorse bridge / 디스커버리 진열대에 토픽 글 진입 / 마크다운 미리보기.
 
 ### 2026-05-08: Wedge D 빌드 — AuthorProfile 에 토픽 글 섹션 추가
 - **Source**: 빌드 세션 (5-08, "다음 진행해줘")
