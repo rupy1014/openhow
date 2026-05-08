@@ -119,13 +119,19 @@ related:
 - TopicBoard 카드 `<button>` → `<Link to>` 로 전환 (router 한 줄 추가, CSS `text-decoration: none` 보강)
 - 검증: TS 0 에러 (worker, viewer), `GET .../posts/first-post-abc12345` 200 + `.../nonexistent` 404, Playwright 카드 클릭 → 상세 라우트 navigation 정상, 상세 페이지 마크다운 (`# 안녕` → h1) 렌더 정상, 404 페이지 백 링크 정상
 
-### Wedge D — 다음 후보 (Backlog 로 이관)
+### Wedge D — AuthorProfile 토픽 글 노출 (5-08, done)
+- API: `GET /api/authors/profile/:username` 응답에 `topicPosts` 추가 — published 상태인 토픽 글만, topic join 으로 `topicSlug`/`topicTitle` 동봉, 최근 20건 (`packages/worker/src/routes/authors.ts`)
+- Viewer: `AuthorProfile.tsx` `ProfileResponse` 에 `topicPosts: TopicPostBrief[]` 추가, "토픽 게시글" 섹션 렌더 (제목 + `topicTitle · 날짜` 메타, `/t/:topicSlug/:postSlug` 링크), CSS 신규 카드 (`.author-profile-topic-post-card`)
+- 결정: `/u/:handle` 분리 라우트 만들지 않고 기존 `/s/:username` 한 화면에 큐레이션 글 + 토픽 글을 병렬 섹션으로 둠 — 가입자 1급 시민화 (intent 본문 정의) 의 가시화는 동일 프로필 안에서 두 라인을 같이 보여주는 게 더 강함
+- 검증: TS 0 에러 (worker, viewer), `GET /api/authors/profile/seed_author` 응답에 `topicPosts: [{ id: post_test_1, title: "Wedge B 첫 글", topicSlug: "claude-code", ... }]` 1건 반환, Playwright 스크린샷 — "토픽 게시글" 섹션 + 카드 1개 렌더 정상
+
+### Wedge E — 다음 후보 (Backlog 로 이관)
 - 토픽 admin CRUD (관리자 페이지에서 토픽 추가/수정/seed 보강 — 수동 SQL 안 쓰게)
-- `/u/:handle` 프로필 — "내가 쓴 글" 집계 (현재 `/s/:username` AuthorProfile 이 워크스페이스 글만 모음, 토픽 글 추가)
 - 큐레이터 워크스페이스 ↔ 토픽 게시판 endorse/승격 bridge
 - 로그인 사용자 인증된 POST 흐름 E2E 검증 (현재는 401 unauth + 시드 INSERT 만 검증, full happy path 미검증)
 - 글 수정/삭제 (작성자 본인만)
 - 마크다운 작성 폼 미리보기/리치 에디터
+- 디스커버리 진열대에 토픽 글 진입 (지금은 워크스페이스/큐레이션 글만 노출)
 
 ## Footprint (initial guess, validate during explore)
 
@@ -144,6 +150,16 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-08: Wedge D 빌드 — AuthorProfile 에 토픽 글 섹션 추가
+- **Source**: 빌드 세션 (5-08, "다음 진행해줘")
+- **Signal**: Wedge C done 후 가장 자연스러운 후속은 "가입자 1급 시민" 의 가시화 — 글을 써도 자기 프로필에 모이지 않으면 작성 동기가 약함. `/u/:handle` 분리 라우트 vs `/s/:username` 확장 사이에서 후자 선택.
+- **결정 / 학습**:
+  - `/u/:handle` 새 라우트를 만들지 않고 기존 `/s/:username` AuthorProfile 한 화면에 큐레이션 글 + 토픽 글을 병렬 섹션으로 둠. URL 두 개 만들면 가입자 정체성이 분열되고 큐레이터/가입자 hybrid 정체성 (intent 의 "1급 시민" 정의) 도 약해짐.
+  - API 추가는 Promise.all 한 칸 — author 의 topic post 쿼리 (published 만, topic join, 최근 20). 새 endpoint 안 만들고 기존 `/api/authors/profile/:username` 응답 확장.
+  - `topicPosts` 빈 배열일 때 섹션 통째로 숨김 — 새 가입자 프로필이 빈 섹션으로 어색해지지 않도록.
+  - 토픽 글 카드는 워크스페이스 글 카드보다 단순하게 (썸네일/설명 없이 제목 + 토픽명 · 날짜) — 토픽 글은 짧은 노트가 기본 가정이라 카드 레이아웃도 짧게.
+- **다음 wedge 후보**: 토픽 admin CRUD / 큐레이션 ↔ 토픽 endorse bridge / 디스커버리 진열대에 토픽 글 진입 / 글 수정·삭제.
 
 ### 2026-05-08: Wedge C 빌드 — 게시글 상세 라우트 + 마크다운 렌더
 - **Source**: 빌드 세션 (5-08, "추천대로 진행해줘")
