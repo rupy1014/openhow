@@ -131,13 +131,20 @@ related:
 - 검증: 401 unauth · 403 wrong user (별도 user + apikey 시드해서 재현) · 404 missing post · 400 empty body validation · 200 happy + soft-delete 후 GET 404 + D1 `status='deleted'` 확인 · Playwright 비로그인 화면 owner-actions 0개 확인
 - 결정: hard delete 대신 soft-delete — `topic_post.status` 필드 이미 존재 (default 'published'), 모든 read 쿼리가 published 만 가져오므로 자연 숨김. 추후 복구·트래시 UI 가능. Edit/delete API key 흐름으로 검증한 패턴은 다음 wedge 의 dev-login 정상화 전까지 임시 — 운영 사용자는 better-auth 세션으로 동일 endpoint 호출.
 
-### Wedge F — 다음 후보 (Backlog 로 이관)
+### Wedge F — 디스커버리 진열대에 토픽 글 진입 (5-08, done)
+- API: `GET /api/public/feed` 응답에 `topicPosts` 추가 — published 만, topic+author join, 최근 8 (`packages/worker/src/routes/public-feed.ts`)
+- Viewer: PublicBlogHome 의 latest/popular 그리드 바로 아래 "토픽 게시판" 섹션 — `pbh-topic-post-card` (태그 + 제목 + 작성자·날짜), auto-fill grid, 빈 배열일 때 섹션 자체 숨김
+- 결정: 위치는 "전체 아티클 + 인기 글" 다음, "시리즈 · 커리큘럼" 앞 — 큐레이션 라인을 위에 두면서 가입자 라인을 같은 첫 화면 안에 들임. hero 위로 올리지 않음 (큐레이션 우선 정체성 유지).
+- 검증: TS 0 에러, 로컬 D1 에 4건 시드 → feed 응답 `topicPosts.length === 4` + Playwright 홈 스크린샷에 4개 카드 정상 렌더, 프로덕션 `topicPosts: []` (아직 글 없음, 응답 형 정상)
+
+### Wedge G — 다음 후보 (Backlog 로 이관)
 - 토픽 admin CRUD (관리자 페이지에서 토픽 추가/수정/seed 보강 — 수동 SQL 안 쓰게)
-- 큐레이터 워크스페이스 ↔ 토픽 게시판 endorse/승격 bridge
+- 큐레이터 워크스페이스 ↔ 토픽 게시판 endorse/승격 bridge — featured_content 패턴 재사용 가능성 검토
 - 로그인 사용자 인증된 POST 흐름 E2E 검증 (현재는 401/403 unauth + apikey 시드 happy path 만 검증, better-auth 세션 happy path 미검증)
 - 마크다운 작성 폼 미리보기/리치 에디터
-- 디스커버리 진열대에 토픽 글 진입 (지금은 워크스페이스/큐레이션 글만 노출)
 - 작성자 본인용 "내 글" 임시저장/draft 흐름
+- 토픽 인덱스 라우트 (`/t` 만 누르면 모든 토픽 둘러보기 — 현재는 `/t/:slug` 만 존재)
+- 토픽 글 viewCount + 인기 토픽 글 rail
 
 ## Footprint (initial guess, validate during explore)
 
@@ -156,6 +163,17 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-08: Wedge F 빌드 — 디스커버리 진열대에 토픽 글 진입
+- **Source**: 빌드 세션 (5-08, "다음 진행해줘")
+- **Signal**: 작성→읽기→프로필→수정/삭제까지 됐지만 가입자 글이 홈에 안 잡히면 "1급 시민" 이 아니라 후방 구역. 가시성 wedge 가 가장 큰 임팩트.
+- **결정 / 학습**:
+  - 위치는 latest/popular 그리드 바로 다음 — 큐레이션 라인 (Featured/전체 아티클/인기 글) 을 위에 두면서 가입자 라인을 같은 첫 화면 안에 들임. Hero 위로 올리지 않음. 큐레이션-우선 정체성과 1급 시민화 가 양립 가능한 sequence: 위 → 큐레이션, 아래 → 커뮤니티.
+  - 빈 배열일 때 섹션 통째로 숨김 (`feed.topicPosts?.length > 0`) — 새 사이트에서 "0건" 이 노출되면 어색.
+  - "더 보기" 링크 안 만듦. 토픽 인덱스 라우트 (`/t` 만 누르면 모든 토픽) 가 아직 없어서 — 카드 자체로 진입.
+  - 카드는 단순 (태그 + 제목 + 작성자·날짜). 워크스페이스 카드처럼 썸네일/desc 안 둠 — 토픽 글은 노트 성격이라 짧은 카드가 맞음.
+  - 8건 limit (서버) → 6건 slice (클라이언트). 향후 "최근 + 인기 + 카테고리별" 분리 가능성 두면서 단순 시작.
+- **다음 wedge 후보**: 큐레이션 ↔ 토픽 endorse/승격 bridge (featured_content 패턴 재사용?) / 토픽 admin CRUD / 토픽 인덱스 라우트 / 마크다운 미리보기.
 
 ### 2026-05-08: Wedge E 빌드 — 글 수정/삭제 (작성자 본인만)
 - **Source**: 빌드 세션 (5-08, "다음 진행해줘")
