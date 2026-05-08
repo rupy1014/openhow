@@ -137,14 +137,19 @@ related:
 - 결정: 위치는 "전체 아티클 + 인기 글" 다음, "시리즈 · 커리큘럼" 앞 — 큐레이션 라인을 위에 두면서 가입자 라인을 같은 첫 화면 안에 들임. hero 위로 올리지 않음 (큐레이션 우선 정체성 유지).
 - 검증: TS 0 에러, 로컬 D1 에 4건 시드 → feed 응답 `topicPosts.length === 4` + Playwright 홈 스크린샷에 4개 카드 정상 렌더, 프로덕션 `topicPosts: []` (아직 글 없음, 응답 형 정상)
 
-### Wedge G — 다음 후보 (Backlog 로 이관)
+### Wedge G — 토픽 인덱스 라우트 `/t` (5-08, done)
+- Viewer: `/t` 라우트 + `TopicIndex.tsx` + CSS — 기존 `GET /api/topics` (postCount 포함) 응답을 카드 그리드로 렌더, ai_domain_tag pill + post count + description, `/t/:slug` 링크 (`packages/viewer/src/pages/TopicIndex.tsx`, `.css`, `router.tsx`)
+- 결정: 워커/DB 변경 0건 — Wedge A 의 `GET /api/topics` 가 이미 postCount 포함이라 viewer-only wedge 로 자연스럽게 닫힘. 디스커버리 루프 (Wedge F 홈 카드 → Wedge G 토픽 인덱스 → Wedge A 토픽 보드 → Wedge C 글 상세) 완결.
+- 검증: TS 0 에러 (viewer), Playwright 로컬 — 카드 2개 (Claude Code 3개의 글 / Cursor 1개의 글) 정상 렌더 + 카드 클릭 → `/t/claude-code` 라우팅 확인, 프로덕션 배포 후 `/t` 200 + `/api/topics` 응답 정상
+
+### Wedge H — 다음 후보 (Backlog 로 이관)
 - 토픽 admin CRUD (관리자 페이지에서 토픽 추가/수정/seed 보강 — 수동 SQL 안 쓰게)
 - 큐레이터 워크스페이스 ↔ 토픽 게시판 endorse/승격 bridge — featured_content 패턴 재사용 가능성 검토
 - 로그인 사용자 인증된 POST 흐름 E2E 검증 (현재는 401/403 unauth + apikey 시드 happy path 만 검증, better-auth 세션 happy path 미검증)
 - 마크다운 작성 폼 미리보기/리치 에디터
 - 작성자 본인용 "내 글" 임시저장/draft 흐름
-- 토픽 인덱스 라우트 (`/t` 만 누르면 모든 토픽 둘러보기 — 현재는 `/t/:slug` 만 존재)
 - 토픽 글 viewCount + 인기 토픽 글 rail
+- 토픽 인덱스에 정렬/필터 (post count 순, ai_domain_tag 그룹) — 현재는 createdAt desc 단일
 
 ## Footprint (initial guess, validate during explore)
 
@@ -163,6 +168,16 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-08: Wedge G 빌드 — 토픽 인덱스 라우트 `/t`
+- **Source**: 빌드 세션 (5-08, "다음 진행해줘")
+- **Signal**: Wedge F 가 홈에서 토픽 글 카드를 띄웠지만 토픽 자체를 둘러볼 진입이 없음. `/t/claude-code` 만 있고 `/t` 가 비어 디스커버리 루프 한 칸이 빠진 채로 남아 있었음.
+- **결정 / 학습**:
+  - Worker 변경 0건 — Wedge A 의 `GET /api/topics` 가 이미 leftJoin + groupBy 로 postCount 까지 내고 있어 viewer-only wedge 로 닫힘. "다음 wedge = 백엔드+프론트 한 셋" 이라는 무의식적 가정 깨야 — 작은 viewer 한 장이 디스커버리 루프 한 칸을 메우는 게 더 정확.
+  - 카드는 ai_domain_tag pill + post count + description — TopicBoard 헤더와 색상 톤 (accent soft blue) 일치시켜 인덱스→보드 진입이 같은 시각 라인업으로 보이게.
+  - 빈 상태/로딩/에러 분기 모두 단일 main 안에서 — 별 라우트 안 쓰고 컴포넌트 안 분기 (TopicBoard 와 동일 패턴).
+  - 토픽 보드에서 인덱스로 돌아가는 링크는 이번 wedge 에선 보류 — 헤더에 백 링크 넣으면 카드 헤더 레이아웃 비례가 깨짐. 별 네비 wedge 로 분리.
+- **다음 wedge 후보**: 토픽 admin CRUD / 큐레이션 ↔ 토픽 endorse bridge / 마크다운 미리보기 / 토픽 글 viewCount + 인기 rail.
 
 ### 2026-05-08: Wedge F 빌드 — 디스커버리 진열대에 토픽 글 진입
 - **Source**: 빌드 세션 (5-08, "다음 진행해줘")
