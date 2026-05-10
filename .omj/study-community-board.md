@@ -185,6 +185,18 @@ related:
 - 검증: Worker/Viewer TS 0 에러, Playwright 로컬 (vibe-coding owner=seed@local.dev) — 빈 상태 → 2 endorse → 4 카드 노출 (claude-code 3 / cursor 1, viewCount 5/0/0/0 정렬), cleanup 후 섹션 카운트 0. 프로덕션 — `/api/workspaces/clauders-ai/endorsed-topic-posts` 200 + `{topics:[],posts:[]}` (clauders-ai 에 endorsement 0건), 404 분기 정상.
 - 다음 wedge 후보 (K3 등): 큐레이터 promotion (mirror 토픽 글 → 큐레이션 라인업) / endorsed rail "더 보기" 링크 (토픽 인덱스로) / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / d1_migrations 추적 prudence.
 
+### Wedge L — 큐레이터 promotion (mirror 토픽 글 → 큐레이션 라인업) (5-10, done)
+- DB: `workspace_topic_post_promotion` 테이블 + 마이그레이션 0065 — `(workspace_id, topic_post_id)` pair UNIQUE, 양쪽 cascade delete. 새 endorsement 처럼 lineage 가 아닌 평면 join 테이블 (mirror copy 가 아닌 reference). (`packages/worker/migrations/0065_add_workspace_topic_post_promotion.sql`, `packages/worker/src/db/schema.ts`)
+- API: `GET /api/workspaces/:slug/promotions` (public, post+topic+author 조인, `promotedAt DESC`, default 12 cap 24, status=published 필터) / `POST` (owner-only 403, body topicPostId, target.status==='published' 검증 → 400, dup 체크 → 409, deterministic id `promo_{wsid_underscored}_{post_short}`) / `DELETE /:topicPostId` (owner-only 403). (`packages/worker/src/routes/workspaces.ts`)
+- Viewer admin: `/dashboard/:workspace/promotions` 페이지 + canManage-gated "큐레이션 promote" sidebar nav. 두 섹션 — "현재 라인업" (라인업에서 내리기 버튼) + "후보" (라인업에 올리기 버튼, endorsed-topic-posts 가 후보 풀, 이미 라인업에 있는 글은 제외). (`packages/viewer/src/pages/admin/WorkspacePromotions.tsx/.css`, `packages/viewer/src/router.tsx`, `packages/viewer/src/layouts/AdminLayout.tsx`)
+- Viewer landing: WorkspaceDocs 두 랜딩 변형에 `wsd-promoted-*` 라인업 rail (purple-bordered 박스 + 큐레이션 태그, accent-soft 배경) — 엔도스 rail 위에 배치. promotedPosts 배열 비면 섹션 통째 숨김. (`packages/viewer/src/pages/workspace/WorkspaceDocs.tsx/.css`)
+- 결정: mirror copy semantics (post 본문 복제) 가 아닌 reference (join row) — 토픽 글 변경 시 자동 동기화, 작성자 attribution 자연 보존, 글 삭제 시 cascade. 큐레이션 라인업이 "큐레이터의 추천 stamp" 이지 "큐레이터가 다시 쓴 글" 이 아님. mirror 는 v2 (큐레이터가 본문에 코멘트 첨부하는 케이스).
+- 결정: 후보 풀 = endorsed-topic-posts (K2 endpoint 재사용) — 모든 토픽 글이 아닌 endorse 한 토픽 의 글만 promote 가능. endorse 가 "이 토픽을 따른다" 의 의미라면 promote 는 "그 토픽 안에서 이 글을 골랐다" 의 의미 — 두 단계 게이트. 별 토픽 검색 UI 안 만들어도 자연.
+- 결정: 라인업 rail 의 purple border + 큐레이션 태그 — 엔도스 rail (회색 dashed border, 회색 태그) 보다 시각적으로 한 층 강함. "이 큐레이터가 직접 골랐다" 시그널 차별화. 큐레이션 워크스페이스 본 콘텐츠 다음 → 라인업 → 엔도스 순서로 시각적 위계.
+- 결정: deterministic id (`promo_{ws}_{post}`) — UUID 안 씀. 기존 wedge (endorse_*, post_*, topic_*) 와 일관, debug/log 시 의미 추적 가능.
+- 검증: Worker/Viewer TS 0 에러. Playwright 로컬 (vibe-coding owner=seed@local.dev) — endorse claude-code → 후보 3개 → 1개 promote → 라인업 rail 1 카드 노출 + 엔도스 rail 1 카드 별도 (이미 라인업 있는 글 endorsed rail 에는 그대로 — 이중 노출 의도, 라인업/엔도스 두 시그널은 독립). 어드민 페이지 두 섹션 카운트 일치. 엣지: dup POST 409, no-auth POST 401, DELETE 200 → list 비움 확인. 프로덕션: 0065 remote D1 apply 성공, worker 배포 완료, GET 404 (엔드포인트 존재 확인 — 노출 워크스페이스 없음).
+- 다음 wedge 후보 (M 등): mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 rail "더 보기" → 토픽으로 / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / 라인업 ↔ 엔도스 rail 시각 위계 더 분명히 (혹은 통합).
+
 ## Footprint (initial guess, validate during explore)
 
 - **Auth/Identity**: 플랫폼-level user 테이블 (이미 존재 여부 확인 필요), handle/profile 필드, 소셜 로그인 연동
@@ -202,6 +214,21 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-10: Wedge L 빌드 — 큐레이터 promotion (mirror 토픽 글 → 큐레이션 라인업)
+- **Source**: 빌드 세션 (5-10, "다음 진행해줘")
+- **Signal**: 옵션 C 의 마지막 큰 promise — "큐레이터 promotion (mirror 토픽 글 → 큐레이션 라인업)" 이 K2 끝났을 때 단독 candidate 로 남아 있었음. K 가 endorse 를 박고, K2 가 그걸 워크스페이스 화면에 surface 했고, L 이 그 위에서 "큐레이터가 라인업으로 골라 올린 글" 한 단계 더 강한 시그널을 만든다. 큐레이션 워크스페이스 ↔ 토픽 게시판 bridge 의 양방향 닫힘 — 큐레이터가 토픽을 endorse 하고 (K), 그 안에서 글을 골라 라인업으로 올린다 (L).
+- **결정 / 학습**:
+  - mirror copy 가 아닌 reference — `workspace_topic_post_promotion` 은 `(workspace_id, topic_post_id)` 평면 join, 본문 복제 안 함. 처음에 "mirror" 라는 단어 때문에 본문 복사를 떠올렸지만, 실제로 필요한 건 "이 큐레이터가 골랐다는 stamp" 일 뿐. 본문은 토픽 글 그대로, 클릭은 토픽 boards 의 원글로 이동. 작성자 attribution 자연 보존, 글 변경 시 자동 동기화, 글 삭제 시 cascade. 본문에 큐레이터 코멘트 첨부 케이스는 mirror copy 가 진짜 필요한 v2.
+  - 후보 풀을 endorsed-topic-posts (K2 endpoint) 로 한정 — 모든 토픽 글이 promote 가능하지 않다. endorse 가 1차 게이트 ("이 토픽을 따른다"), promote 가 2차 게이트 ("그 토픽 안에서 이 글을 골랐다"). 별 검색 UI 만들지 않아도 자연스러운 흐름이 됨. 어드민 워크플로 = endorse 페이지 → promote 페이지 두 단계 (`canManage` 게이트 동일).
+  - 라인업 rail 의 시각 위계 — purple border + accent-soft 배경 + "큐레이션" 태그. 엔도스 rail (회색 dashed border, 회색 태그) 보다 한 층 강함. 위치는 엔도스 rail 위 (큐레이션 본 콘텐츠 → 라인업 → 엔도스). "이 큐레이터가 직접 골랐다" 와 "이 큐레이터가 따르는 토픽의 인기 글" 이 다른 시그널이라 톤도 다르게.
+  - 어드민 페이지의 두 섹션 (현재 라인업 / 후보) — 단일 리스트 + 토글 버튼 패턴 안 씀. 라인업/후보가 의미상 두 different states (라인업 = 골라진, 후보 = endorse 토픽의 인기). 두 섹션으로 가르고 각자 카운트 노출. 후보가 비면 "endorse 한 토픽에 글이 아직 없어요" 안내 — endorse → promote 의 흐름 가드.
+  - deterministic id `promo_{ws_underscored}_{post_short}` — endorse 의 `endorse_{ws}_{topic}` 패턴 따름. UUID 안 씀. workspace id 의 hyphen 을 underscore 로 (sqlite 식별자 안 깨지게), `post_seed_2` 의 `post_` 접두 떼고 `seed_2` 만 — log/debug 시 ws ↔ post 연결을 한눈에. 동일 ws+post 는 자연스럽게 unique key.
+  - dup → 409, non-published → 400, no-auth → 401, non-owner → 403 — 4가지 에러 분기를 모두 같은 endpoint 안에서 처리. unique index 가 dup 잡지만 응답 메시지 분기를 위해 SELECT 한 번 미리. owner check 는 `ws.ownerId !== user.id` inline (Wedge I 부터 굳어진 패턴, role-based 가 아니라 ownership-based).
+  - DEV_LOGIN_EMAIL 정상화는 또 못 했음 — Wedge H 부터 다섯 wedge 째 "다음 후보" 에 적혀 있는 걸 또 미룸. `.dev.vars` typo 임시 변경 → 원복 워크플로가 매번 마찰. 다음 wedge 에서 진짜로 닫거나, 별 dev 계정 (rupy1014@gmail.com 도 superadmin) 하나 추가 시드해서 typo 무시하는 방향. 이번 wedge 는 검증 우선.
+  - 검증 — 빈 promotion 상태 → endorse claude-code → 후보 3개 surface → 1개 promote → 라인업 rail 1 카드 + 엔도스 rail 1 카드 (같은 글 이중 노출) 가 의도. 라인업이 엔도스를 대체하지 않고 "골라진 일부" 만 강조하는 시그널. 같은 카드 두 곳 보이는 게 깨끗하지 않을 수 있지만, 라인업이 비면 그 자리를 다른 cue (큐레이터의 직접 추천 부재) 가 메우는 게 더 큰 손실. 시각 위계로 차별화로 충분.
+  - 작은 sizing 한계 — 마이그레이션 + 3 endpoints + admin 1면 + landing rail 한 묶음 (~700줄) 한 wedge. K2 보다 무거웠지만 K 의 endorse CRUD 와 거의 동일 패턴 복사라 결정 비용은 낮음. mirror copy v2 / 큐레이터 코멘트 첨부 / draft 흐름 등 진짜 새 결정이 필요한 wedge 는 별도.
+- **다음 wedge 후보**: mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 rail "더 보기" → 토픽으로 / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 (이번엔 진짜) / 라인업 ↔ 엔도스 rail 시각 위계 더 분명히 (혹은 같은 글 이중 노출 dedup 옵션).
 
 ### 2026-05-10: Wedge K2 빌드 — 워크스페이스 화면에서 endorsed 토픽 글 surface
 - **Source**: 빌드 세션 (5-10, "다음 진행해줘")
