@@ -6,7 +6,7 @@ iteration: 1
 domain: product
 stage: discovery
 created: 2026-05-07
-updated: 2026-05-08
+updated: 2026-05-10
 related:
   - openhow-positioning-clauders-seo.md
   - creator-platform-discovery.md
@@ -174,6 +174,17 @@ related:
 - 검증: Worker/Viewer TS 0 에러, Playwright 로컬 (dev-login → seed@local.dev = vibe-coding owner) — 빈 상태 → claude-code endorse → cursor endorse → 2건 → 1건 제거 → 0건 정리 happy path, GET 200 (joined 메타 정상), POST 비로그인 401. 프로덕션 — `/api/workspaces/clauders-ai/endorsements` 200 + `[]`, POST no-auth 401.
 - 다음 wedge 후보 (K2 등): 워크스페이스 화면에 endorsed 토픽 글 surface (Wedge F 홈 rail 패턴 재사용), 큐레이터 promotion (mirror 토픽 글 → 큐레이션 라인업), 작성자 draft 흐름, 인기 rail v2 (de-dup, 기간 필터), DEV_LOGIN_EMAIL 정상화.
 
+### Wedge K2 — 워크스페이스 화면에서 endorsed 토픽 글 surface (5-10, done)
+- API: `GET /api/workspaces/:slug/endorsed-topic-posts?limit=N` (public) — endorsed 토픽 ids 조회 → `inArray` 로 published topic_post 묶음 추출 (topic + author 조인), `viewCount DESC, createdAt DESC` 정렬, default limit 8, cap 24. 빈 endorsement 면 `{topics:[],posts:[]}` 즉시 반환 (`packages/worker/src/routes/workspaces.ts`)
+- Viewer: WorkspaceDocs 의 blog/team-blog 두 랜딩 변형 모두에 "엔도스 토픽 글" rail 추가 — 카드(태그 pill + 제목 + author·날짜·조회수). endorsedPosts 배열이 비면 섹션 통째 숨김. `useEffect` 로 workspace slug 변경 시 fetch (`packages/viewer/src/pages/workspace/WorkspaceDocs.tsx`)
+- CSS: `wsd-endorsed-*` 클래스 — Wedge F 홈 rail 의 `pbh-topic-post-*` 톤 그대로 (260px auto-fill grid, accent-soft tag, 2-line title clamp) (`packages/viewer/src/pages/workspace/WorkspaceDocs.css`)
+- 결정: 새 endpoint `endorsed-topic-posts` 분리 — 기존 `/documents?workspace=` 응답에 끼워넣지 않음. manifest 캐시(SSG/CDN) 가 워크스페이스 문서를 fronting 하는데, 토픽 글은 자주 바뀌는 viewCount 가 키라 캐싱 라이프사이클이 다름. fetch 실패는 silent (catch → setEndorsedPosts([])) — 메인 랜딩 렌더를 막지 않음.
+- 결정: blog 랜딩과 team-blog 랜딩 두 곳에 동일 `renderEndorsedRail()` 헬퍼 — viewer 한 파일 안 inline closure (별 컴포넌트 추출 안 함). 두 변형은 wrapper 컨테이너(`blog-post-list-container` vs `blog-post-list-container--team`)만 다르고 rail 자체는 같은 grid.
+- 결정: tag 표시 우선순위 = `topicAiDomainTag || topicTitle` — Wedge F 홈 rail 과 동일 컨벤션, 토픽 ai_domain_tag (예: "claude-code") 가 있으면 그걸, 없으면 한글 제목 fallback.
+- 결정: K 의 promise 였던 "endorsed 토픽 글 public surface" 를 큐레이션 promotion (mirror) 보다 먼저 — promotion 은 토픽-글 ↔ 큐레이션-라인업 mapping table 등 결정 5개 이상이라 wedge 한 칸 더 무거움. 우선 surface 까지 박고 데이터 흐름 검증.
+- 검증: Worker/Viewer TS 0 에러, Playwright 로컬 (vibe-coding owner=seed@local.dev) — 빈 상태 → 2 endorse → 4 카드 노출 (claude-code 3 / cursor 1, viewCount 5/0/0/0 정렬), cleanup 후 섹션 카운트 0. 프로덕션 — `/api/workspaces/clauders-ai/endorsed-topic-posts` 200 + `{topics:[],posts:[]}` (clauders-ai 에 endorsement 0건), 404 분기 정상.
+- 다음 wedge 후보 (K3 등): 큐레이터 promotion (mirror 토픽 글 → 큐레이션 라인업) / endorsed rail "더 보기" 링크 (토픽 인덱스로) / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / d1_migrations 추적 prudence.
+
 ## Footprint (initial guess, validate during explore)
 
 - **Auth/Identity**: 플랫폼-level user 테이블 (이미 존재 여부 확인 필요), handle/profile 필드, 소셜 로그인 연동
@@ -191,6 +202,21 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-10: Wedge K2 빌드 — 워크스페이스 화면에서 endorsed 토픽 글 surface
+- **Source**: 빌드 세션 (5-10, "다음 진행해줘")
+- **Signal**: Wedge K 가 admin endorse CRUD 만 박고 끝났음 — 사용자 입장에선 워크스페이스 화면에서 endorsed 토픽이 안 보이면 endorse 자체가 무의미한 운영자 메타. K2 가 그 promise 를 닫는다. 동시에 Wedge F 홈 rail 이 토픽 글을 플랫폼 차원에서 노출하므로, 워크스페이스 차원 surface 는 "이 큐레이터가 추천하는 같은 주제의 다른 가입자 글" 시그널 — 큐레이션 워크스페이스 ↔ 토픽 게시판의 첫 가시적 bridge.
+- **결정 / 학습**:
+  - 새 public endpoint `/endorsed-topic-posts` 분리 — `/documents?workspace=` 응답에 끼워넣지 않음. WorkspaceDocs 가 처음에 static manifest (CDN-cached `_data/{slug}/manifest.json`) 을 우선 시도해서 워크스페이스 문서를 즉시 그리는데, 토픽 글은 viewCount 가 자주 바뀌므로 manifest 캐싱 라이프사이클과 충돌. 별 endpoint 라 실시간 fetch 가 자연스럽고 fetch 실패도 메인 랜딩을 막지 않음.
+  - `inArray` + 기존 Wedge F 의 topicPostsFeed select shape 재사용 — drizzle 의 `inArray(schema.topicPost.topicId, topicIds)` 한 번에 묶음 쿼리. 토픽별 round-robin (각 토픽에서 N개씩) 같은 균등 분배 안 함 — 새 사이트라 어차피 한쪽 토픽이 비면 다른 토픽 글이 채우는 게 더 자연. 데이터 쌓이면 별 wedge 로 균등화.
+  - rail 위치는 standard blog 변형의 `rest.length > 0` 이후 (모든 워크스페이스 글 다음), team-blog 변형은 articles-section 다음 series 앞 — 큐레이션 워크스페이스의 자기 콘텐츠 우선, 커뮤니티 토픽 surface 는 "여기 더" 자리. Wedge F 홈에서 "전체 아티클/인기 글 → 토픽 게시판 → 시리즈" 순서와 동형.
+  - `renderEndorsedRail()` 인라인 헬퍼 — 두 랜딩 변형이 wrapper 만 다르고 rail 자체 동일이라 클로저 한 칸으로 충분. 별 `<EndorsedTopicRail>` 컴포넌트 추출하면 부모 css scope 에서 분리돼서 톤 일치 보장이 어려움 (Wedge H 의 마크다운 미리보기 헬퍼 결정과 동형 패턴).
+  - tag 우선순위 `topicAiDomainTag || topicTitle` — Wedge F 의 `pbh-topic-post-tag` 와 동일 컨벤션 의도적으로 맞춤. 같은 토픽 라벨 (`claude-code`) 이 홈 rail / 워크스페이스 rail / 토픽 보드 헤더 세 곳에 동일 시각으로 보여 "같은 entity" 인식 강화.
+  - empty endorsement 면 endpoint 가 즉시 `{topics:[],posts:[]}` 반환 — 빈 inArray 가 SQL 레벨에서 unsafe path 인데 (드라이버에 따라 `1=0` 으로 fallback 안 할 수 있음), endorsement 개수만 미리 보고 가지치는 게 안전.
+  - viewer 의 fetch catch 가 silent — endpoint 실패해도 setEndorsedPosts 는 초기값 [] 유지. 워크스페이스 자체 문서는 제대로 보여야 하는데 토픽 surface 가 빠져도 큐레이션 정체성은 안 죽음. degrade graceful.
+  - K2 의 sizing — endpoint 1개 + viewer 1면 + css 한 묶음 (~210줄) — 한 wedge 단위. promotion (mirror) 은 결정이 5개 이상 (토픽 글 ↔ 큐레이션 글 mapping table, mirror copy semantics, 작성자 attribution, mirror 후 토픽 글 변경 시 동기화 정책 등) 이라 별 wedge.
+  - 프로덕션 smoke 가 endorsed 0건이라 비어 있는 형태만 검증된 한계 — 실제 endorsed 가 있는 prod 워크스페이스가 없어 "rail 이 prod 에서 그려지는지" 까지는 다음 endorsement 작업 후 자연스럽게 검증됨. 새 endpoint 추가는 보수적 가시성으로 시작.
+- **다음 wedge 후보**: 큐레이터 promotion (mirror 토픽 글 → 큐레이션 라인업) / endorsed rail "더 보기" 링크 (토픽 인덱스로) / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / d1_migrations 추적 prudence.
 
 ### 2026-05-08: Wedge K 빌드 — 워크스페이스 ↔ 토픽 endorse bridge Phase 1 (admin CRUD)
 - **Source**: 빌드 세션 (5-08, "다음 진행해줘")
