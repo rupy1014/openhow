@@ -197,6 +197,18 @@ related:
 - 검증: Worker/Viewer TS 0 에러. Playwright 로컬 (vibe-coding owner=seed@local.dev) — endorse claude-code → 후보 3개 → 1개 promote → 라인업 rail 1 카드 노출 + 엔도스 rail 1 카드 별도 (이미 라인업 있는 글 endorsed rail 에는 그대로 — 이중 노출 의도, 라인업/엔도스 두 시그널은 독립). 어드민 페이지 두 섹션 카운트 일치. 엣지: dup POST 409, no-auth POST 401, DELETE 200 → list 비움 확인. 프로덕션: 0065 remote D1 apply 성공, worker 배포 완료, GET 404 (엔드포인트 존재 확인 — 노출 워크스페이스 없음).
 - 다음 wedge 후보 (M 등): mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 rail "더 보기" → 토픽으로 / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / 라인업 ↔ 엔도스 rail 시각 위계 더 분명히 (혹은 통합).
 
+### Wedge P — ?edit=1 자동 편집 모드 + composer draft → detail 직행 (5-11, done)
+- 배경: Wedge N 회수 시그널이 "본인 프로필 '내 초안' 카드 클릭 시 글 상세로 가는데, 거기서 수정→게시까지 한 번 더 클릭 필요" 라고 명시. Wedge O 가 데이터 잃음을 막았다면 P 는 마찰을 줄임. 초안 = 이어쓰기 대기 상태 → 클릭 시 곧장 편집 모드가 의미적으로 맞다.
+- Viewer — TopicPostDetail: `useSearchParams` 도입, mount 후 data + currentUser 로드되면 `?edit=1` & `currentUser.id === post.author.id` 일 때 자동으로 startEdit 본문 실행 (제목/본문 prefill + editing=true). `autoEditConsumedRef` 로 한 번만 실행 (재진입 방지). 소비 후 `setSearchParams({}, { replace: true })` 로 URL 에서 `edit` 제거 — 새로고침 시 다시 트리거 안 됨. (`packages/viewer/src/pages/TopicPostDetail.tsx`)
+- Viewer — AuthorProfile "내 초안" 카드: `to` 에 `?edit=1` 추가. 본인 프로필 전용 섹션이므로 항상 owner 매칭 (isMe 가드는 섹션 자체에 이미 걸려 있음).
+- Viewer — TopicBoard composer: "초안 저장" 성공 시 POST 응답의 `slug` 를 받아 `navigate('/t/:topic/:slug?edit=1')` 로 detail 페이지로 보냄. 보드 reload 스킵 (어차피 draft 는 public listing 에 안 보임). "등록" (published) 은 기존 동작 유지 — 발행 직후엔 보드에서 자기 글 확인이 자연스럽다.
+- 결정: query param (`?edit=1`) vs path 분리 (`/t/.../edit`) — path 로 가면 detail 라우트를 새로 만들거나 nested route 깔아야 함. edit mode 는 일시적 + owner 전용 상태이지 별도 리소스가 아님 → query param 이 맞음. 동일 URL 을 다른 사람이 봐도 그냥 detail 보이는 게 깔끔.
+- 결정: 자동 진입 후 URL 정리 (`replace: true`) — 사용자가 새로고침했을 때 무한히 edit mode 로 들어가지 않게 + 브라우저 뒤로가기 히스토리에 `?edit=1` 이 안 남게. `replace` 가 핵심 — `navigate` (push) 면 히스토리 중복.
+- 결정: `useRef` 로 consumed 가드 — useEffect deps 에 `searchParams` 가 있어 setSearchParams 호출하면 effect 재실행. ref 로 "이미 처리함" 표시 안 하면 무한 루프 위험. ref 는 렌더 트리거 안 함 + mutable 이라 이런 일회성 가드에 적합.
+- 결정: composer 초안저장 후 detail 직행 — Reddit "draft saved → continue editing" 패턴. 사용자가 "초안 저장" 클릭한 의도는 "잠시 저장하고 닫기" 도 있지만 "잠시 저장하고 계속 쓰기" 가 더 흔함. detail+edit 이 후자에 맞고, 사용자가 닫고 싶으면 "취소" 한 번이면 보드로 복귀.
+- 검증: Viewer TS 0 에러. Playwright `temp/edit-mode-smoke.cjs` — composer 초안저장 → 자동으로 detail 이동 + ?edit=1 → 편집 폼 자동 표시 + URL 에서 edit 제거 + 제목/본문 일치 / 프로필 내 초안 카드 href 에 ?edit=1 + 클릭 시 편집 폼 자동 / `?edit=1` 없는 plain detail 은 read mode. 9 assertion 통과. autosave smoke 도 step 6 (보드 복귀) 만 조정 후 재통과. 프로덕션 (Version 1dfadf42) — openhow.io 200.
+- 다음 wedge 후보 (Q 등): "내 초안" 빈 상태 친절한 안내 + 첫 글 쓰기 CTA / 큐레이터 draft 표시 (큐레이터 draft = 라인업 후보) / 모더레이션 흐름 (가입자 글 신고/숨김) / 가입자 글 RSS / 인기 rail v2 (de-dup, 기간 필터) / draft 자동 만료 (30일+ 미수정 draft 정리).
+
 ### Wedge O — 작성/편집 composer draft auto-save (localStorage) (5-11, done)
 - 배경: Wedge N 이 "초안 저장" 버튼은 깔았지만 사용자가 클릭 안 하고 닫거나 새로고침하면 작성 내용이 그대로 증발. localStorage 로 자동 저장 + 복원 배너를 깔면 클릭 한 번을 빠뜨려도 회수 가능 — viewer-only, DB/API 변경 0건. Reddit "Draft saved" / Medium "Restore draft" 패턴.
 - Viewer — `packages/viewer/src/hooks/useLocalDraft.ts` 신설: `{ key, enabled, debounceMs=800 }` 입력. `save(title, body)` 는 debounce 후 `{ title, body, savedAt }` JSON 으로 `localStorage.setItem(key, ...)`. title+body 둘 다 빈문자열이면 자동 `removeItem` (빈 입력 저장 안 함). `clear()` 는 즉시 remove + 대기 중인 timer 취소. `stored` 는 hook 마운트 시 한 번 읽고 state 로 노출 — 사용자가 폼 채워가는 동안 값이 매번 갱신되며 비교 시 form 과 다르면 "복원하기" 띄움. SSR/private mode 안전 가드 (`typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'`) + try/catch (quota error silent).
@@ -249,6 +261,17 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-11: Wedge P 빌드 — ?edit=1 자동 편집 모드 + composer → detail 직행
+- **Source**: 빌드 세션 (5-11, "다음 진행해줘", Wedge N 회수 시그널 + Wedge O close note 가 후보로 명시)
+- **Signal**: 초안 = 이어쓰기 대기 상태인데 카드 클릭 → 글 상세 → 수정 버튼 → 편집 폼 까지 3-step. "이어쓰기" 라는 사용자 멘탈 모델에 1-step 이 맞다. Reddit 의 "draft" 도 클릭 즉시 composer 로 들어감. Wedge N/O 가 draft 데이터 layer 를 깔았으니 P 는 UX layer.
+- **결정 / 학습**:
+  - query param vs path — edit mode 는 owner 전용 + 일시 상태이지 별도 리소스 아님. path 로 (`/t/.../edit`) 가면 라우트 + 비owner 접근 시 처리 까지 복잡해짐. query param 은 "같은 detail 의 한 가지 보기 모드" 라는 의미와도 잘 맞고, 비owner 가 URL 받아도 그냥 detail 보임 (소비 안 됨). UI 토글 상태를 URL 에 노출하되 영구화하지 않는 패턴엔 query param.
+  - `?edit=1` 소비 후 URL 정리 (replace) — 이걸 안 하면 사용자가 새로고침할 때마다 editing 모드로 들어가고, 뒤로가기 히스토리에 `?edit=1` 이 잔류. `setSearchParams(next, { replace: true })` 가 핵심 — `replace` 안 주면 push 라 히스토리 중복. 일회성 trigger 패턴엔 replace 가 default.
+  - `useRef` 로 consumed 가드 — effect deps 에 `searchParams` 가 들어가는데 effect 안에서 setSearchParams 호출하면 effect 재실행됨. ref 로 "이미 처리함" 표시 안 하면 무한 루프. state 보다 ref 인 이유: 렌더 트리거 불필요 + mutable. 일회성 side effect 가드에 ref 가 적합.
+  - composer 초안저장 후 detail 직행 — 처음엔 "보드에 머무는 게 안전한가" 고민. 하지만 "초안 저장 = 잠시 멈춤" 의미가 강함 + Reddit/Notion 도 작성 직후 자기 글 화면으로 보냄. 사용자가 닫고 싶으면 "취소" 한 번. 발행 (published) 은 보드 reload — 자기 글이 즉시 listing 에 나타나는 확인 가치가 큼. draft 와 published 의 post-save UX 분기는 의미상 정당.
+  - "ref + effect + replace" 패턴 — 일회성 query-param trigger 의 정석. 다음에 `?action=X` 류 만들 때 그대로 재사용 가능 (예: `?ref=email`, `?invite=X`).
+- **회수 시그널**: 가입자가 실제로 "내 초안" 카드 클릭 후 편집 → 발행까지 한 흐름으로 갈지. 발행 비율이 안 오르면 편집 폼 자체의 마찰 (마크다운 어려움, 미리보기 깜빡임 등) 이 진짜 병목. composer 초안저장 후 detail+edit 으로 직행해서 사용자가 "어 보드 어디갔지" 하는 인지 부담은 없는지도 시그널 — 만약 그렇다면 "초안 저장됨, 계속 편집 중" 류 toast 가 다음 wedge.
 
 ### 2026-05-11: Wedge O 빌드 — composer draft auto-save (localStorage)
 - **Source**: 빌드 세션 (5-11, "다음 진행해줘", Wedge N close note 가 후보로 명시)
