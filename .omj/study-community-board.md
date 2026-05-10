@@ -197,6 +197,20 @@ related:
 - 검증: Worker/Viewer TS 0 에러. Playwright 로컬 (vibe-coding owner=seed@local.dev) — endorse claude-code → 후보 3개 → 1개 promote → 라인업 rail 1 카드 노출 + 엔도스 rail 1 카드 별도 (이미 라인업 있는 글 endorsed rail 에는 그대로 — 이중 노출 의도, 라인업/엔도스 두 시그널은 독립). 어드민 페이지 두 섹션 카운트 일치. 엣지: dup POST 409, no-auth POST 401, DELETE 200 → list 비움 확인. 프로덕션: 0065 remote D1 apply 성공, worker 배포 완료, GET 404 (엔드포인트 존재 확인 — 노출 워크스페이스 없음).
 - 다음 wedge 후보 (M 등): mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 rail "더 보기" → 토픽으로 / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / 라인업 ↔ 엔도스 rail 시각 위계 더 분명히 (혹은 통합).
 
+### Wedge N — 가입자 draft 흐름 (5-11, done)
+- 사전: DEV_LOGIN_EMAIL 정상화 (6 wedge 연속 미룬 약속 청산) — `.dev.vars` 의 `DEV_LOGIN_EMAIL=seed@local.dev` (기존 typo `rupy1008@gamil.com` 제거), `SUPERADMIN_EMAILS` 에 `seed@local.dev` 추가. wrangler 는 `.dev.vars` 를 hot-reload 안 함 → dev 서버 재시작 필수 (`pkill -f "wrangler.*dev"` → `pnpm dev`). gitignored 라 commit 0 변경.
+- Worker — topic_post status 분기: `POST /api/topics/:slug/posts` body 에 `status: 'draft' | 'published'` 옵셔널 (디폴트 published, 'draft' 만 override). `PUT /api/topics/:slug/posts/:postSlug` body 에 옵셔널 status — 있으면 draft↔published 전환, 없으면 status 보존. 응답 body 에 status 포함. `GET /api/topics/:slug/posts/:postSlug` 를 `authMiddleware` 로 감싸서 c.var.user 받고, `status='published'` WHERE 필터 제거 후 가드 3개: deleted → 404 / draft + 비소유자 → 404 / 본인 draft → 정상 응답 (viewCount bump 는 published 만). 토픽 보드 목록 (`GET /api/topics/:slug`) 은 기존 `status='published'` 필터 유지 — draft 가 public listing 절대 노출 X. (`packages/worker/src/routes/topics.ts`)
+- Worker — `GET /api/authors/me/drafts` (`requireAuth`): 본인의 status='draft' 토픽 글 최근 20개, topic slug/title join. 응답 `{ drafts: [{ id, slug, title, createdAt, updatedAt, topicSlug, topicTitle }] }`. (`packages/worker/src/routes/authors.ts`)
+- Viewer — TopicBoard 작성 composer: `handleSubmit(e, status='published')` 로 시그니처 변경. "초안 저장" (type='button', status='draft') + "등록" (type='submit', published) + "취소" 3버튼. (`packages/viewer/src/pages/TopicBoard.tsx/.css`)
+- Viewer — TopicPostDetail 편집/조회: 편집 폼 `handleSave` 에 옵셔널 statusOverride. 현재 draft 면 "초안 저장" + "저장 및 게시", 현재 published 면 "초안으로 전환" + "저장" (status 미전송). 조회 모드 (본인 + draft) 일 때 헤더에 `초안` 황색 배지 + nav 에 "게시하기" primary 버튼 (`handlePublishDraft` — title/body 그대로 PUT status='published'). 조회 모드에서 조회수도 draft 일 땐 숨김. (`packages/viewer/src/pages/TopicPostDetail.tsx/.css`)
+- Viewer — AuthorProfile 자기 프로필 "내 초안" 섹션: `isMe` 일 때만 `/authors/me/drafts` fetch, 헤더 바로 아래·공간/최근 발행/토픽 글 보다 위. 황색 톤 박스 (`#fffbeb` bg, `#fde68a` border) + count 배지 + 카드 클릭 시 글 상세로 이동 (편집 모드는 자동 진입 안 함 — 본인은 "수정" 버튼이 표시되므로 한 번 더 클릭). (`packages/viewer/src/pages/AuthorProfile.tsx/.css`)
+- 결정: detail GET 에 `authMiddleware` 만 (requireAuth 아님) — published 글은 비로그인도 봐야 하므로 사용자 식별만 하고 차단은 안 함. 가드는 핸들러 안에서 분기 (`!currentUser || currentUser.id !== post.author.id` → 404). 401 대신 404 로 통일해 draft 존재 자체를 노출 안 함 (정보 누설 방지).
+- 결정: 가입자 자기 프로필 "내 초안" 위치 — 처음엔 토픽 글 다음을 생각했지만, 본인 입장에선 가장 actionable (이어쓰기 대기 중) → 헤더 바로 아래 첫 섹션으로. 다른 사람 프로필엔 노출 X (`isMe` 가드).
+- 결정: 황색 톤 — draft 는 "아직 완성 아님" 신호. accent purple (큐레이터) / blue (라인업 게재) 와 시각적 충돌 없어야 함. 황색 (`#fffbeb`/`#92400e`) 은 GitHub draft PR 컨벤션 + 한국 사용자에게도 "미완성/주의" 직관 매핑.
+- 결정: PUT status 미전송 = 보존 — 기존 published 글 단순 수정 시 status 가 실수로 바뀌면 안 됨. null 가드 (`nextStatus ?? post.status`) 가 invariant. draft 글 수정 후 단순 "저장" 은 의도적으로 안 만듦 (저장 시 draft 유지 → "초안 저장" 버튼이 그 역할). 의미 분기를 버튼이 강제.
+- 검증: Worker/Viewer TS 0 에러. Playwright 로컬 — dev login (seed@local.dev) → POST draft → me/drafts 1건 ↑ → 토픽 보드 public listing 0건 (draft 비노출 OK) → 소유자 detail 200/draft → 익명 detail 404 + me/drafts 401 (SECURITY OK) → PUT published 전환 200 → public listing 등장. UI: TopicBoard 의 "초안 저장" 버튼 클릭 → draft 생성, AuthorProfile `/s/seed_author` 의 "내 초안" 섹션 + 카드 2개 렌더 확인 (스크린샷 `temp/draft-smoke-profile2.png`). 프로덕션 배포 (Version ed3d6c2b) — `/api/topics` 200, `/api/topics/claude-code` 200, `/api/authors/me/drafts` 익명 401 모두 정상. 마이그레이션 0건 (Wedge B+E 에서 이미 `status` 컬럼 존재).
+- 다음 wedge 후보 (O 등): draft auto-save (페이지 떠나면 잃음 방지 — localStorage 임시저장) / mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 ↔ 엔도스 rail "더 보기" 링크 / 가입자 글 RSS / 큐레이터가 draft 작성 시 어떻게 표시할지 (큐레이터 draft = 라인업 후보) / 인기 rail v2 (de-dup, 기간 필터) / 토픽 admin 의 모더레이션 흐름 (가입자 글 신고/숨김).
+
 ### Wedge M — 토픽 글 작성자 큐레이터/가입자 배지 (5-11, done)
 - Worker: 토픽 글 응답 author 객체에 `isCurator` (또는 flat 응답엔 `authorIsCurator`) 추가 — SQL EXISTS subquery: `EXISTS(SELECT 1 FROM workspace AS w_ic WHERE w_ic.owner_id = user.id)`. 워크스페이스 한 개라도 소유하면 1, 아니면 0. (`packages/worker/src/routes/topics.ts` 두 엔드포인트 nested author 객체, `packages/worker/src/routes/workspaces.ts` endorsed-topic-posts + promotions flat, `packages/worker/src/routes/public-feed.ts` topicPostsFeed flat)
 - Viewer: 5곳에 `큐레이터` pill 배지 — TopicBoard 글 카드 meta / TopicPostDetail 헤더 author 옆 / WorkspaceDocs promoted+endorsed rail 카드 meta (공통 `.wsd-curator-badge`) / PublicBlogHome 인기 토픽 글 rail / AuthorProfile 헤더 (workspaces.length>0 로 viewer-side 추론). 모두 같은 톤 — `var(--accent-soft)` 배경 + `var(--primary-color)` 텍스트의 라운드 pill. (`packages/viewer/src/pages/{TopicBoard,TopicPostDetail,PublicBlogHome,AuthorProfile}.tsx/.css`, `packages/viewer/src/pages/workspace/WorkspaceDocs.tsx/.css`)
@@ -223,6 +237,19 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-11: Wedge N 빌드 — 가입자 draft 흐름 + DEV_LOGIN_EMAIL 정상화
+- **Source**: 빌드 세션 (5-11, "다음 진행해줘")
+- **Signal**: Wedge M close note 가 "DEV_LOGIN_EMAIL 정상화 (6th consecutive wedge — 진짜 다음 wedge 의 첫 task 로 격상)" + "draft 흐름" 을 동시에 다음 후보로 적었다. 작은 운영 빚 (DEV_LOGIN) 과 가시적 사용자 흐름 (draft) 을 한 wedge 에 묶음 — 운영 정비를 wedge 시작점에서 청산하지 않으면 또 미뤄질 위험 (5번 미뤘던 패턴 자체가 시그널).
+- **결정 / 학습**:
+  - wrangler `.dev.vars` hot-reload 안 됨 — 소스 파일 변경엔 즉시 reload 되지만 `.dev.vars` 는 프로세스 시작 시점에만 읽음. 변경 후 `pkill wrangler.*dev && pnpm dev` 가 필수. 디버깅 시 첫 신호는 "env 값이 옛날 그대로" → 코드는 맞고 reload 가 안 된 케이스. 다음에 env 관련 헛디딤 시 이걸 먼저 의심.
+  - detail GET 의 401 vs 404 분기 — draft 를 보호할 때 비소유자에게 401 (인증 필요) 을 주면 "draft 가 존재한다" 를 누설. 404 로 통일해 존재 자체를 숨김. 보안 원칙: enumeration prevention. published 글은 비로그인 200, draft 는 비소유자 모두 404 — 두 자원이 같은 URL 패턴이지만 다른 응답 코드는 추론 가능한 누설.
+  - `authMiddleware` vs `requireAuth` 의 의도 분리가 이번 wedge 에서 처음 양쪽 다 활용됨. authMiddleware = c.var.user 셋팅만 (없으면 null), requireAuth = 401 차단. detail GET 처럼 "공개 자원 + 소유자만 추가 권한" 같은 분기엔 authMiddleware 가 정답. me/drafts 같은 본인 전용엔 requireAuth. 두 미들웨어가 의도적으로 다르게 만들어진 이유가 이제 명확.
+  - PUT 의 status 보존 invariant — `nextStatus ?? post.status`. body 에 status 안 보내면 기존 값 유지. 처음엔 "status 항상 명시" 강제할까 고민했지만, viewer 가 단순 수정 (제목/본문) 만 보낼 때 status 를 매번 같이 보내야 하는 건 boilerplate. 옵셔널 + 보존이 invariant 면 호출자가 의미 있을 때만 보낸다. 같은 패턴이 PATCH 와 비슷한 시멘틱.
+  - "내 초안" 위치 — 본인 입장에선 actionable item (이어쓰기 대기) 이 가장 위에 있어야 함. 다른 사람이 볼 땐 가려야 하므로 `isMe` 가드 필수. 자기 자신 vs 타인의 같은 페이지에서 다른 UI 를 보여주는 패턴이 늘어남 (구독 버튼, drafts) — 이런 분기가 3개 넘어가면 page split 해야 할 수도 (현재 2개로 아직 OK).
+  - 황색 톤 = draft 컨벤션 — accent purple (큐레이터), blue (라인업), red (위험/삭제) 가 이미 쓰임. 황색 (`#fffbeb` bg, `#92400e` text) 은 비어 있던 슬롯 + GitHub draft PR 과도 충돌 없음. 색을 추가하기 전에 기존 팔레트와 의미 매핑을 확인하는 습관.
+  - DEV_LOGIN_EMAIL 청산 — 6개 wedge 연속 미루던 일을 진짜로 닫음. 청산 자체가 다음 wedge 작업 (`/dev/login` 으로 Playwright smoke 실행) 의 길을 텄음. 운영 정비는 다음 작업의 인프라가 되는 경우가 많음 — "그냥 빚 갚기" 가 아니라 enabler.
+- **회수 시그널**: 가입자가 실제로 draft 를 쓰는지 (UI 클릭 흐름 vs API 직접). 본인 프로필 "내 초안" 카드 클릭 시 글 상세로 가는데, 거기서 수정→게시까지 한 번 더 클릭 필요 — 마찰 측정 후 자동 편집 모드 진입 (`?edit=1`) 옵션 검토. published 글이 0인 신규 사용자에게 "내 초안" 만 보이는 빈 프로필이 어떻게 느껴질지도 시그널.
 
 ### 2026-05-11: Wedge M 빌드 — 토픽 글 작성자 큐레이터/가입자 시각 배지
 - **Source**: 빌드 세션 (5-11, "다음 진행해줘")
