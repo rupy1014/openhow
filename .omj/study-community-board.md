@@ -197,6 +197,18 @@ related:
 - 검증: Worker/Viewer TS 0 에러. Playwright 로컬 (vibe-coding owner=seed@local.dev) — endorse claude-code → 후보 3개 → 1개 promote → 라인업 rail 1 카드 노출 + 엔도스 rail 1 카드 별도 (이미 라인업 있는 글 endorsed rail 에는 그대로 — 이중 노출 의도, 라인업/엔도스 두 시그널은 독립). 어드민 페이지 두 섹션 카운트 일치. 엣지: dup POST 409, no-auth POST 401, DELETE 200 → list 비움 확인. 프로덕션: 0065 remote D1 apply 성공, worker 배포 완료, GET 404 (엔드포인트 존재 확인 — 노출 워크스페이스 없음).
 - 다음 wedge 후보 (M 등): mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 rail "더 보기" → 토픽으로 / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / 라인업 ↔ 엔도스 rail 시각 위계 더 분명히 (혹은 통합).
 
+### Wedge O — 작성/편집 composer draft auto-save (localStorage) (5-11, done)
+- 배경: Wedge N 이 "초안 저장" 버튼은 깔았지만 사용자가 클릭 안 하고 닫거나 새로고침하면 작성 내용이 그대로 증발. localStorage 로 자동 저장 + 복원 배너를 깔면 클릭 한 번을 빠뜨려도 회수 가능 — viewer-only, DB/API 변경 0건. Reddit "Draft saved" / Medium "Restore draft" 패턴.
+- Viewer — `packages/viewer/src/hooks/useLocalDraft.ts` 신설: `{ key, enabled, debounceMs=800 }` 입력. `save(title, body)` 는 debounce 후 `{ title, body, savedAt }` JSON 으로 `localStorage.setItem(key, ...)`. title+body 둘 다 빈문자열이면 자동 `removeItem` (빈 입력 저장 안 함). `clear()` 는 즉시 remove + 대기 중인 timer 취소. `stored` 는 hook 마운트 시 한 번 읽고 state 로 노출 — 사용자가 폼 채워가는 동안 값이 매번 갱신되며 비교 시 form 과 다르면 "복원하기" 띄움. SSR/private mode 안전 가드 (`typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'`) + try/catch (quota error silent).
+- Viewer — TopicBoard composer 연동: key = `topic-draft:${topicSlug}`. composer 열린 동안만 enabled. formTitle/formBody useEffect 로 saveDraft 호출. stored 가 form 과 다를 때만 황색 복원 배너 표시 — "이전에 쓰던 내용이 있어요." + 복원하기 (form 에 채움 + storage 는 유지) / 버리기 (storage 제거 + 배너 닫힘). 등록/초안 저장 성공 후 `clearDraft()` 호출. (`packages/viewer/src/pages/TopicBoard.tsx/.css`)
+- Viewer — TopicPostDetail 편집 폼 연동: key = `topic-post-draft:${topicSlug}:${postSlug}` (글마다 분리 — 다른 글 편집 시 섞이지 않음). editing 모드 진입 시 hook enable, 종료 시 disable. 저장 성공 후 `clearEditDraft()`. (`packages/viewer/src/pages/TopicPostDetail.tsx/.css`)
+- 결정: localStorage key 네임스페이스 — `topic-draft:${slug}` 와 `topic-post-draft:${topic}:${post}` 로 분리. 한 토픽에 글 여러 개 동시 편집해도 충돌 없음. 작성 composer 와 편집 폼은 의미가 달라 prefix 다르게 (`topic-draft` vs `topic-post-draft`) — 편집 폼이 새 글 키를 덮지 않게.
+- 결정: 800ms debounce — 타이핑 한 글자마다 write 하면 IO 과다 + 텍스트 입력 중 빈 상태로 잠깐 저장될 위험. 800ms 는 대충 "한 문장 다 쓰고 멈춤" 정도. 너무 길면 (>1500ms) 새로고침 직후 잃을 위험 ↑.
+- 결정: 복원 배너 vs 자동 prefill — 자동으로 폼에 채우면 사용자가 의도적으로 새로 쓰려던 입력을 덮어쓸 수 있음. 명시적 "복원하기" 클릭으로 의도 확인. "버리기" 도 함께 제공해서 이전 draft 가 영원히 따라다니지 않게.
+- 결정: title+body 둘 다 빈문자열이면 자동 remove — 사용자가 입력 후 다 지우면 storage 도 비움. 다음 세션에 빈 draft 가 복원 배너로 보이지 않게.
+- 검증: Viewer TS 0 에러. Playwright (`temp/autosave-smoke.cjs`) — dev login → 토픽 보드 composer 열고 제목/본문 입력 → 1.2s 대기 → localStorage 에 저장 확인 → reload (composer 닫힘) → composer 다시 열기 → 복원 배너 표시 → 복원하기 클릭 → 필드 값 일치 + 배너 사라짐 → 초안 저장 클릭 → localStorage null → 재타이핑 + 새로고침 → 버리기 클릭 → localStorage null. 6단계 모두 통과. 프로덕션 배포 (Version 37e02401) — openhow.io 200 OK.
+- 다음 wedge 후보 (P 등): 큐레이터가 draft 작성 시 표시 (큐레이터 draft = 라인업 후보) / 토픽 admin 의 모더레이션 흐름 (가입자 글 신고/숨김) / 가입자 글 RSS / mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 ↔ 엔도스 rail "더 보기" 링크 / 인기 rail v2 (de-dup, 기간 필터) / "내 초안" 카드 클릭 시 자동 편집 모드 (`?edit=1`).
+
 ### Wedge N — 가입자 draft 흐름 (5-11, done)
 - 사전: DEV_LOGIN_EMAIL 정상화 (6 wedge 연속 미룬 약속 청산) — `.dev.vars` 의 `DEV_LOGIN_EMAIL=seed@local.dev` (기존 typo `rupy1008@gamil.com` 제거), `SUPERADMIN_EMAILS` 에 `seed@local.dev` 추가. wrangler 는 `.dev.vars` 를 hot-reload 안 함 → dev 서버 재시작 필수 (`pkill -f "wrangler.*dev"` → `pnpm dev`). gitignored 라 commit 0 변경.
 - Worker — topic_post status 분기: `POST /api/topics/:slug/posts` body 에 `status: 'draft' | 'published'` 옵셔널 (디폴트 published, 'draft' 만 override). `PUT /api/topics/:slug/posts/:postSlug` body 에 옵셔널 status — 있으면 draft↔published 전환, 없으면 status 보존. 응답 body 에 status 포함. `GET /api/topics/:slug/posts/:postSlug` 를 `authMiddleware` 로 감싸서 c.var.user 받고, `status='published'` WHERE 필터 제거 후 가드 3개: deleted → 404 / draft + 비소유자 → 404 / 본인 draft → 정상 응답 (viewCount bump 는 published 만). 토픽 보드 목록 (`GET /api/topics/:slug`) 은 기존 `status='published'` 필터 유지 — draft 가 public listing 절대 노출 X. (`packages/worker/src/routes/topics.ts`)
@@ -237,6 +249,18 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-11: Wedge O 빌드 — composer draft auto-save (localStorage)
+- **Source**: 빌드 세션 (5-11, "다음 진행해줘", Wedge N close note 가 후보로 명시)
+- **Signal**: Wedge N 이 "초안 저장" 버튼만 만들고 끝 — 누르지 않고 떠나면 잃음. 이 갭은 코드 부족이 아니라 UX 가정 부족 (사용자가 항상 클릭한다는 가정). Reddit/Medium 도 같은 이유로 자동 저장을 깔았다. server-side draft auto-create 까지 갈 수도 있었지만 그 길은 row 폭증 + 정리 정책 필요 → localStorage 가 단순 + 즉시 가치 + 회수 95%.
+- **결정 / 학습**:
+  - localStorage 자동저장 vs 서버 자동 draft 생성 — 처음엔 서버 쪽으로 흐를 뻔. 가입자가 composer 열기만 해도 row 생성 / 매 키스트로크마다 PUT / 빈 draft 자동 정리 등 정책 폭증. localStorage 는 viewer-only, DB 변경 0, 사용자 디바이스 한정이라 동기화 문제 없음. 멀티 디바이스 draft 동기화가 필요한 시점이 오기 전엔 이게 정답. "서버로 가는 건 마지막 수단" 룰의 좋은 예.
+  - debounce 800ms — 너무 짧으면 (200ms) 매 입력마다 IO + 빈 상태 잠깐 저장 위험. 너무 길면 (2000ms+) 새로고침 직전 잃을 확률 ↑. 800ms 는 평균 문장 멈춤 직관 + 한국어 IME 조합 끝나는 시점과도 잘 맞음. 다음에 텍스트 입력 debounce 짤 때 시작값으로 800.
+  - 복원 배너 vs 자동 prefill — 자동 prefill 은 일견 친절하지만 "새로 쓰려고 composer 연 사용자" 가 이전 draft 에 덮인다. 명시적 "복원하기/버리기" 한 단계는 마찰 같지만 안전. UI 미니멀리즘이 항상 정답은 아님 — 의도 확인 단계가 데이터를 살린다.
+  - 빈 입력 자동 remove — 사용자가 다 지우면 storage 도 비워야 다음 세션에 빈 복원 배너가 안 뜸. "현재 form == 비어있음" 도 의도 신호로 해석. 이게 빠지면 "복원하기 눌렀더니 빈 폼" 같은 어색한 경험 발생.
+  - key 네임스페이스 분리 (`topic-draft:` vs `topic-post-draft:`) — 작성 composer 와 편집 폼이 같은 토픽에서 동시에 열릴 일은 적지만 의미가 다르므로 분리. 편집 폼은 글마다 (post slug 포함) 다르게 — 여러 글 편집 동시 진행해도 섞이지 않음. URL 패턴이 곧 key 네임스페이스라는 단순한 매핑.
+  - SSR 가드 + try/catch — `window.localStorage` 가 SSR 에서 없거나 private mode 에서 throw. 두 케이스 다 silent 무시 (앱 깨지지 않게). 자동 저장은 best-effort 기능이지 필수 기능이 아님 — 실패해도 폼은 계속 동작.
+- **회수 시그널**: 사용자가 새로고침 후 "복원하기" 를 실제로 누르는지 (배너만 띄우고 무시되면 의미 없음). 향후 telemetry 가 붙으면 "draft restore 클릭률" 이 1차 지표. 그 전엔 prod 에서 가입자가 첫 draft 작성 시 패턴 관찰. "복원하기" 클릭 후 발행 vs "버리기" 후 새로 작성 비율도 시그널 — 후자가 많으면 자동저장이 오히려 노이즈.
 
 ### 2026-05-11: Wedge N 빌드 — 가입자 draft 흐름 + DEV_LOGIN_EMAIL 정상화
 - **Source**: 빌드 세션 (5-11, "다음 진행해줘")
