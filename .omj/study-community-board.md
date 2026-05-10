@@ -197,6 +197,15 @@ related:
 - 검증: Worker/Viewer TS 0 에러. Playwright 로컬 (vibe-coding owner=seed@local.dev) — endorse claude-code → 후보 3개 → 1개 promote → 라인업 rail 1 카드 노출 + 엔도스 rail 1 카드 별도 (이미 라인업 있는 글 endorsed rail 에는 그대로 — 이중 노출 의도, 라인업/엔도스 두 시그널은 독립). 어드민 페이지 두 섹션 카운트 일치. 엣지: dup POST 409, no-auth POST 401, DELETE 200 → list 비움 확인. 프로덕션: 0065 remote D1 apply 성공, worker 배포 완료, GET 404 (엔드포인트 존재 확인 — 노출 워크스페이스 없음).
 - 다음 wedge 후보 (M 등): mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 rail "더 보기" → 토픽으로 / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / 라인업 ↔ 엔도스 rail 시각 위계 더 분명히 (혹은 통합).
 
+### Wedge M — 토픽 글 작성자 큐레이터/가입자 배지 (5-11, done)
+- Worker: 토픽 글 응답 author 객체에 `isCurator` (또는 flat 응답엔 `authorIsCurator`) 추가 — SQL EXISTS subquery: `EXISTS(SELECT 1 FROM workspace AS w_ic WHERE w_ic.owner_id = user.id)`. 워크스페이스 한 개라도 소유하면 1, 아니면 0. (`packages/worker/src/routes/topics.ts` 두 엔드포인트 nested author 객체, `packages/worker/src/routes/workspaces.ts` endorsed-topic-posts + promotions flat, `packages/worker/src/routes/public-feed.ts` topicPostsFeed flat)
+- Viewer: 5곳에 `큐레이터` pill 배지 — TopicBoard 글 카드 meta / TopicPostDetail 헤더 author 옆 / WorkspaceDocs promoted+endorsed rail 카드 meta (공통 `.wsd-curator-badge`) / PublicBlogHome 인기 토픽 글 rail / AuthorProfile 헤더 (workspaces.length>0 로 viewer-side 추론). 모두 같은 톤 — `var(--accent-soft)` 배경 + `var(--primary-color)` 텍스트의 라운드 pill. (`packages/viewer/src/pages/{TopicBoard,TopicPostDetail,PublicBlogHome,AuthorProfile}.tsx/.css`, `packages/viewer/src/pages/workspace/WorkspaceDocs.tsx/.css`)
+- 결정: SQL EXISTS — JOIN 으로 계산하면 워크스페이스 N개 소유한 사용자가 N번 join 되며 결과 중복/카운트 오작동 위험. EXISTS 는 단일 boolean (0/1) 반환이라 안전, 인덱스 lookup 1회. Drizzle `sql<number>` 템플릿 + `${schema.user.id}` 보간으로 outer query 와 안전하게 link.
+- 결정: viewer-side 추론 vs DB 필드 — TopicBoard/TopicPostDetail/PublicBlogHome/WorkspaceDocs 는 author 가 다양해 행마다 다르므로 DB 필드로 가져옴. AuthorProfile 은 페이지 1인이라 응답에 이미 있는 `workspaces` 배열의 length 로 viewer 가 추론 — Worker 트래픽 절약 + DRY. 두 패턴 혼용 적정.
+- 결정: 큐레이션 라인업 rail (이미 purple 박스로 묶여 있음) 안에서도 author 별 큐레이터 배지 노출 — "라인업 = 큐레이터 추천 stamp" 와 "글쓴이 = 큐레이터" 는 다른 시그널. 라인업이 게재 시 시그널이라면 배지는 사람 시그널.
+- 검증: Worker/Viewer TS 0 에러. Playwright 로컬 — 토픽 보드 3 카드 모두 큐레이터 배지 (seed_author 는 vibe-coding owner) / 글 상세 1 배지 / 워크스페이스 랜딩 4 배지 (promoted 1 + endorsed 3) / AuthorProfile 헤더 1 배지. 콘솔 0 에러. 프로덕션: 배포 완료, /api/topics + /api/topics/:slug + /api/public/feed 200 (프로덕션 토픽 글 없어 isCurator=1 어설션 못 함 — 로컬에서 검증 완료).
+- 다음 wedge 후보 (N 등): mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 ↔ 엔도스 rail "더 보기" 링크 / draft 흐름 (status='draft' + 편집 흐름) / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 (6th consecutive wedge — 진짜 다음 wedge 의 첫 task 로 격상) / 가입자 배지 ("가입자" pill, 큐레이터 아닌 author 표시) — 현재는 큐레이터 만 배지, 가입자는 무표시 (디폴트). 시각적 대칭 필요하면 추가.
+
 ## Footprint (initial guess, validate during explore)
 
 - **Auth/Identity**: 플랫폼-level user 테이블 (이미 존재 여부 확인 필요), handle/profile 필드, 소셜 로그인 연동
@@ -214,6 +223,17 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-11: Wedge M 빌드 — 토픽 글 작성자 큐레이터/가입자 시각 배지
+- **Source**: 빌드 세션 (5-11, "다음 진행해줘")
+- **Signal**: What v1 에 적힌 "시각적 구분 — 큐레이션 라인업 (유료/공식 배지) vs 토픽 게시판 글 (가입자 배지)" 항목이 K/K2/L 모두 끝난 시점에 유일하게 남은 v1 unchecked. L 이 게재 시 (라인업/엔도스 rail) 시그널을 만들었으니, 사람 시그널 (큐레이터 vs 가입자) 이 자연스런 다음 layer. Medium+Reddit 하이브리드의 권위/평등 축 — 큐레이터 글이라는 표식이 가입자 글과 같은 보드에 섞여도 한눈에 구분되어야 한다.
+- **결정 / 학습**:
+  - SQL EXISTS vs JOIN — 처음엔 LEFT JOIN workspace + COUNT 패턴을 떠올렸지만 author 한 명이 워크스페이스 N 개를 소유하면 row 가 N 배되며 페이지네이션/정렬이 깨진다. `EXISTS(SELECT 1 FROM workspace AS w_ic WHERE w_ic.owner_id = user.id)` 가 boolean 0/1 단일 반환, outer query row 수에 영향 0. SQLite 에서 EXISTS 는 인덱스 lookup 만큼 빠름. 다음에 "행마다 다른 테이블 한 칼럼" 이 필요할 때 EXISTS 우선.
+  - 같은 도메인 신호인데 nested author 와 flat authorFoo 가 응답마다 섞여 있음 (topics.ts 는 nested, workspaces.ts/public-feed.ts 는 flat) — 통일 안 하고 각자 패턴 유지. flat→nested 리팩터는 viewer 5곳 동시 변경이라 wedge 1 개 분량. 지금은 이름만 (`isCurator` nested, `authorIsCurator` flat) 다르게 두고 viewer 가 둘 다 읽음. 통일은 별 wedge 후보.
+  - viewer-side 추론 vs DB 필드 혼용 — 행마다 author 가 바뀌는 곳 (TopicBoard 등) 은 DB 가 정답, 페이지 1인 (AuthorProfile) 은 이미 응답에 들어 있는 `workspaces` 배열 length 로 추론. 둘 다 같은 정의 (workspaces 1개 이상 owner) 라 일관됨. Worker 트래픽 절약 + DRY 이득. 작은 결정이지만 미러링 자제 — UI 가 이미 데이터를 들고 있으면 derive 한다.
+  - 큐레이터 배지만 만들고 가입자 배지는 안 만듦 — "큐레이터" 가 marked, 가입자가 default. 가입자 배지를 의무화하면 게시판이 한국식 호칭 잔치가 되어 권위 위계가 오히려 강해지는 위험. 평등이 default, 큐레이터가 명시적 차별화. 시각 대칭 필요 시점 (예: 큐레이터/가입자 비율 불균형으로 보드 톤이 바뀜) 에 다시 본다.
+  - 라인업 rail 안의 큐레이터 배지는 redundant 같지만 의도적으로 둠 — 라인업 = 게재 시 시그널 (큐레이터가 골랐다), 배지 = 사람 시그널 (글쓴이가 큐레이터다). 라인업에 큐레이터 글이 올라간 경우와 가입자 글이 올라간 경우 둘 다 가능하므로 두 신호 직교. K2 에서 결정한 "엔도스 vs 라인업 직교성" 의 연장.
+- **회수 시그널**: 가입자 글 작성 흐름이 아직 없어 (현재 토픽 글 작성 자체가 일반 가입자 전용이지만 prod 에 가입자 토픽 글이 0). 즉 prod 에서 배지 차이가 실제로 보이려면 가입자 가입 + 글 작성 흐름이 흘러야 함. 다음 시그널 = "가입자 글 보드에 처음 올라오는 순간" — 그때 배지 톤/대비가 의도대로 차이를 만드는지 재확인.
 
 ### 2026-05-10: Wedge L 빌드 — 큐레이터 promotion (mirror 토픽 글 → 큐레이션 라인업)
 - **Source**: 빌드 세션 (5-10, "다음 진행해줘")
