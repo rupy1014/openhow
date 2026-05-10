@@ -197,6 +197,21 @@ related:
 - 검증: Worker/Viewer TS 0 에러. Playwright 로컬 (vibe-coding owner=seed@local.dev) — endorse claude-code → 후보 3개 → 1개 promote → 라인업 rail 1 카드 노출 + 엔도스 rail 1 카드 별도 (이미 라인업 있는 글 endorsed rail 에는 그대로 — 이중 노출 의도, 라인업/엔도스 두 시그널은 독립). 어드민 페이지 두 섹션 카운트 일치. 엣지: dup POST 409, no-auth POST 401, DELETE 200 → list 비움 확인. 프로덕션: 0065 remote D1 apply 성공, worker 배포 완료, GET 404 (엔드포인트 존재 확인 — 노출 워크스페이스 없음).
 - 다음 wedge 후보 (M 등): mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 rail "더 보기" → 토픽으로 / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / 라인업 ↔ 엔도스 rail 시각 위계 더 분명히 (혹은 통합).
 
+### Wedge Q — 토픽 글 좋아요 v1 (5-11, done)
+- 배경: v1 What 모두 완료된 시점. v2 의 "좋아요/하이라이트 — 큐레이션 승격 후보 신호" 가 가장 strategic — 큐레이터 mirror (Wedge L) 가 사람이 직접 고르는 경로라면, 좋아요는 자동으로 surface 후보를 만들어주는 신호. 가입자 engagement 의 1차 metric 도 됨.
+- DB — migration 0066: `topic_post_like` 신설 (composite PK `(topic_post_id, user_id)`, `created_at`, post/user 별 FK CASCADE, 보조 index 2개). `topic_post` 에 `like_count INTEGER NOT NULL DEFAULT 0` 추가 — 비정규화 카운트 (count 쿼리 매번 도는 것보다 cheap, +/- atomic update). schema.ts 에 `topicPostLike` 테이블 export + `primaryKey` helper import. (`packages/worker/migrations/0066_add_topic_post_like.sql`, `packages/worker/src/db/schema.ts`)
+- Worker — `POST /api/topics/:slug/posts/:postSlug/like` (requireAuth): 좋아요 row 없으면 insert + `like_count` +1, 있으면 no-op (멱등). published 글 한정 (draft/deleted → 404). 응답 `{ ok, viewerLiked: true, likeCount }`. `DELETE` 동일 경로: row 있으면 delete + `like_count` -1 (`MAX(... - 1, 0)` 으로 음수 가드). status 제약 없음 — draft 로 전환된 글에서도 cleanup 가능. (`packages/worker/src/routes/topics.ts`)
+- Worker — 응답 likeCount/viewerLiked: 토픽 보드 list (`GET /topics/:slug`) posts 에 `likeCount` 추가. detail (`GET /topics/:slug/posts/:postSlug`) post 에 `likeCount` + `viewerLiked` (로그인 안 했으면 false, 했으면 like row 존재 여부). draft 분기 후에도 안전하게 채워서 반환.
+- Viewer — TopicPostDetail 좋아요 버튼: 본문 article 아래 중앙 정렬 토글 버튼 `♡ / ♥ + count`. optimistic update — 클릭 즉시 state 변경 + 카운트 ±1, 서버 응답으로 보정. 실패 시 이전 상태로 rollback. `is-liked` 클래스로 채워진 하트 + 핑크/빨강 톤 (`#fef2f2` bg, `#b91c1c` text, `#f87171` border). 비로그인 클릭 시 `/login` 으로 redirect. draft 글은 버튼 자체 미노출 (status !== published). (`packages/viewer/src/pages/TopicPostDetail.tsx/.css`)
+- Viewer — TopicBoard 카드 meta 에 `♥ N` — `likeCount > 0` 일 때만 노출 (0 은 노이즈). 조회 옆에 dot 구분자로 추가. (`packages/viewer/src/pages/TopicBoard.tsx`)
+- 결정: 비정규화 카운트 vs `COUNT(*)` 쿼리 — 비정규화. 좋아요는 listing 의 핫패스 (보드 한 번 열 때마다 N 글 카운트) 라 매번 join+count 는 N+1. trigger 대신 어플리케이션 레벨 +1/-1 (sqlite trigger 는 가능하지만 마이그레이션/디버깅 복잡도 ↑). 이론적으로 race condition 가능하지만 한 user-post pair 가 동시에 두 번 요청할 가능성 ≈ 0 + 멱등 가드 (existing check) 가 1차 방어. drift 가 누적되면 별 wedge 로 reconcile cron 추가 가능.
+- 결정: 멱등 POST/DELETE — REST 정공법은 PUT 또는 POST/DELETE 의 멱등 보장. 두 번째 POST 가 throw 하면 클라이언트가 race 시 무작정 retry 못 함. existing check → no-op + 항상 200. 같은 패턴이 React 19 의 concurrent rendering 에서도 안전.
+- 결정: viewerLiked 는 detail 만, list 는 미포함 — list 의 viewerLiked 를 채우려면 user_id 기준 join 1번 추가. 보드 한 번 열 때 N 행마다 viewerLiked 가 정말 필요한가? 일단 답: 카운트만 보여주고, 본인 좋아요 여부는 detail 에서 보임. 보드에서 "이미 좋아요한 글" 표시가 필요해지면 별 wedge.
+- 결정: 좋아요 0 일 때 카드 meta 노출 안 함 — 0/0/0 행렬이 시각적 노이즈. `> 0` 일 때만 표시. 댓글 0/조회 0 도 같은 원리지만 조회는 항상 노출 — 조회는 SEO/관심도 기본 신호라 0 표시도 의미 있음. 좋아요는 social proof 라 0 = 없는 게 깔끔.
+- 결정: 좋아요 UI 는 본문 article 아래 — Medium clap 위치 (본문 끝). 헤더 meta 에 넣으면 읽기 전 클릭이 빈번해질 수 있음. 본문 다 읽고 좋아요를 누르는 흐름이 가치 있는 시그널.
+- 검증: Worker/Viewer TS 0 에러. Migration 로컬 + 프로덕션 양쪽 apply. `temp/like-smoke.cjs` Playwright — anon detail likeCount=0/viewerLiked=false / anon POST → 401 / authed POST → likeCount=1 viewerLiked=true / 멱등 (재 POST → 동일) / DELETE → likeCount=0 viewerLiked=false / UI 클릭 → is-liked + count++ / 재클릭 → is-liked 해제. 7 assertion 통과. 프로덕션 (Version 7ab69c56) — openhow.io 200, `/api/topics` 200, 익명 POST /like 401, 존재하지 않는 글 404.
+- 다음 wedge 후보 (R 등): 좋아요 카운트를 인기 rail v2 정렬 신호로 (현재 viewCount only) / 큐레이터 promotion UI 에 좋아요 상위 글 자동 후보 표시 / 내가 좋아요한 글 모음 (`/me/likes`) / 좋아요 알림 (작성자에게) / 워크스페이스 endorsed 토픽 글 list 도 likeCount 노출 / 좋아요 카운트 drift reconcile cron.
+
 ### Wedge P — ?edit=1 자동 편집 모드 + composer draft → detail 직행 (5-11, done)
 - 배경: Wedge N 회수 시그널이 "본인 프로필 '내 초안' 카드 클릭 시 글 상세로 가는데, 거기서 수정→게시까지 한 번 더 클릭 필요" 라고 명시. Wedge O 가 데이터 잃음을 막았다면 P 는 마찰을 줄임. 초안 = 이어쓰기 대기 상태 → 클릭 시 곧장 편집 모드가 의미적으로 맞다.
 - Viewer — TopicPostDetail: `useSearchParams` 도입, mount 후 data + currentUser 로드되면 `?edit=1` & `currentUser.id === post.author.id` 일 때 자동으로 startEdit 본문 실행 (제목/본문 prefill + editing=true). `autoEditConsumedRef` 로 한 번만 실행 (재진입 방지). 소비 후 `setSearchParams({}, { replace: true })` 로 URL 에서 `edit` 제거 — 새로고침 시 다시 트리거 안 됨. (`packages/viewer/src/pages/TopicPostDetail.tsx`)
@@ -261,6 +276,18 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-11: Wedge Q 빌드 — 토픽 글 좋아요 v1
+- **Source**: 빌드 세션 (5-11, "다음 진행해줘", v1 What 완료 후 v2 strategic 항목 선택)
+- **Signal**: v1 What 모두 완료된 시점에서 다음 strategic 진전은 두 갈래 — (a) prod 의 가입자 유입/콘텐츠 생성 push (지금 0건), (b) v2 에서 가장 핵심인 좋아요/하이라이트. (a) 는 마케팅·외부 활동, (b) 는 코드. 코드 쪽에서 다음 자연스러운 게 좋아요 — 큐레이터 promotion (Wedge L) 과 직접 시너지 (자동 후보 신호), 인기 rail (Wedge J) 의 viewCount-only 한계 보완, 가입자 engagement 의 시작점.
+- **결정 / 학습**:
+  - 비정규화 카운트 — 좋아요는 listing 한 번 열 때마다 N 글 카운트 필요. JOIN+COUNT 는 N+1, 매번 도는 게 부담. 어플리케이션 +/- 1 + 멱등 가드 패턴이 SQL trigger 보다 단순 (디버깅/마이그레이션). drift 가능성은 race 가 거의 없는 도메인 (한 user-post 쌍) 이라 실용적으로 무시. 향후 cron reconcile 만 두면 충분.
+  - 멱등 POST/DELETE — REST 정공법 + 클라이언트 retry 안전. existing row 체크 후 no-op. 두 번째 호출이 throw 하면 race 시 client retry 가 깨짐. "성공 = 원하는 최종 상태가 됨" 으로 의미 정의하면 멱등이 자연스러움. 같은 패턴이 React 19 concurrent rendering 에서도 안전 (effect 중복 실행 시 동일 결과).
+  - viewerLiked 는 detail 만 — list 에 넣으려면 user_id 기준 join 추가 (N 행마다). 비용 vs 가치 비교: 리스트에서 "내가 좋아요한 글" 강조하는 UX 가 검증 안 됐고, detail 에서 본인 상태 보여주는 것만으로 토글 정확성 보장. 미래 필요 시 별 wedge.
+  - 좋아요 0 표시 안 함 — social proof 의 메커니즘은 "다른 사람이 좋아함" 시그널. 0 은 오히려 negative signal (아무도 좋아요 안 함). 조회수 0 은 표시해도 OK 인 이유: SEO/관심도 기본 정보. 좋아요는 사회적 의미라 0 = 숨김.
+  - optimistic update + rollback — 클릭 즉시 UI 반영 (네트워크 지연 안 느끼게) + 실패 시 이전 상태로 복원. setData 콜백 안에서 prev 기반 업데이트로 stale state race 도 방지. 같은 패턴이 모든 토글 액션 (북마크, follow, 구독) 에 재사용 가능. 다음 wedge 에서 같은 코드 모양이 보이면 hook (`useOptimisticToggle`) 으로 추출 고려.
+  - 좋아요 UI 위치 — 본문 article 아래. Medium clap, Reddit upvote (post detail) 와 같은 패턴. 헤더 meta 에 넣으면 읽기 전 클릭 가능성 ↑ — "다 읽고 좋아한 글" 시그널의 가치를 약화시킴. 읽는 시간이 짧은 SNS 라면 헤더 가까이가 맞지만, openhow 는 긴 글 (큐레이션 + 토픽 노트) 컨텍스트라 본문 아래가 시그널 품질에 맞음.
+- **회수 시그널**: 가입자가 좋아요 누르는지 (현재 prod 가입자 글 0 이라 자체로는 측정 불가 — 큐레이션 글에도 좋아요 깔지 결정 필요할 수 있음). 좋아요 → 큐레이터 promotion 결정 → 라인업 mirror 의 흐름이 실제로 도는지가 진짜 검증. 만약 큐레이터가 좋아요 신호 보지 않고 promotion 한다면 후속 wedge 에서 promotion UI 에 "이 글 좋아요 N" 노출 필요.
 
 ### 2026-05-11: Wedge P 빌드 — ?edit=1 자동 편집 모드 + composer → detail 직행
 - **Source**: 빌드 세션 (5-11, "다음 진행해줘", Wedge N 회수 시그널 + Wedge O close note 가 후보로 명시)
