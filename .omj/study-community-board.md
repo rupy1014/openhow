@@ -197,6 +197,18 @@ related:
 - 검증: Worker/Viewer TS 0 에러. Playwright 로컬 (vibe-coding owner=seed@local.dev) — endorse claude-code → 후보 3개 → 1개 promote → 라인업 rail 1 카드 노출 + 엔도스 rail 1 카드 별도 (이미 라인업 있는 글 endorsed rail 에는 그대로 — 이중 노출 의도, 라인업/엔도스 두 시그널은 독립). 어드민 페이지 두 섹션 카운트 일치. 엣지: dup POST 409, no-auth POST 401, DELETE 200 → list 비움 확인. 프로덕션: 0065 remote D1 apply 성공, worker 배포 완료, GET 404 (엔드포인트 존재 확인 — 노출 워크스페이스 없음).
 - 다음 wedge 후보 (M 등): mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 rail "더 보기" → 토픽으로 / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / 라인업 ↔ 엔도스 rail 시각 위계 더 분명히 (혹은 통합).
 
+### Wedge T — `/me/likes` 내가 좋아요한 글 모음 (5-11, done)
+- 배경: Wedge Q/R/S 체인이 좋아요 신호를 **컬럼 → home rail → 큐레이션 도구** 로 surface 했고, 이제 가입자 본인이 자기 좋아요 활동을 회수할 곳이 없음. Medium 의 "My Highlights" / Reddit "Upvoted" 패턴 — 가입자 1급 시민화의 자연 일환. v2 What 의 "follow/북마크/토픽 구독" 중 가장 가벼운 (DB 변경 0건, 기존 `topic_post_like` 재활용) 시작점.
+- Worker — `GET /api/authors/me/likes` (requireAuth, `packages/worker/src/routes/authors.ts`): `topic_post_like × topic_post × topic × user(author)` 4-way 조인, `likedAt DESC`, default 20 cap 50. select 에 viewCount/likeCount/likedAt/topic 메타/author 메타/`authorIsCurator` EXISTS subquery (Wedge M 패턴). `status='published'` 필터 — 작성자가 draft 로 전환했거나 deleted 된 글은 자동 숨김. drizzle import 에 `sql` 추가 (EXISTS subquery 위해).
+- Viewer — `MyLikes.tsx` + CSS + `/me/likes` 라우트 (`packages/viewer/src/pages/MyLikes.tsx`, `MyLikes.css`, `router.tsx`): PublicBlogHome 인기 rail 톤 카드 grid (260px auto-fill), 비로그인은 로그인 안내 + redirect, 빈 상태는 토픽 인덱스 진입 안내, 큐레이터 배지 (Wedge M `.my-likes-curator-badge`), `♥ N · 조회 N · 좋아요 {날짜}` 메타.
+- Viewer — AuthorProfile 본인 프로필 (`isMe`) 헤더 아래 "♥ 좋아요한 글" pill 링크 (`packages/viewer/src/pages/AuthorProfile.tsx/.css`): 다른 사람 프로필엔 노출 X (isMe 가드). drafts 섹션 위에 배치 — 본인 활동 진입점 한 줄로 묶음. 향후 댓글/북마크 등 추가될 때 같은 pill 라인 확장 가능.
+- 결정: 별 me-action sidebar UI 만들지 않음 — `/me/likes` 는 dedicated route 이지만 진입은 **AuthorProfile (본인) 헤더 pill 하나** 로 충분. 추가 surface (header dropdown, sidebar) 는 me-action 종류 ≥3 늘어났을 때 검토. 현재 1개 짜리에 nav 인프라 까는 건 over-engineering.
+- 결정: `status='published'` 필터 in API — draft/deleted 글은 좋아요 자체가 의미 없음 (POST /like 가 published 만 허용했고, deleted 는 cascade). 그런데 작성자가 publish→draft 로 후 전환한 경우는 like row 가 남아도 결과에서 빠지는 게 자연 (가입자에게 사라진 글 목록 보여줄 가치 없음). 향후 "예전 좋아요한 글" 같은 archive 요구 생기면 별 wedge.
+- 결정: 응답 shape = endorsed-topic-posts 와 유사 + `likedAt` 한 칸 추가 — viewer 카드 컴포넌트가 동일 패턴으로 렌더 가능. 일관 shape 유지가 향후 popular/endorsed/likes 세 rail 통합 컴포넌트화 시 비용 절감.
+- 결정: limit cap 50 — drafts(20) 와 다른 이유: 좋아요는 시간 지나며 누적이라 점차 늘어남. 너무 짧으면 "한 달 전 좋아요" 회수 어려움. 50 도 모자라면 pagination 추가 (현 단계 cursor 도입 over-engineering).
+- 검증: Worker/Viewer TS 0 에러. `temp/me-likes-smoke.cjs` Playwright — anon GET → 401 / dev login (seed@local.dev) baseline 4 → 2 unliked posts pick → 1.1s 간격 like A,B → /me/likes 응답 6건, likedAt DESC 로 B > A, 응답 shape 9개 키 완비 / UI `/me/likes` 카드 6개 + 6 ♥ 노출 / AuthorProfile `/s/seed_author` me-action pill href="/me/likes" 텍스트 "♥ 좋아요한 글" 노출 / cleanup 2 DELETE → baseline 4 복귀. 9 assertion 통과. 프로덕션 (Version f0a15521) — `/api/authors/me/likes` anon 401, `/me/likes` SPA 200.
+- 다음 wedge 후보 (U 등): 좋아요 알림 (작성자에게 새 좋아요 시 — 통신 채널 결정 필요, in-app vs 이메일) / 북마크 (좋아요와 다른 의미 — 좋아요 = 공감, 북마크 = 나중에 다시 읽기) / follow (작가 단위 구독) / 좋아요 카운트 drift reconcile cron (Wedge Q 의 미완 보강) / 인기 rail v3 시간 감쇠 / 모더레이션 흐름 (가입자 글 신고/숨김). 좋아요 surfacing 체인이 Q/R/S/T 4단계로 충분히 짙어졌으니, 다음은 다른 v2 축 (북마크/follow/알림) 또는 plateau (콘텐츠/마케팅) 도 합리.
+
 ### Wedge S — 큐레이터 promotion 후보 정렬에 likeCount 가중 (5-11, done)
 - 배경: Wedge R 이 home 인기 rail 을 likeCount 가중으로 정렬했지만, **큐레이터 promotion 의 후보 리스트 (`/dashboard/:ws/promotions`)** 와 **워크스페이스 랜딩 endorsed rail** 은 viewCount-only 였음. 둘 다 동일 endpoint (`/api/workspaces/:slug/endorsed-topic-posts`) 를 쓰는데 거기서 가중 sort 가 적용되지 않아 큐레이터가 후보를 고를 때, 그리고 reader 가 endorse 글 surface 를 볼 때, 가입자 engagement 신호가 안 보임. Wedge R 의 자연 확장 + 큐레이션 라인업 의사결정 fuel.
 - Worker — `/api/workspaces/:slug/endorsed-topic-posts` orderBy 를 `desc(viewCount + likeCount * 5), desc(createdAt)` 로 변경. select 에 `likeCount` 컬럼 추가. Drizzle `sql` 템플릿 산술 (Wedge R 과 동일 패턴). 하나의 endpoint 변경이 두 surface (admin promotion picker + reader endorsed rail) 를 동시에 커버. (`packages/worker/src/routes/workspaces.ts`)
@@ -299,6 +311,18 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-11: Wedge T 빌드 — `/me/likes` 가입자 본인 좋아요 회수
+- **Source**: 빌드 세션 (5-11, "/me/likes 진행해줘" — 사용자 직접 선택)
+- **Signal**: Q/R/S 가 좋아요를 column→home rail→큐레이션 도구로 surface 했지만 **가입자 본인이 자기 좋아요를 회수할 곳** 이 없었음. Medium "My Highlights" / Reddit "Upvoted" — 가입자 1급 시민화의 자연 단계.
+- **결정 / 학습**:
+  - 기존 인프라 재활용 = 가장 가벼운 wedge — `topic_post_like` 테이블/EXISTS curator 패턴/PublicBlogHome 카드 톤 모두 기존 자산. DB 변경 0건, 신규 worker endpoint 1개, 신규 viewer page 1개, 기존 page edit 2개. **체인 끝 wedge 는 신규 인프라 깔지 말고 surface 만 추가** 가 자연 — column 추가 (Q) → 점진 surface (R, S, T) 의 마지막 페이즈.
+  - me-action 진입점 = pill 1개 — `/me/likes` 는 dedicated route 이지만 진입은 AuthorProfile 본인 헤더의 작은 pill 하나로 시작. nav infrastructure (header dropdown, sidebar) 는 me-action 이 ≥3 늘어났을 때 검토. **1개짜리에 인프라 까는 건 over-engineering** — 미래 follow/북마크/댓글 wedge 가 들어오면 같은 pill 라인에 자연 확장.
+  - `status='published'` 필터의 의미 — draft/deleted 글은 결과에서 자동 숨김. 가입자에게 "사라진 글" 보여줄 가치 없음. 향후 "예전 좋아요" archive 요구가 생기면 별 endpoint (별 wedge) 로 분리.
+  - cap 50 vs drafts cap 20 — 좋아요는 시간 누적형 (drafts 는 정리형). cap 도 도메인 다이나믹스 반영. pagination 은 현 단계 over-engineering.
+  - 응답 shape 일관성 — endorsed-topic-posts / popular-rail / me/likes 세 endpoint 가 비슷한 shape (+ likedAt 한 칸). 향후 통합 카드 컴포넌트화 시 비용 절감 ↓. **API shape 컨벤션은 신규 endpoint 작성 시점에 의식적으로 맞춰야** 나중에 통합 비용 감소.
+  - Wedge Q/R/S/T 4-wedge 체인 완결 — 한 신호 (좋아요) 가 column 추가 → home surface → 큐레이션 도구 surface → 본인 회수 까지 4 step 으로 충분히 짙어짐. **다음 신호는 다른 축** (북마크/follow/알림) 또는 plateau (콘텐츠/마케팅) 가 자연. 같은 축으로 5번째 wedge 가 자연스럽지 않으면 분기 시점.
+- **다음 후보 (U)**: 사용자 결정 보류 — 후보군: 좋아요 알림 (통신 채널 결정 필요), 북마크 (좋아요와 의미 분리 — 공감 vs 다시 읽기), follow (작가 단위 구독, 이미 `authorFollow` 테이블 존재), 좋아요 drift reconcile cron, 인기 rail v3 시간 감쇠, 모더레이션 (신고/숨김). 좋아요 체인은 plateau 진입 적기.
 
 ### 2026-05-11: Wedge S 빌드 — promotion 후보 정렬에 likeCount 가중
 - **Source**: 빌드 세션 (5-11, "다음 wedge S 진행해줘" — Wedge R 자연 후속)
