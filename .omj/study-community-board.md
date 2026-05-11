@@ -197,6 +197,17 @@ related:
 - 검증: Worker/Viewer TS 0 에러. Playwright 로컬 (vibe-coding owner=seed@local.dev) — endorse claude-code → 후보 3개 → 1개 promote → 라인업 rail 1 카드 노출 + 엔도스 rail 1 카드 별도 (이미 라인업 있는 글 endorsed rail 에는 그대로 — 이중 노출 의도, 라인업/엔도스 두 시그널은 독립). 어드민 페이지 두 섹션 카운트 일치. 엣지: dup POST 409, no-auth POST 401, DELETE 200 → list 비움 확인. 프로덕션: 0065 remote D1 apply 성공, worker 배포 완료, GET 404 (엔드포인트 존재 확인 — 노출 워크스페이스 없음).
 - 다음 wedge 후보 (M 등): mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 rail "더 보기" → 토픽으로 / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / 라인업 ↔ 엔도스 rail 시각 위계 더 분명히 (혹은 통합).
 
+### Wedge R — 인기 rail v2: likeCount 가중 합산 (5-11, done)
+- 배경: Wedge J 가 인기 rail 을 viewCount 만으로 정렬했고, Wedge Q 에서 likeCount 신호를 만들었지만 surface 에 연결 안 됨. 가입자 engagement 의 가장 강한 신호 (passive view 보다 accountable action) 를 정렬에 합산 — Wedge Q 의 직접 확장. 큐레이터 promotion 의 자동 후보 surface 와도 결이 같음 (좋아요 ↑ = 라인업 후보 ↑).
+- Worker — `/api/public/feed` topicPostsFeed 정렬을 `desc(viewCount + likeCount * 5), desc(createdAt)` 로 변경. select 에 `likeCount` 추가. Drizzle `sql` 템플릿으로 컬럼 산술 표현 — 가중치 5 변경 시 한 곳만 수정. (`packages/worker/src/routes/public-feed.ts`)
+- Viewer — PublicBlogHome `PublicTopicPost` 인터페이스에 `likeCount?: number` 추가, 인기 토픽 글 카드 meta 에 `♥ N` (likeCount>0 일 때만, 조회 옆 dot 구분자) — Wedge Q 의 TopicBoard 카드와 동일 패턴. 섹션 카피 "조회수 순" → "조회수 + 좋아요 가중". (`packages/viewer/src/pages/PublicBlogHome.tsx`)
+- 결정: 가중치 5 — 1 like ≈ 5 views. 좋아요는 클릭 + 로그인 신원이 필요한 accountable action, view 는 passive (봇/실수 클릭 포함). 너무 작으면 (≤2) 신호 묻히고, 너무 크면 (≥10) view 신호가 무력화. 5 는 SNS engagement heuristic 의 보수적 중간값. 추후 트래픽 쌓이면 데이터로 검증 후 조정 가능.
+- 결정: SQL 산술 (`viewCount + likeCount * 5`) vs 별 score 컬럼 — 컬럼 추가 안 함. score 는 두 카운트의 derived value 이고, 매번 like 시 score 컬럼도 같이 갱신해야 하면 정합성 부담. 인기 rail 은 limit 8 + index 가능한 작은 쿼리라 산술 비용 무시 가능.
+- 결정: 가중치 변경 시 backward-compat 고민 안 함 — 정렬 기준일 뿐, 응답 shape 안 바뀜. 클라이언트가 점수 자체를 의존할 일 없음.
+- 결정: TopicBoard list 정렬은 손 안 댐 — 보드 내부는 발행 순서 (최신 위) 가 기본 직관. 인기순 정렬 필요해지면 별 wedge (보드에 정렬 토글 추가).
+- 검증: Worker/Viewer TS 0 에러. `temp/popular-rail-v2-smoke.cjs` Playwright — 글 A (views=30, likes=0, score=30) vs 글 B (views=5, likes=1, score=10) 시드 → feed 응답 정렬: A > B > 기존 tip(7) > smoke(3) > 0s 확인 / likeCount 필드 응답에 포함 / 홈 카드 6개 중 3개에 ♥ 배지 노출. 프로덕션 (Version 33a8a2ee) — openhow.io 200, `/api/public/feed` 200 (topicPosts=[], 새 컬럼 select 에러 없음).
+- 다음 wedge 후보 (S 등): 큐레이터 promotion UI 에 좋아요 상위 글 자동 후보 표시 (Wedge L 의 후보 리스트를 likeCount desc 로 정렬) / 내가 좋아요한 글 모음 (`/me/likes`) / 좋아요 알림 (작성자에게 새 좋아요 시) / 워크스페이스 endorsed 토픽 글 rail 도 likeCount 노출 / 좋아요 카운트 drift reconcile cron / 인기 rail v3: 시간 감쇠 (오래된 글의 viewCount 가 영원히 상위 점유 막기).
+
 ### Wedge Q — 토픽 글 좋아요 v1 (5-11, done)
 - 배경: v1 What 모두 완료된 시점. v2 의 "좋아요/하이라이트 — 큐레이션 승격 후보 신호" 가 가장 strategic — 큐레이터 mirror (Wedge L) 가 사람이 직접 고르는 경로라면, 좋아요는 자동으로 surface 후보를 만들어주는 신호. 가입자 engagement 의 1차 metric 도 됨.
 - DB — migration 0066: `topic_post_like` 신설 (composite PK `(topic_post_id, user_id)`, `created_at`, post/user 별 FK CASCADE, 보조 index 2개). `topic_post` 에 `like_count INTEGER NOT NULL DEFAULT 0` 추가 — 비정규화 카운트 (count 쿼리 매번 도는 것보다 cheap, +/- atomic update). schema.ts 에 `topicPostLike` 테이블 export + `primaryKey` helper import. (`packages/worker/migrations/0066_add_topic_post_like.sql`, `packages/worker/src/db/schema.ts`)
@@ -276,6 +287,16 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-11: Wedge R 빌드 — 인기 rail v2 likeCount 가중 합산
+- **Source**: 빌드 세션 (5-11, "추천대로 진행", Wedge Q 직후 사용자 결정 — 코드 측 자연 확장)
+- **Signal**: Wedge Q 가 likeCount 컬럼/엔드포인트/UI 를 만들었지만 surface 에 합산 안 됨. 인기 rail (Wedge J) 은 여전히 viewCount-only 정렬. 좋아요는 view 보다 강한 신호 (accountable action) 인데 인기 surface 에 반영 안 되면 신호 만든 의미 ↓.
+- **결정 / 학습**:
+  - 가중치 5 ("1 like ≈ 5 views") — 좋아요는 클릭 + 로그인 신원 필요한 accountable action, view 는 passive (봇/실수 포함). SNS heuristic 의 보수적 중간. <3 이면 신호 묻힘, >10 이면 view 자체가 무력화. 5 가 두 시그널의 균형점. 트래픽 쌓이면 A/B 로 검증 가능.
+  - SQL 산술 vs derived score 컬럼 — 컬럼 추가 안 함. score = derived value 이고 매번 like 시 score 도 갱신하면 동기화 부담. 인기 rail 은 limit 8 + index-friendly 작은 쿼리라 산술 비용 무시. 가중치 변경 시 한 줄만 고치면 됨 (튜닝 비용 낮음).
+  - 인기 ≠ 정렬 토글 — TopicBoard 보드 내부는 발행 순서 유지. 보드는 "최신 위에서 아래로" 가 직관적이고, 인기 surface 는 home rail 의 역할. 두 곳에서 같은 정렬을 쓸 필요 없음.
+  - 가중치 변경 backward-compat 고민 X — 정렬 기준일 뿐 응답 shape 안 바뀜. 클라이언트가 score 자체를 의존할 일 없음. UI 는 두 카운트만 노출.
+- **다음 후보 (S)**: 큐레이터 promotion 후보 자동 정렬 (likeCount desc) — Wedge L 의 후보 리스트 surface 가 viewCount 만 보고 있음. Wedge R 의 자연 후속.
 
 ### 2026-05-11: Wedge Q 빌드 — 토픽 글 좋아요 v1
 - **Source**: 빌드 세션 (5-11, "다음 진행해줘", v1 What 완료 후 v2 strategic 항목 선택)
