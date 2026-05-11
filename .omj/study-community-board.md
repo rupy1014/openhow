@@ -197,6 +197,18 @@ related:
 - 검증: Worker/Viewer TS 0 에러. Playwright 로컬 (vibe-coding owner=seed@local.dev) — endorse claude-code → 후보 3개 → 1개 promote → 라인업 rail 1 카드 노출 + 엔도스 rail 1 카드 별도 (이미 라인업 있는 글 endorsed rail 에는 그대로 — 이중 노출 의도, 라인업/엔도스 두 시그널은 독립). 어드민 페이지 두 섹션 카운트 일치. 엣지: dup POST 409, no-auth POST 401, DELETE 200 → list 비움 확인. 프로덕션: 0065 remote D1 apply 성공, worker 배포 완료, GET 404 (엔드포인트 존재 확인 — 노출 워크스페이스 없음).
 - 다음 wedge 후보 (M 등): mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 rail "더 보기" → 토픽으로 / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / 라인업 ↔ 엔도스 rail 시각 위계 더 분명히 (혹은 통합).
 
+### Wedge S — 큐레이터 promotion 후보 정렬에 likeCount 가중 (5-11, done)
+- 배경: Wedge R 이 home 인기 rail 을 likeCount 가중으로 정렬했지만, **큐레이터 promotion 의 후보 리스트 (`/dashboard/:ws/promotions`)** 와 **워크스페이스 랜딩 endorsed rail** 은 viewCount-only 였음. 둘 다 동일 endpoint (`/api/workspaces/:slug/endorsed-topic-posts`) 를 쓰는데 거기서 가중 sort 가 적용되지 않아 큐레이터가 후보를 고를 때, 그리고 reader 가 endorse 글 surface 를 볼 때, 가입자 engagement 신호가 안 보임. Wedge R 의 자연 확장 + 큐레이션 라인업 의사결정 fuel.
+- Worker — `/api/workspaces/:slug/endorsed-topic-posts` orderBy 를 `desc(viewCount + likeCount * 5), desc(createdAt)` 로 변경. select 에 `likeCount` 컬럼 추가. Drizzle `sql` 템플릿 산술 (Wedge R 과 동일 패턴). 하나의 endpoint 변경이 두 surface (admin promotion picker + reader endorsed rail) 를 동시에 커버. (`packages/worker/src/routes/workspaces.ts`)
+- Viewer (admin) — WorkspacePromotions 의 후보 카드 meta 에 `♥ N` (likeCount>0 일 때만, 조회 옆 dot 구분자). 섹션 description "endorse 한 토픽의 인기 글이 후보로 올라옵니다." → "endorse 한 토픽의 인기 글 **(조회수 + 좋아요 가중)** 이 후보로 올라옵니다." — 큐레이터에게 정렬 기준을 명시. `EndorsedPost` 인터페이스에 `likeCount?: number | null` 추가. (`packages/viewer/src/pages/admin/WorkspacePromotions.tsx`)
+- Viewer (reader) — WorkspaceDocs 의 `renderEndorsedRail` 카드 meta 에 `♥ N` (likeCount>0 일 때만). `EndorsedTopicPost` 인터페이스에 `likeCount` 추가. blog/team-blog 두 변형 모두 동일 helper 라 한 번 수정으로 두 곳 반영. (`packages/viewer/src/pages/workspace/WorkspaceDocs.tsx`)
+- 결정: 한 endpoint 변경으로 admin + reader 두 surface 통일 — endpoint 분리/별 sort 옵션 추가하지 않음. 큐레이터가 보는 "후보 정렬" 과 reader 가 보는 "endorsed 정렬" 은 같은 신호여야 자연 (큐레이터는 reader 가 보는 것 + 가입자 신호를 보고 라인업 결정). 두 시그널 분리하면 정렬 의도가 모호해짐.
+- 결정: 가중치 5 — Wedge R 과 동일. 시스템 전체에서 "1 like ≈ 5 views" invariant 유지. promotion picker 에서만 다른 가중치 쓰면 큐레이터 직관과 home rail/reader 가 보는 인기와 정렬이 어긋남. 한 단일 진실 (single source of truth).
+- 결정: ♥ 배지 노출 — admin 후보 카드 + reader endorsed rail 모두 `likeCount > 0` 일 때만 (Wedge Q TopicBoard 와 일관). 0 배지는 노이즈. 조회 옆 dot 구분자도 동일.
+- 결정: WorkspacePromotions 의 description 한 줄 갱신 — 정렬 변경은 silent 하면 안 됨. 큐레이터가 "왜 이 글이 위에 있지?" 했을 때 description 한 줄로 정렬 기준 알 수 있게.
+- 검증: Worker/Viewer TS 0 에러. `temp/promo-candidate-sort-smoke.cjs` Playwright — vibe-coding 워크스페이스에서 글 A (views=5, likes=0, score=5) vs 글 B (views=1, likes=1, score=6) 시드 → endorsed-topic-posts 응답 정렬: B > A 확인 (가중 sort 없으면 A > B). likeCount 필드 응답에 포함. UI `/w/vibe-coding` 랜딩 endorsed rail 카드 3개 중 3개에 ♥ 배지 노출 (smoke + tip + B). 프로덕션 (Version f400726b) — openhow.io 200, `/api/workspaces/clauders-ai/endorsed-topic-posts` 200 + `{topics:[],posts:[]}` (endorsement 0 — 빈 응답이지만 새 컬럼 select 에러 없음).
+- 다음 wedge 후보 (T 등): 내가 좋아요한 글 모음 (`/me/likes`) / 좋아요 알림 (작성자에게 새 좋아요) / 좋아요 카운트 drift reconcile cron / 인기 rail v3: 시간 감쇠 (오래된 글 영원 상위 점유 방지) / 가입자 글 RSS / 모더레이션 흐름 (가입자 글 신고/숨김).
+
 ### Wedge R — 인기 rail v2: likeCount 가중 합산 (5-11, done)
 - 배경: Wedge J 가 인기 rail 을 viewCount 만으로 정렬했고, Wedge Q 에서 likeCount 신호를 만들었지만 surface 에 연결 안 됨. 가입자 engagement 의 가장 강한 신호 (passive view 보다 accountable action) 를 정렬에 합산 — Wedge Q 의 직접 확장. 큐레이터 promotion 의 자동 후보 surface 와도 결이 같음 (좋아요 ↑ = 라인업 후보 ↑).
 - Worker — `/api/public/feed` topicPostsFeed 정렬을 `desc(viewCount + likeCount * 5), desc(createdAt)` 로 변경. select 에 `likeCount` 추가. Drizzle `sql` 템플릿으로 컬럼 산술 표현 — 가중치 5 변경 시 한 곳만 수정. (`packages/worker/src/routes/public-feed.ts`)
@@ -287,6 +299,17 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-05-11: Wedge S 빌드 — promotion 후보 정렬에 likeCount 가중
+- **Source**: 빌드 세션 (5-11, "다음 wedge S 진행해줘" — Wedge R 자연 후속)
+- **Signal**: Wedge R 이 home 인기 rail 만 가중 정렬로 갱신했고, 큐레이터 promotion 후보 (`/dashboard/:ws/promotions`) + 워크스페이스 endorsed rail 은 여전히 viewCount-only. 같은 endpoint (`endorsed-topic-posts`) 두 surface 동시 잡힘. 큐레이션 라인업 의사결정에 가입자 engagement 가 안 보이면 promote 의 신호가 view (passive) 일 뿐 like (accountable) 이 안 됨.
+- **결정 / 학습**:
+  - 단일 endpoint = 단일 정렬 규칙 — admin promotion picker 와 reader endorsed rail 이 같은 endpoint 면 정렬도 같아야 의미가 일관. 두 곳에 따로 sort 옵션 두면 큐레이터가 reader 와 다른 순서를 보게 되어 "왜 이 글이 위?" 가 결정 비용으로 돌아옴. **하나의 endpoint, 하나의 정렬, 두 surface** 가 자연.
+  - 가중치 5 invariant — Wedge R 과 동일 5 채택. 시스템 전체에서 "1 like ≈ 5 views" 라는 단일 진실 유지. promotion picker 에서만 다른 가중 쓰면 큐레이터 직관과 home rail/reader 정렬이 어긋남. 가중치 튜닝은 SQL 한 줄만 고치면 되니 향후 통합 조정 가능.
+  - description 한 줄로 정렬 기준 노출 — 큐레이터가 "왜 이 글이 위?" 라는 질문을 안 하게 admin description 에 "(조회수 + 좋아요 가중)" 명시. silent sort change 는 큐레이션 도구에서 위험. 가중치 변경 시 description 도 같이 갱신할 invariant.
+  - 두 surface 통합 vs 분리 — admin picker UI 와 reader rail UI 는 시각 톤이 다르지만 (admin = 표 + 액션 버튼, reader = 카드 rail) **데이터 정렬 의미는 동일**. UI 표현은 분리하되 정렬은 통합 — 적정 추상화 깊이.
+  - Wedge R + S 의 자연 연결 — likeCount 신호 (Wedge Q) → home rail surface (Wedge R) → 큐레이터 후보 surface (Wedge S). 각 wedge 가 직전 wedge 의 자연 후속이며 orphan 신호 없음. **Wedge Q 의 likeCount 가 만든 후속 작업이 3-wedge 체인을 형성** — column 추가 → 1차 surface (home) → 2차 surface (큐레이션 도구).
+- **다음 후보 (T)**: 사용자 결정 보류 — 후보군: `/me/likes`, 좋아요 알림, 좋아요 drift reconcile cron, 인기 rail v3 시간 감쇠. 좋아요 surfacing 은 이제 3-wedge 체인으로 충분히 진열됨, 다른 v2 항목 또는 plateau 진입 검토 시점.
 
 ### 2026-05-11: Wedge R 빌드 — 인기 rail v2 likeCount 가중 합산
 - **Source**: 빌드 세션 (5-11, "추천대로 진행", Wedge Q 직후 사용자 결정 — 코드 측 자연 확장)
