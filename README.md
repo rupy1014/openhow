@@ -419,7 +419,7 @@ openhow/
     └── packages/
         ├── cli/           ← @openhow/cli (npm)
         ├── types/         ← @openhow/types (npm)
-        ├── viewer/        ← Vue 3 SPA
+        ├── viewer/        ← React 19 SPA
         └── worker/        ← Cloudflare Worker API
 ```
 
