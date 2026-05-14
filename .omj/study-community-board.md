@@ -6,7 +6,7 @@ iteration: 1
 domain: product
 stage: discovery
 created: 2026-05-07
-updated: 2026-05-10
+updated: 2026-05-13
 related:
   - openhow-positioning-clauders-seo.md
   - creator-platform-discovery.md
@@ -196,6 +196,15 @@ related:
 - 결정: deterministic id (`promo_{ws}_{post}`) — UUID 안 씀. 기존 wedge (endorse_*, post_*, topic_*) 와 일관, debug/log 시 의미 추적 가능.
 - 검증: Worker/Viewer TS 0 에러. Playwright 로컬 (vibe-coding owner=seed@local.dev) — endorse claude-code → 후보 3개 → 1개 promote → 라인업 rail 1 카드 노출 + 엔도스 rail 1 카드 별도 (이미 라인업 있는 글 endorsed rail 에는 그대로 — 이중 노출 의도, 라인업/엔도스 두 시그널은 독립). 어드민 페이지 두 섹션 카운트 일치. 엣지: dup POST 409, no-auth POST 401, DELETE 200 → list 비움 확인. 프로덕션: 0065 remote D1 apply 성공, worker 배포 완료, GET 404 (엔드포인트 존재 확인 — 노출 워크스페이스 없음).
 - 다음 wedge 후보 (M 등): mirror copy semantics v2 (큐레이터 코멘트 첨부) / 라인업 rail "더 보기" → 토픽으로 / draft 흐름 / 인기 rail v2 (de-dup, 기간 필터) / DEV_LOGIN_EMAIL 정상화 / 라인업 ↔ 엔도스 rail 시각 위계 더 분명히 (혹은 통합).
+
+### 2026-05-13: [signal] 글 출처 mechanic refinement — CLI sync publishing, UI composer 비활성화 방향
+
+- **Source**: 대화 중 사용자 결정 (옵시디언 차별 정리 거쳐 합의)
+- **Signal**: "md 기반의 문서화 서비스야. 결국 UI 로 MD 를 글쓰는게 아닌거지." → "cli 기반의 문서 편집 플랫폼으로 가보자. ui 글쓰기 에디터는 일단 안보여주는걸로 하자."
+- **Intent change**: 토픽 게시판 1급 entity + 가입자 1급 시민 모델 유지. 글 작성 메커니즘만 외부 MD sync (CLI publish, frontmatter `topic` 자동 라우팅) 로 진화. UI composer (TopicBoard 글쓰기 토글 / TopicPostDetail 인라인 edit / 마크다운 미리보기) 는 후속 의도 `composer-deprecation` 에서 화면 비활성화 + 코드 `// @deprecated` 보존.
+- **Pivot 아님, refinement**: 5-07 잠금 (Medium+Reddit 하이브리드, 토픽 1급, 가입자 1급) 그대로. 글의 출처 mechanic 만 진화.
+- **Follow-up intents (5-13 정렬)**: `cli-publish-md-sync-v1` (콘텐츠 펌프) → `editor-approval-gate` (메인 노출 게이트) → `composer-deprecation` (UI 입구 닫기) → `surface-tone-pass` (콘텐츠 채워진 후 톤 정렬).
+- **References**: [[cli-publish-md-sync-v1]], [[openhow-positioning-clauders-seo]]
 
 ### Wedge T — `/me/likes` 내가 좋아요한 글 모음 (5-11, done)
 - 배경: Wedge Q/R/S 체인이 좋아요 신호를 **컬럼 → home rail → 큐레이션 도구** 로 surface 했고, 이제 가입자 본인이 자기 좋아요 활동을 회수할 곳이 없음. Medium 의 "My Highlights" / Reddit "Upvoted" 패턴 — 가입자 1급 시민화의 자연 일환. v2 What 의 "follow/북마크/토픽 구독" 중 가장 가벼운 (DB 변경 0건, 기존 `topic_post_like` 재활용) 시작점.

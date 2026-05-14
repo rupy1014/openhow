@@ -1,7 +1,7 @@
 ---
 status: building
 created: 2026-04-16
-updated: 2026-04-21
+updated: 2026-05-14
 iteration: 1
 ---
 
@@ -42,6 +42,7 @@ bootpay 채널처럼 `openhow serve`/`publish`로 블로그 워크스페이스�
 
 ## Footprint
 
+- core/packages/viewer/src/styles/main.css, core/packages/viewer/src/styles/markdown.css, core/packages/viewer/src/pages/DocPage.css, core/packages/viewer/src/pages/PublicBlogHome.css, core/packages/cli/src/ssg/ssgStyles.ts — toss.tech 실 CSS 참고(Article max 740px, Toss Product Sans 우선, #3182f6 primary, 12px media radius, badge 13px/8px, 본문 17px/1.78, 제목 700/1.25)로 SPA/SSG 디자인 시스템 정밀화 (2026-05-14)
 - core/packages/viewer/src/layouts/BlogLayout.css — nav active left bar indicator 추가, search focus primary border (2026-04-16)
 - core/packages/cli/src/ssg/ssgStyles.ts — nav item 값 SPA 동기화 (padding, font-size, font-weight, border-radius, gap, min-height, color), search focus border (2026-04-16)
 - core/packages/cli/src/ssg/renderMarkdown.ts — md-code-group 렌더러: 탭바를 각 panel 내부로 이식 (buildTabs helper 도입) (2026-04-21)

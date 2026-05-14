@@ -1,7 +1,7 @@
 ---
 status: exploring
 created: 2026-05-04
-updated: 2026-05-04
+updated: 2026-05-13
 iteration: 1
 ---
 
@@ -154,6 +154,15 @@ openhow 는 multi-tenant 버전 — 각 워크스페이스 = 한 큐레이션 pu
 Stage 2/3/4 는 큐레이션 정체성 의도 들이 몇 개 새로 만들어진 후에 결정 (큐레이션 surface 가 구체화되어야 LMS 코드 disable/제거 결정이 정확).
 
 ## Learnings
+
+### 2026-05-13: mechanic 진화 — MD publishing/discovery layer 잠금
+
+- **Source**: 대화 중 사용자 결정 (옵시디언 차별 정리 + 우선순위 재정렬)
+- **Insight**: openhow 의 차별축 = (1) AI 도메인 lock, (2) 큐레이션 레이어 (에디터 동의 게이트), (3) Discovery + SEO + 토픽 응집력. 옵시디언과 협력 관계 (input vs publishing/discovery layer), 경쟁자 아님.
+- **Decision**: 글의 출처 = 외부 MD sync (CLI publish v2, 향후 Notion/GitHub sync). UI composer 화면 비활성화 방향 — 코드는 `// @deprecated` 주석으로 보존 (즉시 삭제 X).
+- **Mechanic 진화이지 pivot 아님**: 5-04 큐레이션 (롱블랙) + 5-07 AI 사이트 (Medium+Reddit 하이브리드) 잠금 유지. 글의 작성 메커니즘만 진화.
+- **Follow-up intents (5-13 정렬)**: `cli-publish-md-sync-v1` → `editor-approval-gate` → `composer-deprecation` → `surface-tone-pass`.
+- **References**: [[cli-publish-md-sync-v1]], [[study-community-board]]
 
 ### 2026-05-04: iter 1 — 코드베이스 split 인벤토리
 - **Method**: `.omj/` 활성 의도 70+ 개를 LMS / SEO / 공통으로 분류. `core/packages/viewer/src/pages/`, `worker/src/routes/`, `cli/src/ssg/` cross-read.
