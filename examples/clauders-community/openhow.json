@@ -1,0 +1,44 @@
+{
+  "content": "docs",
+  "workspace": "clauders-community",
+  "title": "Clauders Community",
+  "description": "Claude Code 사용자들이 자기 작업·실험·삽질을 공유하는 가입자 커뮤니티. 글은 가입자가 직접 쓰고, 즉시 공개됩니다.",
+  "type": "community",
+  "customDomain": "community.clauders.ai",
+  "joinPolicy": "open",
+  "defaultAccessLevel": "public",
+  "sort": "date-desc",
+  "slugPolicy": "ascii-kebab-error",
+  "theme": {
+    "preset": "purple",
+    "primary": "#7c3aed",
+    "dark": false
+  },
+  "community": {
+    "memberRoleDefault": "viewer",
+    "postPermission": "members",
+    "publishGate": "immediate",
+    "moderation": "post-hoc",
+    "antiSpam": {
+      "newMemberCooldownMinutes": 10,
+      "firstPostsThrottle": 3,
+      "blockedDomains": []
+    }
+  },
+  "scan": {
+    "exclude": [
+      "index.md",
+      "**/_meta.json",
+      "images/**"
+    ]
+  },
+  "footer": {
+    "company": "Clauders",
+    "info": "Clauders Community 는 clauders.ai 가입자 자유 기고 커뮤니티 예제입니다.",
+    "copyright": "© 2026 clauders.ai. Community posts © their authors.",
+    "links": [
+      { "label": "clauders.ai", "url": "https://clauders.ai" },
+      { "label": "openhow", "url": "https://openhow.io" }
+    ]
+  }
+}
