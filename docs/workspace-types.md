@@ -14,7 +14,7 @@ openhow init --type team
 
 ---
 
-## 6가지 워크스페이스 타입
+## 7가지 워크스페이스 타입
 
 ### 📘 `docs` — API/개발자 문서
 
@@ -64,17 +64,25 @@ openhow init --type team
 | 용도 | 실행 가능한 스펙 문서, 피드백→버전업→구현 사이클, Agent-to-Agent 협업 |
 | 실제 사례 | 외주개발 스펙 협업, 사주서비스 콘텐츠 전문가 피드백, AI Agent 멀티스텝 구현 |
 
+### 🗣️ community — 가입자 자유 기고 커뮤니티
+
+| 항목 | 값 |
+|------|---|
+| 페르소나 | 큐레이터, 가입자 커뮤니티 운영자 |
+| 용도 | 가입자 직접 작성·즉시 공개·SEO 인덱싱 — Notion-like UI 에디터 기반 |
+| 실제 사례 | community.clauders.ai (Claude Code 가입자 커뮤니티 예제) |
+
 ---
 
 ## 타입별 기본값
 
-| 설정 | `docs` | `course` | `team` | `blog` | `wiki` | `project` |
-|------|--------|----------|--------|--------|--------|-----------|
-| joinPolicy | open | open | invite_only | open | approval | invite_only |
-| defaultAccessLevel | public | public | team | public | public | team |
-| navigationMode | two-panel | sidebar | sidebar | sidebar | two-panel | sidebar |
-| defaultFreeSections | 전체 공개 | 2 | 전체 공개 | 전체 공개 | 전체 공개 | 전체 공개 |
-| theme.preset | blue | purple | green | red | blue | orange |
+| 설정 | `docs` | `course` | `team` | `blog` | `wiki` | `project` | `community` |
+|------|--------|----------|--------|--------|--------|-----------|-------------|
+| joinPolicy | open | open | invite_only | open | approval | invite_only | open |
+| defaultAccessLevel | public | public | team | public | public | team | public |
+| navigationMode | two-panel | sidebar | sidebar | sidebar | two-panel | sidebar | sidebar |
+| defaultFreeSections | 전체 공개 | 2 | 전체 공개 | 전체 공개 | 전체 공개 | 전체 공개 | 전체 공개 |
+| theme.preset | blue | purple | green | red | blue | orange | purple |
 
 ---
 
