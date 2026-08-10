@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>자가진단 퀴즈</title>
+  <style>
+    :root {
+      --bg: #f7f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --answer-bg: #eef2ff;
+      --answer-line: #c7d2fe;
+      --ok: #059669;
+      --ok-bg: #ecfdf5;
+      --ok-line: #a7f3d0;
+      --no: #dc2626;
+      --no-bg: #fef2f2;
+      --no-line: #fecaca;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 40px 20px 64px;
+    }
+
+    header {
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .guide {
+      margin: 24px 0;
+      padding: 18px 20px;
+      background: #111827;
+      color: #f9fafb;
+      border-radius: 16px;
+    }
+
+    .guide strong {
+      color: #a5b4fc;
+    }
+
+    .guide p {
+      margin: 0 0 6px;
+    }
+
+    .guide p:last-child {
+      margin-bottom: 0;
+    }
+
+    .scorebar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin: 0 0 24px;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 18px;
+    }
+
+    .scorebar .stat {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .scorebar .stat span {
+      color: var(--primary-dark);
+    }
+
+    .scorebar .track {
+      flex: 1 1 160px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--line);
+      overflow: hidden;
+    }
+
+    .scorebar .fill {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      transition: width 0.25s ease;
+    }
+
+    .chapter {
+      margin: 32px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chapter h2 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: -0.02em;
+    }
+
+    .chapter .tag {
+      flex: 0 0 auto;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--answer-bg);
+      border: 1px solid var(--answer-line);
+      color: var(--primary-dark);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .quiz-list {
+      display: grid;
+      gap: 18px;
+    }
+
+    .quiz-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    .quiz-head {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .num {
+      flex: 0 0 auto;
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-weight: 800;
+    }
+
+    .quiz-card h3 {
+      margin: 2px 0 0;
+      font-size: 20px;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+
+    .options {
+      display: grid;
+      gap: 8px;
+    }
+
+    .opt {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      width: 100%;
+      text-align: left;
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: var(--card);
+      color: var(--text);
+      font-size: 15px;
+      font-family: inherit;
+      line-height: 1.5;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+    }
+
+    .opt:hover:not(:disabled) {
+      border-color: var(--answer-line);
+      background: var(--answer-bg);
+      transform: translateY(-1px);
+    }
+
+    .opt:disabled {
+      cursor: default;
+    }
+
+    .opt .key {
+      flex: 0 0 auto;
+      display: inline-flex;
+      width: 22px;
+      height: 22px;
+      margin-top: 1px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .opt.is-correct {
+      border-color: var(--ok-line);
+      background: var(--ok-bg);
+    }
+
+    .opt.is-correct .key {
+      background: var(--ok);
+      color: white;
+    }
+
+    .opt.is-wrong {
+      border-color: var(--no-line);
+      background: var(--no-bg);
+    }
+
+    .opt.is-wrong .key {
+      background: var(--no);
+      color: white;
+    }
+
+    .opt.is-dim {
+      opacity: 0.55;
+    }
+
+    .answer {
+      display: none;
+      margin-top: 16px;
+      padding: 16px 18px;
+      border: 1px solid var(--answer-line);
+      border-radius: 14px;
+      background: var(--answer-bg);
+    }
+
+    .answer.open {
+      display: block;
+    }
+
+    .answer p {
+      margin: 0 0 8px;
+    }
+
+    .answer p:last-child {
+      margin-bottom: 0;
+    }
+
+    .verdict {
+      font-weight: 800;
+    }
+
+    .verdict.ok {
+      color: var(--ok);
+    }
+
+    .verdict.no {
+      color: var(--no);
+    }
+
+    .source {
+      display: inline-block;
+      margin-top: 4px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--answer-line);
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    code {
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: rgba(79, 70, 229, 0.1);
+      font-size: 0.92em;
+    }
+
+    .result {
+      display: none;
+      margin-top: 28px;
+      padding: 24px;
+      border-radius: 18px;
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    .result.open {
+      display: block;
+    }
+
+    .result h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .result p {
+      margin: 0 0 8px;
+      color: #d1d5db;
+    }
+
+    .result strong {
+      color: #a5b4fc;
+    }
+
+    .actions {
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .reset {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 20px;
+      background: var(--primary);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .reset:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <p class="eyebrow" id="eyebrow"></p>
+      <h1 id="title"></h1>
+      <p class="lead" id="lead"></p>
+    </header>
+
+    <section class="guide">
+      <p><strong>푸는 법:</strong> 보기를 하나 누르면 바로 채점되고 해설이 열려. 되돌릴 수 없으니 찍지 말고 한 번 생각하고 눌러.</p>
+      <p id="guide-pass"></p>
+    </section>
+
+    <div class="scorebar">
+      <span class="stat">진행 <span id="progress"></span></span>
+      <span class="track"><span class="fill" id="fill"></span></span>
+      <span class="stat">정답 <span id="score">0</span></span>
+    </div>
+
+    <div id="quiz"></div>
+
+    <section class="result" id="result">
+      <h2 id="result-title"></h2>
+      <p id="result-body"></p>
+      <p id="result-weak"></p>
+    </section>
+
+    <div class="actions">
+      <button type="button" class="reset" id="reset">다시 풀기</button>
+    </div>
+
+    <footer id="footer"></footer>
+  </main>
+
+  <script>
+    /* ── 여기만 바꾼다 ────────────────────────────────────────────────
+       문항 수에 연동되는 숫자(총 문항, 통과 기준선, 등급)는 전부 TOTAL에서
+       자동 계산된다. 본문에 숫자를 손으로 적지 마라 — 문항을 빼거나 더할 때
+       반드시 어긋난다. */
+
+    const META = {
+      eyebrow: '클로더즈 N주차 · 주제',
+      title: '주제 자가진단 퀴즈',
+      sourceLabel: 'N주차 문서',   // "OO를 읽고 뭐가 남았는지 확인하는"
+      nextStep: '다음 진도',        // "OO(으)로 넘어가도 돼"
+    };
+
+    const CHAPTERS = [
+      {
+        tag: '01',                                   // 원문 파일 번호 그대로
+        title: '챕터 제목',
+        source: '그룹명 · 문서 제목',                 // 해설 아래 출처 칩
+        questions: [
+          {
+            q: '질문. <code>코드</code>와 <strong>강조</strong> 쓸 수 있어.',
+            options: ['보기 A', '보기 B', '보기 C', '보기 D'],
+            answer: 0,                                // 0-3
+            explain: '왜 그런지 + 문서의 원문 논지. 1~3문장.'
+          }
+        ]
+      }
+    ];
+
+    /* ── 아래는 건드리지 않는다 ──────────────────────────────────── */
+
+    const KEYS = ['A', 'B', 'C', 'D'];
+    const TOTAL = CHAPTERS.reduce((sum, chapter) => sum + chapter.questions.length, 0);
+    const PASS = Math.ceil(TOTAL * 0.8);
+    const HALF = Math.ceil(TOTAL * 0.5);
+
+    const quizEl = document.getElementById('quiz');
+    const progressEl = document.getElementById('progress');
+    const scoreEl = document.getElementById('score');
+    const fillEl = document.getElementById('fill');
+    const resultEl = document.getElementById('result');
+    const resultTitleEl = document.getElementById('result-title');
+    const resultBodyEl = document.getElementById('result-body');
+    const resultWeakEl = document.getElementById('result-weak');
+
+    let answered = 0;
+    let score = 0;
+    const missedBy = new Map();
+
+    function renderChrome() {
+      document.title = META.title;
+      document.getElementById('eyebrow').textContent = META.eyebrow;
+      document.getElementById('title').textContent = META.title;
+      document.getElementById('lead').textContent =
+        `시험이 아니야. ${META.sourceLabel}를 읽고 뭐가 남았는지 스스로 확인하는 ${TOTAL}문항이야.`;
+      document.getElementById('guide-pass').innerHTML =
+        `<strong>기준:</strong> ${TOTAL}문항 중 ${PASS}개(약 80%) 이상이면 ${META.nextStep}로 넘어가도 돼. 틀린 문항은 해설에 적힌 문서를 다시 열어봐.`;
+      document.getElementById('footer').textContent =
+        `${META.eyebrow} 자가진단 · 개념 이해 중심 ${TOTAL}문항`;
+    }
+
+    function render() {
+      quizEl.innerHTML = '';
+      let index = 0;
+
+      CHAPTERS.forEach((chapter) => {
+        const head = document.createElement('div');
+        head.className = 'chapter';
+        head.innerHTML = `<span class="tag">${chapter.tag}</span><h2>${chapter.title}</h2>`;
+        quizEl.appendChild(head);
+
+        const list = document.createElement('section');
+        list.className = 'quiz-list';
+
+        chapter.questions.forEach((question) => {
+          index += 1;
+          const card = document.createElement('article');
+          card.className = 'quiz-card';
+
+          const optionsHtml = question.options
+            .map(
+              (option, i) =>
+                `<button type="button" class="opt" data-index="${i}"><span class="key">${KEYS[i]}</span><span>${option}</span></button>`
+            )
+            .join('');
+
+          card.innerHTML = `
+            <div class="quiz-head">
+              <span class="num">${index}</span>
+              <h3>${question.q}</h3>
+            </div>
+            <div class="options">${optionsHtml}</div>
+            <div class="answer">
+              <p class="verdict"></p>
+              <p class="explain">${question.explain}</p>
+              <p><span class="source">${chapter.source}</span></p>
+            </div>
+          `;
+
+          const answerEl = card.querySelector('.answer');
+          const verdictEl = card.querySelector('.verdict');
+          const buttons = card.querySelectorAll('.opt');
+
+          buttons.forEach((button) => {
+            button.addEventListener('click', () => {
+              const picked = Number(button.dataset.index);
+              const isCorrect = picked === question.answer;
+
+              buttons.forEach((other) => {
+                const i = Number(other.dataset.index);
+                other.disabled = true;
+                if (i === question.answer) {
+                  other.classList.add('is-correct');
+                } else if (i === picked) {
+                  other.classList.add('is-wrong');
+                } else {
+                  other.classList.add('is-dim');
+                }
+              });
+
+              verdictEl.textContent = isCorrect
+                ? `정답! (${KEYS[question.answer]})`
+                : `아쉬워. 정답은 ${KEYS[question.answer]}야.`;
+              verdictEl.classList.add(isCorrect ? 'ok' : 'no');
+              answerEl.classList.add('open');
+
+              answered += 1;
+              if (isCorrect) {
+                score += 1;
+              } else {
+                missedBy.set(chapter.title, (missedBy.get(chapter.title) || 0) + 1);
+              }
+              updateScorebar();
+            });
+          });
+
+          list.appendChild(card);
+        });
+
+        quizEl.appendChild(list);
+      });
+    }
+
+    function updateScorebar() {
+      progressEl.textContent = `${answered} / ${TOTAL}`;
+      scoreEl.textContent = String(score);
+      fillEl.style.width = `${(answered / TOTAL) * 100}%`;
+
+      if (answered === TOTAL) {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const rate = Math.round((score / TOTAL) * 100);
+      let title;
+      let body;
+
+      if (score >= TOTAL - 1) {
+        title = `${score} / ${TOTAL} — 완벽 정리 끝`;
+        body = `읽는 건 끝났어. 이제 ${META.nextStep}로 손을 움직일 차례야.`;
+      } else if (score >= PASS) {
+        title = `${score} / ${TOTAL} — ${META.nextStep}로 넘어가도 돼`;
+        body = `기준선(${PASS}개) 넘겼어. 틀린 문항만 해당 문서에서 다시 확인하고 진도 이어가.`;
+      } else if (score >= HALF) {
+        title = `${score} / ${TOTAL} — 절반은 잡혔어`;
+        body = '개념은 잡혔는데 세부가 흐릿해. 틀린 챕터 문서만 다시 훑고 한 번 더 풀어봐.';
+      } else {
+        title = `${score} / ${TOTAL} — 문서부터 다시`;
+        body = '아직 안 읽은 문서가 있을 확률이 높아. 겁먹을 필요는 없고, 순서대로 한 번씩 읽고 다시 오면 돼.';
+      }
+
+      resultTitleEl.textContent = title;
+      resultBodyEl.innerHTML = `정답률 <strong>${rate}%</strong>. ${body}`;
+
+      const weak = [...missedBy.entries()].sort((a, b) => b[1] - a[1]);
+      resultWeakEl.innerHTML = weak.length
+        ? `다시 볼 문서: ${weak.map(([name, count]) => `<strong>${name}</strong>(${count}개)`).join(', ')}`
+        : `틀린 문항 없음. 바로 ${META.nextStep} 들어가자.`;
+
+      resultEl.classList.add('open');
+      resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    document.getElementById('reset').addEventListener('click', () => {
+      answered = 0;
+      score = 0;
+      missedBy.clear();
+      resultEl.classList.remove('open');
+      render();
+      updateScorebar();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    renderChrome();
+    render();
+    updateScorebar();
+  </script>
+</body>
+</html>
