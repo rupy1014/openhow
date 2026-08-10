@@ -105,12 +105,21 @@ ls -la .claude/commands
 
 `AGENTS.md`는 여러 AI 툴이 공통으로 읽는 지침 파일이야. Linux Foundation이 주도하는 업계 표준이고, Codex·Copilot·Cursor·Windsurf가 네이티브로 지원해.
 
-**공용 규칙은 AGENTS.md에, Claude 전용 규칙은 CLAUDE.md에** 넣어.
+**단, Claude Code는 `AGENTS.md`를 자동으로 읽지 않아.** Claude Code가 직접 읽는 건 `CLAUDE.md`뿐이야. 그래서 공용 규칙을 `AGENTS.md`에 두고 싶으면, `CLAUDE.md`에서 `@AGENTS.md`로 임포트해서 같이 읽게 해.
+
+```md
+# CLAUDE.md
+@AGENTS.md
+
+(여기 아래에 Claude 전용 규칙)
+```
+
+이러면 Codex·Cursor는 `AGENTS.md`를 그대로 쓰고, Claude는 `CLAUDE.md`를 통해 같은 내용을 끌어와. 그래서 역할 분담은 이대로 유지돼.
 
 | 넣을 곳 | 내용 |
 |---------|------|
-| `AGENTS.md` | 워크플로우 목록, 실행 조건, 가드레일 |
-| `CLAUDE.md` | 프로젝트 구조, 개발 명령어, Claude만 아는 설정 |
+| `AGENTS.md` | 워크플로우 목록, 실행 조건, 가드레일 (공용) |
+| `CLAUDE.md` | 프로젝트 구조, 개발 명령어, Claude만 아는 설정 + `@AGENTS.md` 임포트 |
 
 ## 4. 새 AI 툴 추가할 때
 
@@ -142,4 +151,4 @@ Antigravity는 다른 툴과 다르게 **3가지를 동시에 맞춰야** 워크
 ## 자주 헷갈리는 포인트
 
 - **Claude Code 하나만 쓰면 필요 없지?** — 맞아. 지금 Claude만 쓰고 당분간 그럴 거면 `.claude/`에 바로 둬도 된다. 나중에 Codex나 Cursor를 붙일 때 이 강으로 돌아와.
-- **AGENTS.md랑 CLAUDE.md가 둘 다 있으면 충돌 안 해?** — 안 해. Claude Code는 둘 다 읽고 `CLAUDE.md`를 우선 적용해. 공용 규칙은 AGENTS.md에, Claude 전용만 CLAUDE.md에 — 이 경계만 지키면 깔끔해.
+- **AGENTS.md랑 CLAUDE.md가 둘 다 있으면 충돌 안 해?** — 안 해. Claude Code가 직접 읽는 건 `CLAUDE.md`뿐이고, `AGENTS.md`는 `CLAUDE.md`에서 `@AGENTS.md`로 임포트해야 같이 읽혀. 공용 규칙은 AGENTS.md에, Claude 전용은 CLAUDE.md에 두고 임포트로 연결 — 이 경계만 지키면 깔끔해.

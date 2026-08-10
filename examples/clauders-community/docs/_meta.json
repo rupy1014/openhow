@@ -1,5 +1,5 @@
 {
   "nav": [
-    { "key": "posts", "label": "모든 글", "icon": "✍️", "path": "/", "order": 0 }
+    { "key": "articles", "label": "아티클", "icon": "✍️", "path": "/", "order": 0 }
   ]
 }

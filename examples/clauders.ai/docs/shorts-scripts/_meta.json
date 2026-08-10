@@ -1,0 +1,38 @@
+{
+  "label": "쇼츠 대본",
+  "order": 99,
+  "items": {
+    "README": {
+      "label": "제작 전략",
+      "order": 0
+    },
+    "01-getting-started": {
+      "label": "시작하기",
+      "order": 1
+    },
+    "02-claude-code-intro": {
+      "label": "초보 개념잡기",
+      "order": 2
+    },
+    "03-automation": {
+      "label": "자동화 입문",
+      "order": 3
+    },
+    "04-build-service": {
+      "label": "서비스 만들기",
+      "order": 4
+    },
+    "05-demo-night": {
+      "label": "데모나잇",
+      "order": 5
+    },
+    "06-appendix-and-ops": {
+      "label": "부록·운영",
+      "order": 6
+    },
+    "07-fact-check-and-research": {
+      "label": "팩트체크",
+      "order": 7
+    }
+  }
+}

@@ -22,6 +22,14 @@
       "**/_meta.json"
     ]
   },
+  "promo": {
+    "eyebrow": "스터디 모집",
+    "title": "여기까지가 공개할 수 있는 데까지야",
+    "description": "실제로 굴려본 사람들끼리 하는 얘기는 클로더즈 안에서만 해. 커피챗이랑 내부 스터디로.",
+    "cta": { "label": "클로더즈 참여하기", "url": "https://clauders.ai" },
+    "secondaryCta": { "label": "이번 기수 놓쳤다면 대기자 신청", "url": "https://clauders.ai" },
+    "note": "기수제로 모집해. 정원이 차면 다음 기수로 넘어가."
+  },
   "footer": {
     "company": "잡돌쌤",
     "copyright": "© 2026 잡돌쌤. All rights reserved.",

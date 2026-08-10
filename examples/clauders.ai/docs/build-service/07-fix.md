@@ -1,5 +1,5 @@
 ---
-slug: build-service/09-fix
+slug: build-service/07-fix
 title: 고치는 법 — 에러 읽고 디버깅하기
 nav: 고치는 법
 description: '브라우저 콘솔, 개발 도구 로그, 터미널 에러를 보고 Claude에게 정확히 전달하며, 왜 문제가 났는지 이해해가는 디버깅 흐름을 잡는 문서야.'

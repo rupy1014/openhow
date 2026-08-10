@@ -1,5 +1,5 @@
 ---
-slug: build-service/08-git
+slug: build-service/06-git
 title: Git
 nav: Git
 description: '코드를 모르는 사람도 git이 왜 필요한지 이해하고, commit으로 작업 지점을 남기고 push로 백업하는 기본 흐름을 잡는 문서야.'

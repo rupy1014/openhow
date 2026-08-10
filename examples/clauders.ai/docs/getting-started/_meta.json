@@ -6,7 +6,7 @@
     "01-what-ai-can-do": { "label": "AI로 할 수 있는 것", "order": 1 },
     "02-install": { "label": "설치하기", "order": 2 },
     "03-why-cli": { "label": "Claude Code 쓰는 이유", "order": 3 },
-    "04-create-project": { "label": "프로젝트 만들기", "order": 4 }
-  },
-  "badge": "1주차"
+    "04-create-project": { "label": "프로젝트 만들기", "order": 4 },
+    "05-terminal-vs-extension": { "label": "터미널 vs 익스텐션", "order": 5 }
+  }
 }

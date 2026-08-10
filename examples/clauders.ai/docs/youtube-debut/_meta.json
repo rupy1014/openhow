@@ -1,0 +1,10 @@
+{
+  "label": "유튜브 데뷔",
+  "order": 98,
+  "items": {
+    "01-100-noncoders-vibecoders": {
+      "label": "1화: 100명 입문 실험",
+      "order": 1
+    }
+  }
+}

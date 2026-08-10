@@ -1,5 +1,5 @@
 ---
-slug: build-service/10-deploy
+slug: build-service/08-deploy
 title: 배포
 nav: 배포
 description: '내 컴퓨터에서만 보이던 서비스를 URL로 공개하고, Vercel CLI나 GitHub 연동으로 고객에게 보여줄 수 있게 만드는 흐름을 잡는 문서야.'
