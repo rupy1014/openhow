@@ -1,7 +1,7 @@
 ---
 status: exploring
 created: 2026-05-04
-updated: 2026-05-13
+updated: 2026-08-10
 iteration: 1
 ---
 
@@ -154,6 +154,14 @@ openhow 는 multi-tenant 버전 — 각 워크스페이스 = 한 큐레이션 pu
 Stage 2/3/4 는 큐레이션 정체성 의도 들이 몇 개 새로 만들어진 후에 결정 (큐레이션 surface 가 구체화되어야 LMS 코드 disable/제거 결정이 정확).
 
 ## Learnings
+
+### 2026-08-10: [signal] 운영 목적 재정의 — openhow 는 파는 곳이 아니라 유튜브 자료실 겸 입구
+
+- **Source**: 대화 중 사용자 발화 (2026-08-10) — *"ax 는 어느 수준부터 공개하기 어렵다 → private 스터디 모임(클로더즈)으로 유입하는 결"* + 보정 *"공간은 slashpage 로 클로더즈에서 이미 성숙하게 운영 중. 오픈하우는 그냥 내 개인 유튜버 자료실 서비스."*
+- **영향받는 전제 2개**: 이 문서 Why 의 (1) *"paywall + subscription 이 핵심 비즈니스 모델"*, (2) *"openhow 는 multi-tenant 버전 — 향후 다른 큐레이션 publisher 가 자기 워크스페이스로 운영"*. **openhow 에서는 팔지 않는다** — 상품(멤버십)은 클로더즈 쪽(슬래시페이지)에 있고, openhow 는 유튜브 시청자를 받아 거기로 넘기는 공개 자료실이다. multi-tenant 는 인프라로 남되 서사가 아니다.
+- **유지되는 것**: 큐레이션 정체성 (5-04), openhow 이름, LMS 분리 결정, SSG/SEO/CLI publish 축. 정체성 pivot 이 아니라 *운영 목적과 수익 위치의 재배치*.
+- **이관처**: [[openhow-purpose-youtube-archive]] — 정체성 문장 · 홈 카피 · 유튜브↔자료 매핑 · 인입 동선 · 결제 표면 처분을 거기서 다룬다.
+- **후속**: 그 의도가 clarify 되면 `core/CLAUDE.md` Project Overview 의 *"본 비즈니스는 페이월 + 구독"* 문장과 `Pricing.tsx` 수수료 요금제 서사를 함께 갱신해야 한다.
 
 ### 2026-05-13: mechanic 진화 — MD publishing/discovery layer 잠금
 

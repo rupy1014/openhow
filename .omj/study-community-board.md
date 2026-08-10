@@ -6,7 +6,7 @@ iteration: 1
 domain: product
 stage: discovery
 created: 2026-05-07
-updated: 2026-05-13
+updated: 2026-08-10
 related:
   - openhow-positioning-clauders-seo.md
   - creator-platform-discovery.md
@@ -320,6 +320,13 @@ related:
 - 멤버 프로필 페이지 (작성한 글 목록)
 
 ## Learnings
+
+### 2026-08-10: [signal] 이 게시판 층의 역할 재정의 — 상품이 아니라 퍼널 2단계
+
+- **Source**: 대화 중 사용자 발화 (2026-08-10) — openhow 의 운영 목적을 *유튜브 자료실 + 클로더즈(슬래시페이지) 인입*으로 잠금.
+- **변하는 것**: 토픽 게시판 + 가입자 1급 시민 층은 그 자체가 종착 상품이 아니라, **유튜브 시청자 → 자료 독자 → 기고자 → 클로더즈 크루** 로 이어지는 퍼널의 중간 단계다.
+- **변하지 않는 것**: Wedge A~T 로 지은 자산 전부 유지. 5-07 옵션 C(하이브리드) 잠금 유지. 신규 커뮤니티 기능 개발은 새 의도 범위 밖 — 클로더즈의 실제 커뮤니티 공간은 슬래시페이지에 이미 있고 openhow 가 대체하지 않는다.
+- **후속**: 게시판 표면(글 하단 · 토픽 인덱스 · 프로필)에 클로더즈 인입 훅을 얹는 작업이 [[openhow-purpose-youtube-archive]] 의 What 4번에 있다.
 
 ### 2026-05-11: Wedge T 빌드 — `/me/likes` 가입자 본인 좋아요 회수
 - **Source**: 빌드 세션 (5-11, "/me/likes 진행해줘" — 사용자 직접 선택)
