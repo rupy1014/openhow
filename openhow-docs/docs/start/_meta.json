@@ -1,0 +1,19 @@
+{
+  "label": "여기부터",
+  "order": 0,
+  "items": {
+    "01-what-is-this": {
+      "label": "이 자료실 뭐야",
+      "order": 0
+    },
+    "02-where-to-start": {
+      "label": "뭐부터 봐야 해",
+      "order": 1
+    },
+    "03-what-ai-can-do": {
+      "label": "AI로 뭘 할 수 있나",
+      "order": 2
+    }
+  },
+  "collapsed": false
+}

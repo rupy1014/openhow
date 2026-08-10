@@ -1,0 +1,31 @@
+{
+  "label": "Claude Code 시작",
+  "order": 4,
+  "items": {
+    "01-why-cli": {
+      "label": "왜 Claude Code야",
+      "order": 0
+    },
+    "02-install": {
+      "label": "설치하기",
+      "order": 1
+    },
+    "03-first-project": {
+      "label": "첫 프로젝트 만들기",
+      "order": 2
+    },
+    "04-screen": {
+      "label": "화면 읽는 법",
+      "order": 3
+    },
+    "05-terminal-vs-extension": {
+      "label": "터미널 vs 익스텐션",
+      "order": 4
+    },
+    "06-cost": {
+      "label": "얼마 들어?",
+      "order": 5
+    }
+  },
+  "collapsed": false
+}

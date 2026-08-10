@@ -1,0 +1,23 @@
+{
+  "label": "팔아보기",
+  "order": 8,
+  "items": {
+    "01-feedback": {
+      "label": "피드백",
+      "order": 0
+    },
+    "02-pmf": {
+      "label": "PMF 찾기",
+      "order": 1
+    },
+    "03-distribution": {
+      "label": "모객",
+      "order": 2
+    },
+    "04-payment": {
+      "label": "결제·PG",
+      "order": 3
+    }
+  },
+  "collapsed": false
+}

@@ -1,0 +1,43 @@
+{
+  "label": "서비스 만들기",
+  "order": 7,
+  "items": {
+    "00-overview": {
+      "label": "전체 흐름",
+      "order": 0
+    },
+    "01-idea": {
+      "label": "아이디어",
+      "order": 1
+    },
+    "02-lean-plan": {
+      "label": "바이브 기획",
+      "order": 2
+    },
+    "03-prd": {
+      "label": "PRD 작성",
+      "order": 3
+    },
+    "04-tech": {
+      "label": "기술·구조",
+      "order": 4
+    },
+    "05-build-frontend": {
+      "label": "프론트·백엔드",
+      "order": 5
+    },
+    "06-git": {
+      "label": "Git",
+      "order": 6
+    },
+    "07-fix": {
+      "label": "고치는 법",
+      "order": 7
+    },
+    "08-deploy": {
+      "label": "배포",
+      "order": 8
+    }
+  },
+  "collapsed": false
+}

@@ -1,0 +1,2 @@
+{"ts":"2026-08-10T00:45:44Z","event":"UserPromptSubmit","cwd":"/Users/taesupyoon/sideProjects/openhow/openhow-docs/docs","session":"abfe7c13-8a91-449e-bdf5-6944dbde7467","candidate_count":0,"decision":"skip","reason":"missing_index"}
+{"ts":"2026-08-10T07:33:56Z","event":"Stop","cwd":"/Users/taesupyoon/sideProjects/openhow/openhow-docs/docs","session":"abfe7c13-8a91-449e-bdf5-6944dbde7467","intents_checked":0,"decision":"block","reason":"코드 118개 파일을 고쳤는데 확인한 흔적이 없어요. 바뀐 동작을 직접 실행해 보고, 못 하...","stop_count":1}

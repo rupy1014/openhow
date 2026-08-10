@@ -1,0 +1,19 @@
+{
+  "label": "더 보기",
+  "order": 9,
+  "items": {
+    "01-mcp-basics": {
+      "label": "MCP 기초",
+      "order": 0
+    },
+    "02-browser-automation": {
+      "label": "브라우저 자동화",
+      "order": 1
+    },
+    "03-multi-tool-config": {
+      "label": "멀티 툴 설정",
+      "order": 2
+    }
+  },
+  "collapsed": false
+}

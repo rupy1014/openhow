@@ -1,0 +1,429 @@
+/* 워크스페이스 커스텀 CSS.
+   content 루트(docs/)의 style.css 는 serve/publish/export 가 자동으로 집어간다.
+   컨벤션 출처: developers.bootpay.ai/style.css
+   디자인 토큰 출처: bootpay-commerce/multi-manager/projects/store (토스 디자인 시스템 값)
+   serve(SPA)는 Vite 런타임 CSS 주입 순서 때문에 !important 가 필요하다.
+
+   core 는 건드리지 않는다. 여기서 덮을 수 있는 것만 덮고, core 소관은 주석으로 남긴다. */
+
+/* ───────────────────────────────────────────────────────────
+   0. 토큰 — store 의 값을 그대로 가져온다 (발명 금지)
+   ─────────────────────────────────────────────────────────── */
+:root {
+  /* 그림자: 검정 대신 ink-1(#191f28) 틴트. 광원은 위-살짝왼쪽 하나 */
+  --ds-shadow-card: 0 1px 3px rgb(25 31 40 / 4%);
+  --ds-shadow-button: 0 1px 3px rgb(25 31 40 / 6%);
+  --ds-shadow-hover: 0 2px 4px rgb(25 31 40 / 8%);
+
+  --ds-ink-3: #4e5968;
+  --ds-surface-sunken: #f2f4f6;
+  --ds-hairline: #e5e8eb;
+
+  --ds-tap: 44px;      /* WCAG 2.5.8 터치 타깃 */
+  --ds-icon-btn: 32px; /* store: 아이콘 버튼 최소 32x32 */
+}
+
+/* ───────────────────────────────────────────────────────────
+   1. 접근성 — 협상 대상 아님
+   ─────────────────────────────────────────────────────────── */
+
+/* focus 링이 아예 없었다 (게이트: focus-ring weak 0px none).
+   :focus-visible 을 전역에 한 번 선언해 버튼·링크·입력까지 덮는다. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-primary, #507cf3) !important;
+  outline-offset: 2px !important;
+  border-radius: 6px;
+}
+
+/* 터치 타깃 — 좌측 대메뉴 36px, 서브메뉴 36px 이었다.
+   높이만 키우고 글자 크기·간격은 건드리지 않는다. */
+.main-nav-item,
+.nav-link,
+.ssg-main-nav-button,
+.ssg-sidebar-link {
+  min-height: var(--ds-tap) !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* 헤더 아이콘 버튼 — 36x36 이었다. store 기준 헤더는 40x40 이지만
+   WCAG 최소를 맞추려면 44. 시각 크기는 그대로 두고 박스만 키운다. */
+.app-shell-theme-toggle,
+.app-shell-mobile-menu-btn,
+.app-shell-mobile-search-toggle,
+.ssg-theme-toggle {
+  min-width: var(--ds-tap) !important;
+  min-height: var(--ds-tap) !important;
+}
+
+/* 모바일에서 잡힌 나머지 — 게이트가 420x900 으로 측정한다.
+   유튜브 유입이 대부분 모바일이라 이쪽이 더 중요하다. */
+.unified-logo-link,
+.unified-mobile-drawer-theme-toggle,
+.app-shell-footer-social-link {
+  min-height: var(--ds-tap) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.app-shell-footer-social-link {
+  min-width: var(--ds-tap) !important;
+  justify-content: center !important;
+}
+
+/* ───────────────────────────────────────────────────────────
+   2. 분리 수단 — 보더와 그림자를 겹쳐 쓰지 않는다 (CC-7)
+   ─────────────────────────────────────────────────────────── */
+
+/* 코드블록 복사 버튼: border 1px + box-shadow rgba(0,0,0,.18) 0 1px 4px 을
+   동시에 쓰고 있었다. 0.18 은 §12 의 card tier(4%) 를 한참 넘고 순수 검정이라
+   오려 붙인 스티커처럼 보인다. 보더를 버리고 그림자만 card tier 로. */
+.copy-btn,
+.copy-md-btn {
+  border: none !important;
+  box-shadow: var(--ds-shadow-button) !important;
+  min-width: var(--ds-icon-btn) !important;
+  min-height: var(--ds-icon-btn) !important;
+}
+
+.copy-btn:hover,
+.copy-md-btn:hover {
+  box-shadow: var(--ds-shadow-hover) !important;
+}
+
+/* 헤더 보조 버튼(로그인·가입하기) 관련 규칙은 제거했다.
+   openhow.json 의 `header.hideSignIn: true` 로 버튼 자체가 렌더되지 않는다.
+   (로그인 없이 가는 서비스 — 다시 켜면 이 블록도 되살려야 한다) */
+
+/* ───────────────────────────────────────────────────────────
+   3. 좌측 대메뉴 — 그룹 라벨은 남기고 구분선만 없앤다
+   ─────────────────────────────────────────────────────────── */
+.main-nav-divider,
+.ssg-main-nav-divider {
+  border-top: none !important;
+}
+
+/* ───────────────────────────────────────────────────────────
+   4. 우측 목차(TOC) — 리스트 좌측 세로선 제거
+   현재 항목 2px 인디케이터는 유지. ul 세로선을 지우면
+   a 의 margin-left:-1px 보정이 불필요해져 같이 0 으로.
+   공용 셀렉터라 SPA/SSG 가 한 번에 잡힌다
+   (core sharedCss.generated.ts: `.toc-list, .ssg-toc ul`)
+   ─────────────────────────────────────────────────────────── */
+.toc-list,
+.ssg-toc ul {
+  border-left: none !important;
+}
+
+.toc-list a,
+.ssg-toc a {
+  margin-left: 0 !important;
+}
+
+/* ───────────────────────────────────────────────────────────
+   5. 본문
+   ─────────────────────────────────────────────────────────── */
+
+/* 헤딩 앵커가 상단 고정 헤더 밑으로 숨는 것 방지.
+   용어 사전은 TOC 에 116개 앵커가 걸려 있다. */
+.markdown-content :is(h2, h3) {
+  scroll-margin-top: 96px;
+}
+
+/* 숫자 정렬 — 표 안의 금액·수량·버전이 열마다 어긋난다 (CT-4).
+   일부만 걸면 더 어색해서 표 전체에 건다. */
+.markdown-content table {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 코드블록이 modal tier 그림자를 쓰고 있었다
+   (rgba(15,23,42,.18) 0 18px 40px — §12 의 modal 값).
+   card tier 로 낮춰봤더니 이번엔 보더와 겹쳐 CC-7(border XOR shadow) 에 걸렸다.
+   코드블록은 떠 있는 표면이 아니라 읽는 본문이고, 어두운 배경(톤)이 이미
+   구분을 하고 있다 — CR-6 의 "읽기만 하는 묶음은 톤, 보더·그림자 없음".
+   그래서 그림자를 아예 뺀다. 화면의 그림자 언어도 card tier 하나로 남는다. */
+.markdown-content pre.shiki,
+.markdown-content pre[class*="language-"] {
+  box-shadow: none !important;
+}
+
+/* 라운드 personality 통일 — soft 8/12/16 (§C0 "축마다 하나").
+   측정값이 5·7·10·14px 로 흩어져 있었다. */
+.markdown-content pre.shiki,
+.markdown-content pre[class*="language-"],
+.markdown-content table {
+  border-radius: 12px !important;
+}
+
+.copy-btn,
+.copy-md-btn {
+  border-radius: 8px !important;
+}
+
+/* 인라인 코드는 줄 안에 들어가는 작은 칩이라
+   inner = outer − padding 으로 한 단 작게 둔다 (CC-4). */
+.markdown-content :not(pre) > code {
+  border-radius: 6px !important;
+}
+
+/* ───────────────────────────────────────────────────────────
+   core 소관 (여기서 못 고침) — 기록만 남긴다
+   ─────────────────────────────────────────────────────────── */
+/* · font-size-count 16~21종 (7단 권장) — markdown 본문이 rem/em 배수로
+     11.84·13.28·19.52px 같은 소수 크기를 만든다. core 의 마크다운
+     타입 스케일 소관이고, 워크스페이스에서 덮으면 문서 가독성이 깨진다.
+   · off-grid 6·7·10·14px — 대부분 core 컴포넌트 패딩.
+   · 우측 TOC breakpoint SSG(1279px) vs SPA(1679px) 드리프트.
+     퍼블리시본은 정상, 로컬 serve 에서만 1680px 미만일 때 TOC 가 숨는다. */
+
+
+/* ───────────────────────────────────────────────────────────
+   6. 좌측 대메뉴 아이콘 — 이모지 → 단색 라인 아이콘
+   이모지는 플랫폼마다 5~10색을 주입해서 단일 accent 규칙을 그 자리에서
+   깬다 (CC-9a). 한 family · stroke 1.5 · currentColor 로 통일한다.
+
+   core 의 MainNav.tsx 는 `{item.icon}` 을 React 텍스트 자식으로 렌더해서
+   `_meta.json` 에 SVG 를 넣으면 이스케이프된다. 그래서
+     · `_meta.json` 의 icon 은 공백 " " 로 두어 span 만 남기고
+     · 실제 그림은 여기서 mask-image 로 주입한다.
+   섹션마다 식별자가 없어서 `.main-nav` 자식 순서로 건다.
+
+   ⚠ `docs/_meta.json` 의 nav 순서와 결합돼 있다.
+      순서를 바꾸면 아래 nth-child 번호도 같이 고쳐야 한다.
+      (divider 와 section 이 번갈아 들어가서 번호가 연속하지 않는다) */
+.main-nav-icon,
+.ssg-main-nav-button-icon {
+  display: inline-block;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  font-size: 0;                    /* 공백 텍스트가 자리를 먹지 않게 */
+  background-color: currentColor;  /* 아이콘 색 = 글자 색 */
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.main-nav > *:nth-child(2) .main-nav-icon,
+.ssg-main-nav-button-icon {
+  display: inline-block;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  font-size: 0;                    /* 공백 텍스트가 자리를 먹지 않게 */
+  background-color: currentColor;  /* 아이콘 색 = 글자 색 */
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.main-nav > .main-nav-divider:first-child {
+  padding-top: 0 !important;
+}
+
+.navigation > :first-child .nav-group-title {
+  padding-top: 0 !important;
+}
+
+.doc-content {
+  padding-top: 16px !important;
+}
+
+.toc {
+  padding-top: 16px !important;
+}
+
+/* 가운데 컬럼만 5.5px 남았던 이유 — `.doc-title-actions` 가
+   `align-items: center` 인 32px 플렉스 행이라 21px 짜리 날짜가
+   세로 가운데로 밀렸다((32−21)/2 = 5.5). 행 자체는 이미 116 이다.
+   첫 글자 높이를 나머지 셋과 같게 맞추려고 위로 정렬한다. */
+.doc-title-actions {
+  align-items: flex-start !important;
+}
+
+/* ───────────────────────────────────────────────────────────
+   8. 본문 뷰포트 정중앙 고정
+   측정값이 폭마다 −44 / −10 / +70 / +82px 로 떠다녔다. 원인 둘.
+
+   ① 좌우 레일 비대칭
+      좌 = --main-nav-width(200) + --publication-nav-width(200) + gap 24 = 424
+      우 = 220
+      1440px 에서 정중앙에 필요한 좌측 여백은 (1440−740)/2 = 350 인데
+      레일이 424 라 기하학적으로 불가능했다. 레일을 348 로 좁힌다.
+
+   ② --proximity-shift 식이 --nav-content-gap(44px) 을 빼고 있었다
+      그래서 넓은 화면에서 보정이 걸려도 항상 44px 왼쪽에 떨어졌다.
+      이 워크스페이스는 정중앙이 하드 제약이라 0 으로 둔다.
+
+   결과: 좌측 348 + shift = (100vw − 740)/2 → 본문 중심 = 뷰포트 중심. */
+/* 레일 폭·본문 폭만 이 워크스페이스 취향으로 조절한다.
+   변수명은 core 에서 SPA/SSG 가 --sub-sidebar-width 로 통일됐고,
+   정중앙 계산(--proximity-shift)과 .ssg-main 이중 정렬도 core 에서 고쳤다.
+   그래서 여기 남는 건 "값" 뿐이다.
+   !important 는 serve(SPA)의 Vite 런타임 CSS 주입 순서 때문 — core 의 :root 가
+   뒤에 실려서 같은 특정도로는 못 이긴다 (bootpay style.css 도 같은 이유). */
+/* ⚠ 선택자에 .pub-preset-body / .ssg-layout 을 반드시 포함한다.
+   core 가 --nav-content-gap 을 그 요소에 "직접" 선언하기 때문에,
+   :root 에 !important 를 걸어도 못 이긴다 — 상속값은 직접 선언을 못 이긴다.
+   (이걸 몰라서 한참 헤맸다) */
+:root,
+.pub-preset-body,
+.ssg-layout {
+  --main-nav-width: 188px !important;
+  --sub-sidebar-width: 160px !important;
+  --publication-nav-width: 160px !important;
+  --nav-content-gap: 0px !important;
+  --content-reading-max: 704px !important;
+}
+.main-nav > *:nth-child(2) .main-nav-icon,
+.ssg-main-nav > *:nth-child(2) .ssg-main-nav-button-icon { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%2015s1-1%204-1%205%202%208%202%204-1%204-1V3s-1%201-4%201-5-2-8-2-4%201-4%201z%20M4%2022v-7%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%2015s1-1%204-1%205%202%208%202%204-1%204-1V3s-1%201-4%201-5-2-8-2-4%201-4%201z%20M4%2022v-7%22%2F%3E%3C%2Fsvg%3E"); }  /* 여기부터 */
+.main-nav > *:nth-child(3) .main-nav-icon,
+.ssg-main-nav > *:nth-child(3) .ssg-main-nav-button-icon { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%2019.5A2.5%202.5%200%200%201%206.5%2017H20%20M6.5%202H20v20H6.5A2.5%202.5%200%200%201%204%2019.5v-15A2.5%202.5%200%200%201%206.5%202z%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%2019.5A2.5%202.5%200%200%201%206.5%2017H20%20M6.5%202H20v20H6.5A2.5%202.5%200%200%201%204%2019.5v-15A2.5%202.5%200%200%201%206.5%202z%22%2F%3E%3C%2Fsvg%3E"); }  /* 용어 사전 */
+.main-nav > *:nth-child(5) .main-nav-icon,
+.ssg-main-nav > *:nth-child(5) .ssg-main-nav-button-icon { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%204h18v12H3z%20M8%2020h8%20M12%2016v4%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%204h18v12H3z%20M8%2020h8%20M12%2016v4%22%2F%3E%3C%2Fsvg%3E"); }  /* 컴퓨터 기초 */
+.main-nav > *:nth-child(6) .main-nav-icon,
+.ssg-main-nav > *:nth-child(6) .ssg-main-nav-button-icon { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%202v2%20M15%202v2%20M9%2020v2%20M15%2020v2%20M2%209h2%20M2%2015h2%20M20%209h2%20M20%2015h2%20M4%204h16v16H4z%20M9%209h6v6H9z%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%202v2%20M15%202v2%20M9%2020v2%20M15%2020v2%20M2%209h2%20M2%2015h2%20M20%209h2%20M20%2015h2%20M4%204h16v16H4z%20M9%209h6v6H9z%22%2F%3E%3C%2Fsvg%3E"); }  /* AI 기초 */
+.main-nav > *:nth-child(8) .main-nav-icon,
+.ssg-main-nav > *:nth-child(8) .ssg-main-nav-button-icon { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m4%2017%206-6-6-6%20M12%2019h8%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m4%2017%206-6-6-6%20M12%2019h8%22%2F%3E%3C%2Fsvg%3E"); }  /* Claude Code 시작 */
+.main-nav > *:nth-child(9) .main-nav-icon,
+.ssg-main-nav > *:nth-child(9) .ssg-main-nav-button-icon { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2015a2%202%200%200%201-2%202H7l-4%204V5a2%202%200%200%201%202-2h14a2%202%200%200%201%202%202z%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2015a2%202%200%200%201-2%202H7l-4%204V5a2%202%200%200%201%202-2h14a2%202%200%200%201%202%202z%22%2F%3E%3C%2Fsvg%3E"); }  /* 일 잘 시키기 */
+.main-nav > *:nth-child(10) .main-nav-icon,
+.ssg-main-nav > *:nth-child(10) .ssg-main-nav-button-icon { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2012a9%209%200%201%201-2.64-6.36%20M21%203v6h-6%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2012a9%209%200%201%201-2.64-6.36%20M21%203v6h-6%22%2F%3E%3C%2Fsvg%3E"); }  /* 업무 자동화 */
+.main-nav > *:nth-child(12) .main-nav-icon,
+.ssg-main-nav > *:nth-child(12) .ssg-main-nav-button-icon { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m12%202%209%205-9%205-9-5%209-5z%20M3%2017l9%205%209-5%20M3%2012l9%205%209-5%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m12%202%209%205-9%205-9-5%209-5z%20M3%2017l9%205%209-5%20M3%2012l9%205%209-5%22%2F%3E%3C%2Fsvg%3E"); }  /* 서비스 만들기 */
+.main-nav > *:nth-child(13) .main-nav-icon,
+.ssg-main-nav > *:nth-child(13) .ssg-main-nav-button-icon { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m3%2011%2015-7v16L3%2013z%20M6%2012.5V18a2%202%200%200%200%204%200v-4%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m3%2011%2015-7v16L3%2013z%20M6%2012.5V18a2%202%200%200%200%204%200v-4%22%2F%3E%3C%2Fsvg%3E"); }  /* 팔아보기 */
+.main-nav > *:nth-child(15) .main-nav-icon,
+.ssg-main-nav > *:nth-child(15) .ssg-main-nav-button-icon { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m19%2021-7-5-7%205V5a2%202%200%200%201%202-2h10a2%202%200%200%201%202%202z%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m19%2021-7-5-7%205V5a2%202%200%200%201%202-2h10a2%202%200%200%201%202%202z%22%2F%3E%3C%2Fsvg%3E"); }  /* 더 보기 */
+
+/* ───────────────────────────────────────────────────────────
+   9. SSG(퍼블리시본) 대응
+   여기까지의 규칙 상당수가 SPA 클래스만 겨냥하고 있었다.
+   실제로 `openhow export` 로 빌드해 띄워보니 배포본에서
+     · 메뉴 아이콘 10개가 전부 안 보이고 (.ssg-main-nav-button-icon)
+     · 네 컬럼 상단 정렬이 126 vs 100 으로 어긋나고
+     · 본문이 뷰포트 중심에서 +64px 밀려 있었다.
+   SSG 는 변수 기본값도 다르다 — publication-nav-width 260(SPA 200),
+   nav-content-gap 32(SPA 44). 그래서 따로 잡는다. */
+
+/* 네 컬럼 상단 시작점 (SPA 의 16px 과 동일하게) */
+.ssg-main-nav,
+.ssg-sidebar-inner,
+.ssg-main,
+.ssg-toc-wrap {
+  padding-top: 16px !important;
+}
+
+.ssg-main-nav > .ssg-main-nav-divider:first-child {
+  padding-top: 0 !important;
+}
+
+/* 터치 타깃 — SSG 버튼도 44px */
+.ssg-main-nav-button,
+.ssg-sidebar-link {
+  min-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+
+/* ───────────────────────────────────────────────────────────
+   10. 프로모 배너 — 이벤트 배너 연출
+   기본형은 회색 카드 + 보더라 폼 패널처럼 읽혔다.
+   전환을 노리는 자리라 accent 면으로 채우고 위계를 세운다.
+   (마케팅/프로모 표면이라 accent 채움이 허용된다 — 본문 카드에는 안 쓴다)
+
+   흰 글자를 쓰려면 표면이 충분히 어두워야 한다. --color-primary(#507cf3)는
+   흰 글자 대비가 3.6:1 이라 본문 기준(4.5:1) 미달이라서, 더 진한 파랑으로 깐다.
+   SPA(PromoCard.tsx)와 SSG(template.ts buildPromoHtml)가 같은 클래스를 쓴다. */
+.promo-card {
+  position: relative;
+  overflow: hidden;
+  border: none !important;
+  border-radius: 16px !important;
+  background: linear-gradient(145deg, #2f62dd 0%, #1e47a8 100%) !important;
+  box-shadow: 0 4px 12px rgb(25 31 40 / 8%) !important;  /* §12 elevated — 강조된 표면 */
+  padding: 16px !important;
+}
+
+/* 우상단 광택 — 이벤트 배너 느낌을 내는 장식 하나. 시그니처는 한 번만 쓴다 */
+.promo-card::after {
+  content: "";
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 10%);
+  pointer-events: none;
+}
+
+.promo-card__eyebrow {
+  display: inline-block;
+  background: rgb(255 255 255 / 18%) !important;
+  color: #fff !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+}
+
+.promo-card__title {
+  color: #fff !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  letter-spacing: -0.01em;
+  margin: 10px 0 14px !important;
+}
+
+.promo-card__desc {
+  color: rgb(255 255 255 / 82%) !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  margin: 0 0 16px !important;
+}
+
+/* 주 액션 — 파란 면 위이므로 흰 버튼이 가장 강하다 (filled → tonal → ghost) */
+.promo-card__cta {
+  display: block;
+  background: #fff !important;
+  color: #1e47a8 !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  text-align: center;
+  padding: 11px 16px !important;
+  border-radius: 10px !important;
+  border: none !important;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.promo-card__secondary {
+  display: block;
+  text-align: center;
+  color: rgb(255 255 255 / 88%) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-top: 12px !important;
+  min-height: 32px;
+}
+
+.promo-card__note {
+  /* 62% 는 11px 에서 4.21:1 로 AA(4.5) 미달이었다. 실측해서 올렸다. */
+  color: rgb(255 255 255 / 78%) !important;
+  font-size: 11px !important;
+  line-height: 1.5 !important;
+  text-align: center;
+  margin: 10px 0 0 !important;
+}

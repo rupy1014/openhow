@@ -1,0 +1,74 @@
+{
+  "nav": [
+    {
+      "key": "start",
+      "label": "여기부터",
+      "icon": " ",
+      "order": 0,
+      "group": "시작"
+    },
+    {
+      "key": "glossary",
+      "label": "용어 사전",
+      "icon": " ",
+      "order": 1,
+      "group": "시작"
+    },
+    {
+      "key": "computer-basics",
+      "label": "컴퓨터 기초",
+      "icon": " ",
+      "order": 2,
+      "group": "기초 다지기"
+    },
+    {
+      "key": "ai-basics",
+      "label": "AI 기초",
+      "icon": " ",
+      "order": 3,
+      "group": "기초 다지기"
+    },
+    {
+      "key": "claude-code",
+      "label": "Claude Code 시작",
+      "icon": " ",
+      "order": 4,
+      "group": "AI 쓰기"
+    },
+    {
+      "key": "working-with-ai",
+      "label": "일 잘 시키기",
+      "icon": " ",
+      "order": 5,
+      "group": "AI 쓰기"
+    },
+    {
+      "key": "automation",
+      "label": "업무 자동화",
+      "icon": " ",
+      "order": 6,
+      "group": "AI 쓰기"
+    },
+    {
+      "key": "build-service",
+      "label": "서비스 만들기",
+      "icon": " ",
+      "order": 7,
+      "group": "만들고 팔기"
+    },
+    {
+      "key": "go-to-market",
+      "label": "팔아보기",
+      "icon": " ",
+      "order": 8,
+      "group": "만들고 팔기"
+    },
+    {
+      "key": "more",
+      "label": "더 보기",
+      "icon": " ",
+      "order": 9,
+      "group": "참고"
+    }
+  ]
+}

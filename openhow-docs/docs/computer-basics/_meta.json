@@ -1,0 +1,23 @@
+{
+  "label": "컴퓨터 기초",
+  "order": 2,
+  "items": {
+    "01-files-and-folders": {
+      "label": "폴더와 파일",
+      "order": 0
+    },
+    "02-terminal": {
+      "label": "터미널",
+      "order": 1
+    },
+    "03-vscode": {
+      "label": "VS Code",
+      "order": 2
+    },
+    "04-markdown": {
+      "label": "마크다운 (.md)",
+      "order": 3
+    }
+  },
+  "collapsed": false
+}

@@ -1,0 +1,23 @@
+{
+  "label": "일 잘 시키기",
+  "order": 5,
+  "items": {
+    "01-direction": {
+      "label": "감 잡기",
+      "order": 0
+    },
+    "02-good-prompts": {
+      "label": "일 잘 시키기",
+      "order": 1
+    },
+    "03-plan-mode": {
+      "label": "계획 모드",
+      "order": 2
+    },
+    "04-better-results": {
+      "label": "결과 끌어올리기",
+      "order": 3
+    }
+  },
+  "collapsed": false
+}

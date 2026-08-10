@@ -1,0 +1,23 @@
+{
+  "label": "업무 자동화",
+  "order": 6,
+  "items": {
+    "01-four-features": {
+      "label": "4가지 기능",
+      "order": 0
+    },
+    "02-delegate": {
+      "label": "작업 맡기기",
+      "order": 1
+    },
+    "03-patterns": {
+      "label": "사례 모음",
+      "order": 2
+    },
+    "04-practice": {
+      "label": "직접 해보기",
+      "order": 3
+    }
+  },
+  "collapsed": false
+}

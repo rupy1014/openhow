@@ -1,0 +1,11 @@
+{
+  "label": "용어 사전",
+  "order": 1,
+  "items": {
+    "01-terms": {
+      "label": "용어 사전 116개",
+      "order": 0
+    }
+  },
+  "collapsed": false
+}

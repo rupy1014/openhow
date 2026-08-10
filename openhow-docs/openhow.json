@@ -1,0 +1,49 @@
+{
+  "title": "오픈하우",
+  "description": "IT를 하나도 몰라도 AI로 뭔가 만들어보게 하는 무료 자료실. 컴퓨터 기초부터 서비스 배포까지 순서대로 정리했다.",
+  "keywords": "AI 입문, 바이브코딩, Claude Code, 비개발자, 코딩 몰라도, 자동화, 초보",
+  "content": "./docs",
+  "workspace": "openhow-docs",
+  "type": "docs",
+  "layout": "publication",
+  "sort": "menu",
+  "slugPolicy": "ascii-kebab-error",
+  "joinPolicy": "open",
+  "defaultAccessLevel": "public",
+  "theme": {
+    "preset": "blue",
+    "primary": "#507cf3",
+    "dark": true
+  },
+  "favicons": {
+    "themeColor": "#507cf3"
+  },
+  "scan": {
+    "exclude": [
+      "rules/**",
+      "images/**",
+      "**/_meta.json",
+      "style.css"
+    ]
+  },
+  "promo": {
+    "title": "비전공자 직장인 대상 AX 4주 스터디 모집",
+    "cta": {
+      "label": "클로더즈 보러가기",
+      "url": "https://clauders.ai"
+    }
+  },
+  "footer": {
+    "company": "잡돌쌤",
+    "copyright": "© 2026 잡돌쌤. All rights reserved.",
+    "social": [
+      {
+        "type": "youtube",
+        "url": "https://youtube.com/@jobdori"
+      }
+    ]
+  },
+  "header": {
+    "hideSignIn": true
+  }
+}

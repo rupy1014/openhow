@@ -1,0 +1,27 @@
+{
+  "label": "AI 기초",
+  "order": 3,
+  "items": {
+    "01-what-is-ai": {
+      "label": "AI가 뭐야",
+      "order": 0
+    },
+    "02-model-choice": {
+      "label": "회사·제품·모델",
+      "order": 1
+    },
+    "03-prompt": {
+      "label": "프롬프트 기초",
+      "order": 2
+    },
+    "04-context": {
+      "label": "AI는 기억하지 않는다",
+      "order": 3
+    },
+    "05-token": {
+      "label": "토큰이 뭐야",
+      "order": 4
+    }
+  },
+  "collapsed": false
+}
