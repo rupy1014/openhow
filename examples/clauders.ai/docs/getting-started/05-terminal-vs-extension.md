@@ -1,6 +1,12 @@
 ---
-
-## slug: getting-started/05-terminal-vs-extension title: 터미널 vs 익스텐션 nav: 터미널 vs 익스텐션 description: '같은 VS Code 안에서 클로드 코드를 터미널로 쓰는 거랑 익스텐션 패널로 쓰는 게 뭐가 다른지 질문-답변으로 풀어준 문서다.' hook: '같은 VS Code인데, 터미널로 쓰는 거랑 익스텐션으로 쓰는 거 뭐가 달라?' status: 출시 tags: \[getting-started, vscode, extension, terminal\]
+slug: getting-started/05-terminal-vs-extension
+title: 터미널 vs 익스텐션
+nav: 터미널 vs 익스텐션
+description: '같은 VS Code 안에서 클로드 코드를 터미널로 쓰는 거랑 익스텐션 패널로 쓰는 게 뭐가 다른지 질문-답변으로 풀어준 문서다.'
+hook: '같은 VS Code인데, 터미널로 쓰는 거랑 익스텐션으로 쓰는 거 뭐가 달라?'
+status: 출시
+tags: [getting-started, vscode, extension, terminal]
+---
 
 # 터미널이랑 익스텐션, 뭐가 달라?
 

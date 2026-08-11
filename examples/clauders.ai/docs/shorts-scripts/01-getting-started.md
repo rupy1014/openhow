@@ -1,6 +1,12 @@
 ---
-
-## slug: shorts-scripts/getting-started title: 시작하기 쇼츠 대본 nav: 시작하기 description: 클로더즈 시작하기 섹션을 30\~45초 쇼츠 대본으로 변환한 파일입니다. hook: 첫 주차는 도구 설명이 아니라 손을 움직이게 만드는 쇼츠로 갑니다. status: 초안 tags: \[shorts, getting-started\]
+slug: shorts-scripts/getting-started
+title: 시작하기 쇼츠 대본
+nav: 시작하기
+description: 클로더즈 시작하기 섹션을 30~45초 쇼츠 대본으로 변환한 파일입니다.
+hook: 첫 주차는 도구 설명이 아니라 손을 움직이게 만드는 쇼츠로 갑니다.
+status: 초안
+tags: [shorts, getting-started]
+---
 
 # 시작하기 쇼츠 대본
 
