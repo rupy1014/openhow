@@ -41,6 +41,13 @@
       "icon": "📎",
       "order": 5,
       "group": "참고"
+    },
+    {
+      "key": "vibe-deck",
+      "label": "발표자료 특강",
+      "icon": "🖥️",
+      "order": 6,
+      "group": "특강"
     }
   ]
 }

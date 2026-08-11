@@ -1,0 +1,11 @@
+{
+  "label": "발표자료 특강",
+  "order": 6,
+  "items": {
+    "01-why-web": { "label": "왜 웹으로 만드냐", "order": 1 },
+    "02-requirement": { "label": "요구사항 한 장", "order": 2 },
+    "03-assets": { "label": "자료 깔기", "order": 3 },
+    "04-build": { "label": "슬라이드 찍어내기", "order": 4 },
+    "05-verify-deploy": { "label": "확인하고 배포", "order": 5 }
+  }
+}

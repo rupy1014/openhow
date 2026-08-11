@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026년 병원 경영의 뉴노멀 — 웹 슬라이드 예시</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --g:#2FD096;          /* 브랜드 그린 — requirement.md 에 hex 로 박아둔 값 */
+  --g-l:#e6faf1;
+  --g-d:#1a8a5c;
+  --ink:#0f172a;
+  --ink-2:#1e293b;
+  --t-1:#1a1a1a;
+  --t-2:#5a6370;
+  --t-3:#94a3b8;
+  --line:#e2e8f0;
+  --soft:#f4f5f6;
+  --rose:#fff1f2;
+  --rose-t:#be123c;
+}
+
+/* 화면 폭에 비례하는 기준 글자 크기.
+   모든 치수를 rem 으로 쓰면 4K~HD 에서 레이아웃이 안 깨지고 비율만 바뀐다. */
+html{
+  font-size:clamp(13px,1.05vw,19px);
+  scroll-behavior:smooth;
+  scroll-snap-type:y mandatory;
+  overflow-x:hidden;
+}
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  color:var(--t-1);
+  background:#fff;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.6;
+  word-break:keep-all;          /* 한글이 단어 중간에서 안 끊기게 */
+  overflow-wrap:break-word;
+  overflow-x:hidden;
+}
+
+/* ---------- 슬라이드 뼈대 ---------- */
+.s{
+  width:100vw;min-height:100vh;
+  scroll-snap-align:start;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  border-bottom:1px solid rgba(0,0,0,.04);
+}
+.in{width:100%;max-width:76rem;padding:3rem 4rem;margin:0 auto}
+.dark{background:radial-gradient(ellipse at top right,var(--ink-2),var(--ink));color:#fff;border-bottom-color:transparent}
+.gray{background:#f8fafc}
+.pn{position:absolute;bottom:2rem;right:3rem;font-size:.75rem;font-weight:600;opacity:.25;letter-spacing:.05em}
+
+/* ---------- 타이포 ---------- */
+.label{font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-bottom:1rem}
+h1{font-size:3.75rem;font-weight:900;line-height:1.22;letter-spacing:-.03em}
+h2{font-size:3rem;font-weight:800;line-height:1.25;letter-spacing:-.02em;text-wrap:balance}
+h3{font-size:1.25rem;font-weight:700;line-height:1.4}
+.sub{font-size:1.125rem;font-weight:500;color:var(--t-2);line-height:1.7;margin-top:1.25rem;text-wrap:pretty}
+.dark .sub{color:rgba(255,255,255,.62)}
+.g{color:var(--g)}
+.mt{margin-top:2.5rem}
+.mt-s{margin-top:1.5rem}
+
+/* ---------- 등장 애니메이션 ---------- */
+.r{opacity:0;transform:translateY(1.75rem);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.on .r{opacity:1;transform:none}
+.on .r:nth-child(2){transition-delay:.08s}
+.on .r:nth-child(3){transition-delay:.16s}
+.on .r:nth-child(4){transition-delay:.24s}
+.on .r:nth-child(5){transition-delay:.32s}
+
+/* ---------- 네비게이션 ---------- */
+.dots{position:fixed;right:1.75rem;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:.65rem}
+.dots button{width:.6rem;height:.6rem;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(0,0,0,.16);transition:all .3s cubic-bezier(.645,.045,.355,1)}
+.dots button:hover{background:rgba(0,0,0,.34);transform:scale(1.3)}
+.dots button[aria-current]{background:var(--g);transform:scale(1.45)}
+.dots.light button{background:rgba(255,255,255,.22)}
+.dots.light button:hover{background:rgba(255,255,255,.45)}
+.dots.light button[aria-current]{background:var(--g)}
+.bar{position:fixed;left:0;top:0;height:3px;background:var(--g);z-index:101;width:0;transition:width .25s ease}
+
+/* ---------- 조각들 ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:.75rem}
+.chip{padding:.7rem 1.15rem;border:1px solid var(--line);border-radius:.7rem;background:#fff;font-weight:600;font-size:.9rem;color:var(--t-1)}
+.dark .chip{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12);color:#fff}
+.chip.soon{color:var(--t-3);border-style:dashed}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.cols-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+
+.stat{padding:1.75rem 2rem;border-radius:1rem;background:var(--soft)}
+.stat .n{font-size:3.25rem;font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+.stat .l{font-size:.8125rem;font-weight:600;color:#6b7280;margin-bottom:.75rem;line-height:1.4}
+.stat.acc{background:var(--g);color:#fff}
+.stat.acc .n{color:#fff}
+.stat.acc .l{color:rgba(255,255,255,.72)}
+
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem}
+.span2{grid-column:span 2}
+
+/* 허브 앤 스포크 */
+.hub{display:flex;align-items:center;justify-content:center;gap:2.5rem}
+.hub .side{display:flex;flex-direction:column;gap:.6rem;flex:1}
+.hub .core{width:9.5rem;height:9.5rem;border-radius:50%;background:var(--g);color:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:800;font-size:1rem;text-align:center;flex-shrink:0;box-shadow:0 1.25rem 3.75rem rgba(47,208,150,.32)}
+.hub .core small{font-weight:600;font-size:.7rem;opacity:.8;margin-top:.25rem}
+.node{display:flex;align-items:center;gap:.6rem;padding:.6rem 1rem;background:#fff;border:1px solid var(--line);border-radius:.7rem;font-weight:600;font-size:.85rem}
+.node .d{width:.4rem;height:.4rem;border-radius:50%;background:var(--g);flex-shrink:0}
+
+/* 흐름도 */
+.flow{display:flex;align-items:stretch;gap:.5rem}
+.step{flex:1;padding:1.15rem .75rem;background:#fff;border:2px solid var(--line);border-radius:.9rem;text-align:center;font-size:.8125rem;font-weight:700}
+.step small{display:block;font-weight:500;color:var(--t-3);font-size:.7rem;margin-top:.35rem}
+.step.hot{border-color:var(--g);background:var(--g-l);color:var(--g-d)}
+.arw{display:flex;align-items:center;color:#cbd5e1;font-size:1.1rem;flex-shrink:0}
+
+/* 막대 */
+.bars{display:flex;flex-direction:column;gap:1.15rem}
+.bh{display:flex;justify-content:space-between;font-size:.875rem;font-weight:600;margin-bottom:.4rem}
+.bt{height:.5rem;background:var(--line);border-radius:.25rem;overflow:hidden}
+.bf{height:100%;width:0;background:var(--g);border-radius:.25rem;transition:width 1.4s cubic-bezier(.645,.045,.355,1)}
+.dark .bt{background:rgba(255,255,255,.12)}
+
+/* 비교 박스 */
+.cmp{display:grid;grid-template-columns:1fr auto 1fr;gap:1.5rem;align-items:center}
+.box{padding:2.5rem;border-radius:1.25rem;text-align:center}
+.box .k{font-size:.8125rem;font-weight:700;letter-spacing:.08em;margin-bottom:.85rem}
+.box .v{font-size:2.75rem;font-weight:900;letter-spacing:-.03em;line-height:1.1}
+.box .m{font-size:.875rem;margin-top:.6rem;opacity:.75}
+.before{background:var(--rose);color:var(--rose-t)}
+.after{background:var(--g-l);color:var(--g-d);border:2px solid var(--g)}
+.cmp .to{font-size:2rem;color:#cbd5e1}
+
+/* 사일로 */
+.silo{display:flex;gap:1.25rem;align-items:flex-end;justify-content:center;height:15rem}
+.pillar{flex:1;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);border-radius:.75rem .75rem 0 0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:1rem;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.6)}
+
+/* 채팅 목업 */
+.phone{width:19rem;border:.6rem solid var(--ink-2);border-radius:2rem;overflow:hidden;background:#f1f5f9;box-shadow:0 2rem 4rem rgba(0,0,0,.14)}
+.phone .hd{padding:.85rem 1.1rem;background:#fff;border-bottom:1px solid var(--line);font-weight:700;font-size:.8rem;display:flex;align-items:center;gap:.5rem}
+.phone .bd{padding:1rem;display:flex;flex-direction:column;gap:.55rem;min-height:17rem}
+.bub{padding:.7rem .9rem;border-radius:.9rem;font-size:.75rem;line-height:1.5;max-width:86%}
+.ai{background:#fff;align-self:flex-start;border-bottom-left-radius:.2rem}
+.me{background:var(--g);color:#fff;align-self:flex-end;border-bottom-right-radius:.2rem}
+
+/* 플라이휠 */
+.wheel{position:relative;width:26rem;height:26rem;margin:0 auto}
+.wheel .c{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6.5rem;height:6.5rem;border-radius:50%;background:var(--g);color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;font-size:.8rem;z-index:2;box-shadow:0 .6rem 2.5rem rgba(47,208,150,.4)}
+.wheel .nd{position:absolute;width:7.5rem;height:7.5rem;border-radius:50%;background:#fff;border:2px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:700;font-size:.9rem;box-shadow:0 .5rem 1.5rem rgba(0,0,0,.05)}
+.wheel .nd small{font-weight:500;font-size:.7rem;color:var(--t-3);margin-top:.2rem}
+.nd.t{top:0;left:50%;transform:translateX(-50%)}
+.nd.r2{top:50%;right:0;transform:translateY(-50%)}
+.nd.b{bottom:0;left:50%;transform:translateX(-50%)}
+.nd.l{top:50%;left:0;transform:translateY(-50%)}
+.ring{position:absolute;inset:0}
+
+/* 표지 */
+.cover{background:linear-gradient(135deg,#f5f7fa 0%,#edf1f7 42%,#e4ecf5 100%)}
+.cover .in{display:flex;flex-direction:column;justify-content:center;min-height:100vh}
+.cover .foot{position:absolute;bottom:5rem;left:0;right:0;max-width:76rem;margin:0 auto;padding:0 4rem}
+
+/* 안내 배너 */
+.note{position:fixed;left:1.25rem;bottom:1.25rem;z-index:102;background:rgba(15,23,42,.9);color:#fff;font-size:.72rem;padding:.6rem .9rem;border-radius:.6rem;line-height:1.5;max-width:20rem;backdrop-filter:blur(6px)}
+.note b{color:var(--g)}
+.note button{background:none;border:0;color:rgba(255,255,255,.5);cursor:pointer;font-size:.9rem;margin-left:.5rem}
+
+@media (max-width:1024px){
+  .in{padding:2.5rem 2rem}
+  .cols,.cmp{grid-template-columns:1fr;gap:1.75rem}
+  .cmp .to{display:none}
+  .bento{grid-template-columns:repeat(2,1fr)}
+  .cols-3{grid-template-columns:1fr}
+  .hub{flex-direction:column;gap:1.25rem}
+  .wheel{width:20rem;height:20rem}
+  .dots{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .r{transition:none;opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bar" id="bar"></div>
+<nav class="dots" id="dots" aria-label="슬라이드 이동"></nav>
+
+<div class="note" id="note">
+  <b>웹 슬라이드 예시</b> — 스크롤 · 방향키 · 스페이스 · PageDown 으로 넘겨봐.
+  <button onclick="document.getElementById('note').remove()" aria-label="닫기">✕</button>
+</div>
+
+<!-- 01 표지 -->
+<section class="s cover" data-dark="0">
+  <div class="in">
+    <p class="label r">2026 KIMES SEMINAR</p>
+    <h1 class="r">2026년<br>병원 경영의 <span class="g">뉴노멀</span></h1>
+    <p class="sub r" style="max-width:38rem">내원 환자를 늘리는 플랫폼 예약과 광고비 실시간 추적 시스템 활용하기</p>
+  </div>
+  <div class="foot">
+    <p style="font-weight:800;font-size:1rem;color:var(--g);margin-bottom:.4rem">Docfriends</p>
+    <p style="font-size:.9rem"><b>남주형</b> <span style="margin-left:.75rem;font-weight:700">비지니스·프로덕트 총괄</span></p>
+  </div>
+  <span class="pn">01</span>
+</section>
+
+<!-- 02 시장 -->
+<section class="s" data-dark="0">
+  <div class="in">
+    <p class="label r">MARKET</p>
+    <h2 class="r">국내 의료 광고 시장은<br>이미 <span class="g">8조 원</span>이야</h2>
+    <p class="sub r">버스 배너, 엘리베이터 광고, 네이버 키워드, 인스타 숏폼까지. 채널은 계속 늘어났어.</p>
+    <div class="cols-3 mt r">
+      <div class="stat"><p class="l">국내 의료 광고 시장</p><p class="n"><span data-count="8" data-suffix="조">8조</span></p></div>
+      <div class="stat acc"><p class="l">그중 온라인 집행</p><p class="n"><span data-count="5" data-suffix="조">5조</span></p></div>
+      <div class="stat"><p class="l">주요 예약·광고 플랫폼</p><p class="n"><span data-count="7" data-suffix="개">7개</span></p></div>
+    </div>
+  </div>
+  <span class="pn">02</span>
+</section>
+
+<!-- 03 파편화 -->
+<section class="s gray" data-dark="0">
+  <div class="in">
+    <p class="label r">CHANNELS</p>
+    <h2 class="r">그런데 채널이 다 따로 논다</h2>
+    <p class="sub r">환자가 들어오는 문은 늘었는데, 관리하는 창은 그만큼 늘었어.</p>
+    <div class="chips mt r">
+      <span class="chip">네이버</span>
+      <span class="chip">카카오</span>
+      <span class="chip">당근</span>
+      <span class="chip">강남언니</span>
+      <span class="chip">구글</span>
+      <span class="chip soon">블라인드</span>
+      <span class="chip soon">키즈노트</span>
+    </div>
+    <p class="sub r" style="font-size:.9rem;color:var(--t-3)">각 플랫폼 백오피스에 따로 로그인하고, 예약이 오면 전자차트에 손으로 다시 입력한다.</p>
+  </div>
+  <span class="pn">03</span>
+</section>
+
+<!-- 04 pain -->
+<section class="s dark" data-dark="1">
+  <div class="in" style="text-align:center">
+    <p class="label r">PAIN POINT</p>
+    <h2 class="r" style="font-size:3.4rem">"클릭은 많은데<br>실제 예약은 <span class="g">몇 건</span>이지?"</h2>
+    <p class="sub r" style="max-width:42rem;margin-left:auto;margin-right:auto">
+      광고비를 쓸수록 답답해져. 어떤 광고가 이 환자를 병원 문 앞까지 데려왔는지 알 방법이 없거든.
+    </p>
+  </div>
+  <span class="pn">04</span>
+</section>
+
+<!-- 05 데이터 사일로 -->
+<section class="s dark" data-dark="1">
+  <div class="in">
+    <p class="label r">DATA SILO</p>
+    <h2 class="r">정보가 부족한 게 아니라<br><span class="g">끊겨</span> 있는 거야</h2>
+    <div class="silo mt r">
+      <div class="pillar" style="height:64%">광고 플랫폼</div>
+      <div class="pillar" style="height:88%">예약 데이터</div>
+      <div class="pillar" style="height:52%">전자차트</div>
+      <div class="pillar" style="height:74%">진료·처방</div>
+      <div class="pillar" style="height:40%">재방문</div>
+    </div>
+    <p class="sub r">기둥은 다 서 있는데 사이가 비어 있어. 이 단절을 잇는 게 오늘 얘기의 시작이야.</p>
+  </div>
+  <span class="pn">05</span>
+</section>
+
+<!-- 06 허브 -->
+<section class="s" data-dark="0">
+  <div class="in">
+    <p class="label r">SOLUTION</p>
+    <h2 class="r" style="margin-bottom:2.5rem">흩어진 예약 창구부터 하나로 묶었다</h2>
+    <div class="hub r">
+      <div class="side">
+        <div class="node"><span class="d"></span>네이버</div>
+        <div class="node"><span class="d"></span>카카오</div>
+        <div class="node"><span class="d"></span>당근</div>
+        <div class="node"><span class="d"></span>강남언니</div>
+        <div class="node"><span class="d"></span>구글</div>
+      </div>
+      <div class="core">닥톡예약<small>미들웨어</small></div>
+      <div class="side">
+        <div class="node"><span class="d"></span>비트컴퓨터</div>
+        <div class="node"><span class="d"></span>이지스헬스케어</div>
+        <div class="node"><span class="d"></span>동의보감</div>
+        <div class="node"><span class="d"></span>한의맥</div>
+        <div class="node"><span class="d"></span>+25개사</div>
+      </div>
+    </div>
+  </div>
+  <span class="pn">06</span>
+</section>
+
+<!-- 07 슬롯 동기화 -->
+<section class="s gray" data-dark="0">
+  <div class="in">
+    <p class="label r">REAL-TIME SYNC</p>
+    <h2 class="r">한 곳에서 바꾸면<br>모든 플랫폼에 <span class="g">즉시</span> 반영된다</h2>
+    <div class="flow mt r">
+      <div class="step hot">전화 예약 접수<small>EMR 슬롯 차감</small></div>
+      <div class="arw">→</div>
+      <div class="step">닥톡예약<small>실시간 동기화</small></div>
+      <div class="arw">→</div>
+      <div class="step">네이버 · 카카오 · 당근<small>잔여 인원 즉시 갱신</small></div>
+    </div>
+    <p class="sub r">환자 유입 지점은 늘리고 관리 포인트는 하나로 모았어. 오버부킹도 같이 사라진다.</p>
+  </div>
+  <span class="pn">07</span>
+</section>
+
+<!-- 08 성과 -->
+<section class="s" data-dark="0">
+  <div class="in">
+    <p class="label r">RESULTS</p>
+    <h2 class="r" style="margin-bottom:2rem">닥톡예약의 성과</h2>
+    <div class="bento r">
+      <div class="stat span2"><p class="l">EMR 고객사 네트워크</p><p class="n"><span data-count="25000" data-suffix="+">25,000+</span></p></div>
+      <div class="stat"><p class="l">닥톡예약 사용<br>병·의원</p><p class="n"><span data-count="4500" data-suffix="+">4,500+</span></p></div>
+      <div class="stat acc"><p class="l">연동 전자차트사</p><p class="n"><span data-count="32" data-suffix="개">32개</span></p></div>
+      <div class="stat"><p class="l">신규 환자 유입<br>월 평균 성장률</p><p class="n g"><span data-count="14" data-suffix="%">14%</span> ↑</p></div>
+      <div class="stat"><p class="l">연동 플랫폼</p><p class="n"><span data-count="7" data-suffix="개">7개</span></p></div>
+      <div class="stat acc"><p class="l">매주 플랫폼<br>환자 예약 중개</p><p class="n"><span data-count="34000" data-suffix="건">34,000건</span></p></div>
+      <div class="stat"><p class="l">누적 예약<br>중개 건 수</p><p class="n"><span data-count="160" data-suffix="만+">160만+</span></p></div>
+    </div>
+  </div>
+  <span class="pn">08</span>
+</section>
+
+<!-- 09 풀퍼널 -->
+<section class="s dark" data-dark="1">
+  <div class="in">
+    <p class="label r">FULL FUNNEL</p>
+    <h2 class="r">광고 클릭부터 진료까지<br>한 줄로 <span class="g">이어서</span> 본다</h2>
+    <div class="flow mt r" style="margin-bottom:1.5rem">
+      <div class="step" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:#fff">광고 노출</div>
+      <div class="arw">→</div>
+      <div class="step" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:#fff">클릭</div>
+      <div class="arw">→</div>
+      <div class="step hot">닥톡예약<small>중개 지점</small></div>
+      <div class="arw">→</div>
+      <div class="step" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:#fff">플랫폼 예약</div>
+      <div class="arw">→</div>
+      <div class="step" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:#fff">EMR 접수·진료</div>
+    </div>
+    <p class="sub r">"이 광고가 예약으로, 예약이 내원으로 이어졌나"를 실시간으로 확인할 수 있게 된다.</p>
+  </div>
+  <span class="pn">09</span>
+</section>
+
+<!-- 10 인사이트 -->
+<section class="s" data-dark="0">
+  <div class="in">
+    <p class="label r">INSIGHT</p>
+    <div class="cols">
+      <div>
+        <h2 class="r">막연한 추측 대신<br>상권 데이터로 고른다</h2>
+        <p class="sub r">"우리 상권에서 어떤 플랫폼 유입률이 높은지", "이 연령대는 어떤 광고에 반응하는지"를 숫자로 본다.</p>
+      </div>
+      <div class="bars r">
+        <div>
+          <div class="bh"><span>플랫폼 A</span><span class="g">42%</span></div>
+          <div class="bt"><div class="bf" data-w="42"></div></div>
+        </div>
+        <div>
+          <div class="bh"><span>플랫폼 B</span><span class="g">27%</span></div>
+          <div class="bt"><div class="bf" data-w="27"></div></div>
+        </div>
+        <div>
+          <div class="bh"><span>플랫폼 C</span><span class="g">19%</span></div>
+          <div class="bt"><div class="bf" data-w="19"></div></div>
+        </div>
+        <div>
+          <div class="bh"><span>기타</span><span class="g">12%</span></div>
+          <div class="bt"><div class="bf" data-w="12"></div></div>
+        </div>
+        <p style="font-size:.75rem;color:var(--t-3)">※ 화면 구성 예시용 수치</p>
+      </div>
+    </div>
+  </div>
+  <span class="pn">10</span>
+</section>
+
+<!-- 11 심의 -->
+<section class="s gray" data-dark="0">
+  <div class="in">
+    <p class="label r">AI 자동심의</p>
+    <h2 class="r" style="margin-bottom:2.5rem">전략을 세워도 <span class="g">심의</span>에서 막힌다</h2>
+    <div class="cmp r">
+      <div class="box before">
+        <p class="k">BEFORE</p>
+        <p class="v">15일 ~ 3개월</p>
+        <p class="m">심의를 기다리다 트렌드를 놓친다</p>
+      </div>
+      <div class="to">→</div>
+      <div class="box after">
+        <p class="k">AFTER</p>
+        <p class="v">1일 ~ 3일</p>
+        <p class="m">대한의사협회 공식 심의 파트너</p>
+      </div>
+    </div>
+    <p class="sub r">의료법·복지부 가이드라인·지역 보건소 유권해석을 학습시켜 판단 단계를 앞당겼어.</p>
+  </div>
+  <span class="pn">11</span>
+</section>
+
+<!-- 12 환자 메시지 -->
+<section class="s" data-dark="0">
+  <div class="in">
+    <div class="cols">
+      <div>
+        <p class="label r">RETENTION</p>
+        <h2 class="r">"나를 기억해 주는<br>세심한 <span class="g">주치의</span>"</h2>
+        <p class="sub r">비식별 진료·처방 데이터를 바탕으로 환자별 메시지를 자동 생성해. 링크를 누르면 24시간 상담으로 이어져.</p>
+        <p class="sub r" style="font-size:.9rem">
+          데이터는 병원별로 독립이야. 특정 원장의 진료 데이터가 다른 의사의 AI 학습에 쓰이지 않아.
+        </p>
+      </div>
+      <div class="r" style="display:flex;justify-content:center">
+        <div class="phone">
+          <div class="hd"><span style="width:.5rem;height:.5rem;border-radius:50%;background:var(--g);display:inline-block"></span>닥톡AI 상담</div>
+          <div class="bd">
+            <div class="bub ai">지난주 검사 결과 안내드려요. 재방문 일정 잡아드릴까요?</div>
+            <div class="bub me">네, 이번 주 금요일 오후 가능할까요?</div>
+            <div class="bub ai">금요일 15시 30분 예약 가능합니다. 확정할까요?</div>
+            <div class="bub me">확정해주세요</div>
+            <div class="bub ai">예약 완료됐어요. 전날 알림 보내드릴게요.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="pn">12</span>
+</section>
+
+<!-- 13 플라이휠 -->
+<section class="s" data-dark="0">
+  <div class="in">
+    <p class="label r" style="text-align:center">FLYWHEEL</p>
+    <h2 class="r" style="text-align:center;margin-bottom:2rem">데이터를 <span class="g">흐르게</span> 하는 것</h2>
+    <div class="wheel r">
+      <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="35" fill="none" stroke="#e2e8f0" stroke-width=".6" stroke-dasharray="2 2"/>
+      </svg>
+      <div class="c">데이터<br>흐름</div>
+      <div class="nd t">연결<small>인프라</small></div>
+      <div class="nd r2">유입<small>신규 환자</small></div>
+      <div class="nd b">추적<small>광고 성과</small></div>
+      <div class="nd l">케어<small>재내원</small></div>
+    </div>
+  </div>
+  <span class="pn">13</span>
+</section>
+
+<!-- 14 비전 -->
+<section class="s dark" data-dark="1">
+  <div class="in" style="text-align:center">
+    <p class="label r">VISION</p>
+    <h2 class="r" style="font-size:3.4rem">환자와 의사를<br><span class="g">1인 1주치의</span> 관계로</h2>
+    <p class="sub r" style="max-width:40rem;margin-left:auto;margin-right:auto">
+      파편화된 의료 인프라를 하나로 묶어, 경영과 환자 케어의 진심을 데이터와 기술로 연결한다.
+    </p>
+    <p class="sub r" style="font-size:.85rem;color:rgba(255,255,255,.35);margin-top:3rem">
+      이 페이지는 클로더즈 특강용 단일 파일 HTML 예시야. 실제 세미나 자료는 React + GSAP 로 만든 24장짜리 웹앱이고.
+    </p>
+  </div>
+  <span class="pn">14</span>
+</section>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.s'));
+  var dots = document.getElementById('dots');
+  var bar = document.getElementById('bar');
+  var current = 0;
+
+  /* 도트 네비게이션 */
+  slides.forEach(function (s, i) {
+    var b = document.createElement('button');
+    b.setAttribute('aria-label', (i + 1) + '번 슬라이드');
+    b.addEventListener('click', function () { go(i); });
+    dots.appendChild(b);
+  });
+  var buttons = Array.prototype.slice.call(dots.children);
+
+  function go(i) {
+    current = Math.max(0, Math.min(i, slides.length - 1));
+    slides[current].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function setActive(i) {
+    current = i;
+    buttons.forEach(function (b, n) {
+      if (n === i) b.setAttribute('aria-current', 'true');
+      else b.removeAttribute('aria-current');
+    });
+    dots.classList.toggle('light', slides[i].dataset.dark === '1');
+    bar.style.width = ((i + 1) / slides.length * 100) + '%';
+  }
+
+  /* 숫자 카운트업 — 슬라이드가 보일 때 한 번만 */
+  function countUp(el) {
+    var target = parseFloat(el.dataset.count);
+    var suffix = el.dataset.suffix || '';
+    var start = null;
+    var dur = 1300;
+    function frame(ts) {
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased).toLocaleString() + suffix;
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var s = e.target;
+      s.classList.add('on');
+      setActive(slides.indexOf(s));
+
+      if (!s.dataset.played) {
+        s.dataset.played = '1';
+        s.querySelectorAll('[data-count]').forEach(countUp);
+        s.querySelectorAll('.bf').forEach(function (b) {
+          setTimeout(function () { b.style.width = b.dataset.w + '%'; }, 250);
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+
+  slides.forEach(function (s) { io.observe(s); });
+
+  /* 키보드 — 발표 리모컨은 PageUp/PageDown 을 보낸다 */
+  var NEXT = ['ArrowDown', 'ArrowRight', 'PageDown', ' ', 'Spacebar'];
+  var PREV = ['ArrowUp', 'ArrowLeft', 'PageUp'];
+  window.addEventListener('keydown', function (e) {
+    if (NEXT.indexOf(e.key) > -1) { e.preventDefault(); go(current + 1); }
+    else if (PREV.indexOf(e.key) > -1) { e.preventDefault(); go(current - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+  });
+
+  setActive(0);
+  slides[0].classList.add('on');
+})();
+</script>
+</body>
+</html>

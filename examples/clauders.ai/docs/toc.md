@@ -128,6 +128,21 @@ Claude Code 101의 **Explore → Plan → Code → Commit** 을 잡돌식 한국
 
 ---
 
+## 특강 — 발표자료 (커리큘럼 밖 · 언제 봐도 됨)
+
+> 주차 흐름과 별개로 붙는 블록이야. **PPT 대신 웹으로 발표자료를 만드는 법.** KIMES 세미나에서 실제로 쓴 24장짜리 자료를 처음부터 뜯어봐.
+
+- **[👉 완성본 먼저 열어보기](./vibe-deck/kimes-deck-example.html)** — 스크롤·방향키·리모컨으로 넘어가는 단일 HTML 덱
+- **1편 [왜 웹으로 만드냐](./vibe-deck/01-why-web).** `.pptx` 가 AI한테 나쁜 포맷인 이유, 웹이 안 맞는 경우까지.
+- **2편 [요구사항 한 장](./vibe-deck/02-requirement).** 결과물의 90%를 정하는 `requirement.md` 288줄 해부 + 템플릿.
+- **3편 [자료 깔기](./vibe-deck/03-assets).** 회사 자료 `.md` 전처리, PDF 페이지 쪼개기, 숫자 환각 막기.
+- **4편 [슬라이드 찍어내기](./vibe-deck/04-build).** 공통 뼈대 먼저 → 3~5장씩. 빽빽하면 쪼개기.
+- **5편 [확인하고 배포](./vibe-deck/05-verify-deploy).** 눈으로 보는 루프, GitHub Pages 경로 함정, 함정 12종.
+
+**남는 것**: 내 발표용 `requirement.md` 1장 + 배포된 슬라이드 URL 1개
+
+---
+
 ## 범위 밖 (Out of Scope)
 
 - Part 5 (19~20장 — 자동화 운영·모바일 확장)

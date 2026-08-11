@@ -74,6 +74,8 @@ tags: [클로더즈, 기수제, 바이브코딩, Claude Code]
   - [초보 개념잡기](./claude-code-intro/01-model-choice) — AI 기초·감 잡기·일 잘 시키기·화면과 컨텍스트
   - [자동화 입문](./automation/01-four-features) — commands/agents/skills/hooks 4장치로 초보 개념잡기 확인 + `/write 1화`
   - [서비스 만들기](./build-service/00-overview) — 아이디어·PRD·기술·구조·프론트/백엔드·디버깅·배포·PMF·모객·첫 판매
+- 특강
+  - [발표자료 특강](./vibe-deck/01-why-web) — PPT 대신 웹으로 발표자료 만들기. KIMES 세미나 24장 실제 사례 + [완성본 열어보기](./vibe-deck/kimes-deck-example.html)
 
 구 부록(A 서비스 PRD·B 용어 사전·C AI도구 비교·D 자동화 아이디어)은 각각 서비스 만들기 / 초보 개념잡기 / 시작하기 / 자동화 입문으로 흡수됐다. 원본은 `docs_backlog/appendix/` 에 그대로 남아 있어.
 
