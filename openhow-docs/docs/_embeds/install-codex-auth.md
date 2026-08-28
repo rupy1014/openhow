@@ -1,5 +1,5 @@
 ---
-slug: _embeds/install-codex-auth
+slug: embeds/install-codex-auth
 title: codex-auth 설치와 검증 맡기기
 ---
 

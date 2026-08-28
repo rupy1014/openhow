@@ -92,7 +92,7 @@ bash ~/.claude/skills/codex-auth/scripts/selftest.sh
 
 ZIP을 먼저 다운로드한 뒤 아래 `복사`를 누르고 Codex나 Claude Code에 붙여넣어요. 기존 파일이 있으면 덮어쓰기 전에 백업하고, 샌드박스 테스트까지 실행하도록 구성했어요.
 
-:::copy-embed _embeds/install-codex-auth codex-auth 설치와 검증 맡기기
+:::copy-embed embeds/install-codex-auth codex-auth 설치와 검증 맡기기
 :::
 
 ## 어떤 명령을 쓰나요?
