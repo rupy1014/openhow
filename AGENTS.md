@@ -1,11 +1,13 @@
 # AGENTS.md
 Guide for autonomous coding agents in this repo.
-Scope: `/Users/taesupyoon/sideProjects/mdshare` (root), with primary code in `/core`.
+Scope: `/Users/taesupyoon/sideProjects/openhow` (root), with primary code in `/core`.
 
 ## 1) Repo Layout
-- Root (`mdshare/`) is docs/examples/orchestration.
+- Root (`openhow/`) is docs/examples/orchestration.
 - Product code lives in `core/`.
 - For app/API/CLI implementation, work in `core/`.
+- Default project: unless the user explicitly asks for platform, API, CLI, or another workspace, work in `openhow-docs/`. This is the “오픈하우” workspace (`workspace: "openhow-docs"`) served at the `openhow.io` root through `HOME_WORKSPACE_SLUG`. Preview it with `cd openhow-docs && openhow serve` at `http://localhost:3600`; do not start the standalone Viewer on port 5173 for ordinary workspace work.
+- Documentation additions or revisions are OpenHow content tasks by default: add or update the Markdown under `openhow-docs/docs/`, register the page in the relevant `_meta.json`, and place downloadable source materials under `docs/_downloads/` when requested. Reuse existing directives (for example `:::youtube`, `:::code-group`, and `:::copy-embed`) before adding product code. Preview with `openhow serve` on port 3600 and validate with `openhow export`; do not publish unless the user explicitly asks.
 - Monorepo packages:
   - `core/packages/types` (`@openhow/types`)
   - `core/packages/cli` (`@openhow/cli`)

@@ -13,6 +13,10 @@
     "03-multi-tool-config": {
       "label": "멀티 툴 설정",
       "order": 2
+    },
+    "04-codex-at-7000-won": {
+      "label": "Codex 월 7,000원에 쓰는 법",
+      "order": 3
     }
   },
   "collapsed": false
